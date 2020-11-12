@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const path = require('path');
 const app = express(),
       bodyParser = require("body-parser");
@@ -10,6 +11,7 @@ const test = "hey this is from the server :)"
 
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../my-app/build')));
+app.use(cors());
 
 app.get('/api/users', (req, res) => {
   console.log('api/users called!')
@@ -20,7 +22,7 @@ app.post('/api/user', (req, res) => {
   const user = req.body.user;
   console.log('Adding user:::::', user);
   users.push(user);
-  res.json("user addedd");
+  res.json("user added");
 });
 
 app.get('/', (req,res) => {
