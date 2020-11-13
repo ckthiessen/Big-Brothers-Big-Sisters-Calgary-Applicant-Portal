@@ -1,8 +1,6 @@
-import axios from "axios"
+// import axios from "axios"
 
-export default {
-  async getHelloworldExample() {
-    let res = await axios.get("http://localhost:3080/");
-    return res.data;
-  },
+export async function getAllUsers() {
+  const response = await fetch('/api/users');
+  return await response.json();
 }

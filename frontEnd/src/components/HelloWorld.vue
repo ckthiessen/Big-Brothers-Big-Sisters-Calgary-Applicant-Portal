@@ -1,31 +1,34 @@
 <template>
   <div class="hello">
-    <p>
-    </p>
+    <p>This is the HelloWorld component</p>
+    <ul>
+      <li v-for="user in users" :key="user">{{user}}</li>
+    </ul>
   </div>
 </template>
 
 <script>
-import apiServices from "@/services/apiServices"
+import {getAllUsers} from "../services/apiServices"
 
 export default {
   name: 'HelloWorld',
   data(){
     //new - initalizes the event object
     return{
-      event: {}
+      users: [],
     }
   },
-  created(){
-    this.getHelloWorld(); //call when instance is new
+  created: function (){
+    this.getAllUsers(); //call when instance is new
   },
   methods: {
-    async getHelloWorld(){
-      let res = await apiServices.getHelloworldExample();
-      console.log("is the hello working")
-      console.log(res.data);
-      return res.data;
-    }
+    async getAllUsers(){
+      await getAllUsers().then(response => {
+        //console.log(response);
+        this.users = response;
+        this.$emit('emitToApp', response);
+      });
+    },
   }
 }
 </script>

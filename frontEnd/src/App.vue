@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <h1> this is on the client </h1>
-    <HelloWorld />
+    <HelloWorld></HelloWorld>
   </div>
 </template>
 
@@ -10,8 +10,19 @@ import HelloWorld from './components/HelloWorld.vue'
 
 export default {
   name: 'App',
+  data () {
+    return {
+      users : [],
+    }
+  },
   components: {
     HelloWorld
+  },
+
+  mounted: {
+    emitToApp (value) {
+      this.users = value
+    }
   }
 }
 </script>
