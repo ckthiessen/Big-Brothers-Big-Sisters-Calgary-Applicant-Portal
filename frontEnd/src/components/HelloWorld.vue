@@ -8,7 +8,8 @@
 </template>
 
 <script>
-import {getAllUsers} from "../services/apiServices"
+//EXAMPLE Vue component:
+import {getAllUsers} from "../services/apiServices" //Import any func you need
 export default {
   name: 'HelloWorld',
   data(){
