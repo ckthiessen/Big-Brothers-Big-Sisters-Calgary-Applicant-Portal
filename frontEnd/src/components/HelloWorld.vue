@@ -9,7 +9,6 @@
 
 <script>
 import {getAllUsers} from "../services/apiServices"
-
 export default {
   name: 'HelloWorld',
   data(){

@@ -7,7 +7,6 @@
 
 <script>
 import HelloWorld from './components/HelloWorld.vue'
-
 export default {
   name: 'App',
   data () {
@@ -18,7 +17,6 @@ export default {
   components: {
     HelloWorld
   },
-
   mounted: {
     emitToApp (value) {
       this.users = value
