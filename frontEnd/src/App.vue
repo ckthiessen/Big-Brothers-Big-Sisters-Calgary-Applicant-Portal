@@ -1,18 +1,33 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <h1> this is on the client </h1>
+    <HelloWorld></HelloWorld>
   </div>
 </template>
 
 <script>
 import HelloWorld from './components/HelloWorld.vue'
-
 export default {
   name: 'App',
+  data () {
+    return {
+      users : [],
+    }
+  },
+  methods : {
+    emitToApp (value) {
+      console.log(value);
+    }
+  },
+
   components: {
     HelloWorld
-  }
+  },
+  // mounted: {
+  //   emitToApp (value) {
+  //     this.users = value
+  //   }
+  // }
 }
 </script>
 
