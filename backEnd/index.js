@@ -1,8 +1,8 @@
 const express = require('express');
 const path = require('path');
-const app = express(),
-      bodyParser = require("body-parser");
-      port = 3080;
+const app = express();
+const bodyParser = require("body-parser");
+const port = 3080;
 
 // place holder for the data
 const users = [];
@@ -31,3 +31,24 @@ app.get('/', (req,res) => {
 app.listen(port, () => {
     console.log(`Server listening on the port::${port}`);
 });
+
+// Upadating a user info 
+app.patch("/users/:id?info=true", () => {});
+
+// Update user task
+app.patch("/users/:id?activity=true", () => {}); 
+
+// Update user task
+app.patch("/users/isAdmin=true", () => {}); 
+
+// Create a user by id
+app.post("users/:id", () => {});
+
+// Delete user by id
+app.delete("users/:id", () => {});
+
+// Get all users for searching. Client will filter the array that is returned
+app.get("/users", () => {});
+
+// Get users by id (has possible query parameters)
+app.get("/users/:id", () => {});
