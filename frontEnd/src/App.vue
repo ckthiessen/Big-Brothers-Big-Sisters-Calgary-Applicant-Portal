@@ -14,14 +14,20 @@ export default {
       users : [],
     }
   },
+  methods : {
+    emitToApp (value) {
+      console.log(value);
+    }
+  },
+
   components: {
     HelloWorld
   },
-  mounted: {
-    emitToApp (value) {
-      this.users = value
-    }
-  }
+  // mounted: {
+  //   emitToApp (value) {
+  //     this.users = value
+  //   }
+  // }
 }
 </script>
 

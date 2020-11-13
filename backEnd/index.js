@@ -6,7 +6,7 @@ const app = express(),
       port = 3080;
 
 // place holder for the data
-const users = [{"id": 1, "name": "Himika"}];
+const users = [{"id": 1, "name": "Himika"}, {"id": 2, "name": "Snow"}];
 const test = "hey this is from the server :)"
 
 app.use(bodyParser.json());

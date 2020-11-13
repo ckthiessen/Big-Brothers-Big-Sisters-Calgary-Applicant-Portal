@@ -17,7 +17,7 @@ export default {
       users: [],
     }
   },
-  created: function (){
+  created(){
     this.getAllUsers(); //call when instance is new
   },
   methods: {
