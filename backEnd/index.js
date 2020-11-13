@@ -6,7 +6,7 @@ const app = express(),
       port = 3080;
 
 // place holder for the data
-const users = [];
+const users = [{"id": 1, "name": "Himika"}];
 const test = "hey this is from the server :)"
 
 app.use(bodyParser.json());
@@ -26,9 +26,10 @@ app.post('/api/user', (req, res) => {
 });
 
 app.get('/', (req,res) => {
-  //res.sendFile(path.join(__dirname, '../my-app/build/index.html'));
+  res.sendFile(path.join(__dirname, '../my-app/build/index.html'));
   res.json(test);
 });
+
 
 app.listen(port, () => {
     console.log(`Server listening on the port::${port}`);
