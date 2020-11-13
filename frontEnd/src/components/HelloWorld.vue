@@ -23,7 +23,8 @@ export default {
   methods: {
     async getAllUsers(){
       await getAllUsers().then(response => {
-        //console.log(response);
+        console.log("All users:");
+        console.log(response);
         this.users = response;
         this.$emit('emitToApp', response);
       });

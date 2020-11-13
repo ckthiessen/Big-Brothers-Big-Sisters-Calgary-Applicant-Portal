@@ -6,36 +6,59 @@ const bodyParser = require("body-parser");
 const port = 3080;
 
 // place holder for the data
-const users = [{"id": 1, "name": "Himika"}, {"id": 2, "name": "Snow"}];
-const test = "hey this is from the server :)"
+const users = [{"id": 1, "name": "Himika", 
+"userType": "Admin", "Email": "Test@Testing.com",
+"Activities": {
+  "dueDate":"2020-05-09",
+  "isSubmitted": false,
+  "isApproved": false,
+}}];
+
+/*
+ID, Name, Email, Activities, userType {
+  task {
+
+    dueDate:
+    isSubmitted,
+    isApproved
+  }
+}
+*/
 
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../my-app/build')));
 app.use(cors());
 
+app.listen(port, () => {
+  console.log(`Server listening on the port::${port}`);
+});
+
+
+//below are the API methods, matched with apiServices in the Front End
+//NOTE: requires firebase integration, uses "users" variable for testing
+
+// Get all users for searching. Client will filter the array that is returned
 app.get('/api/users', (req, res) => {
-  console.log('api/users called!')
+  console.log("get all users")
   res.json(users);
 });
 
-app.post('/api/user', (req, res) => {
-  const user = req.body.user;
-  console.log('Adding user:::::', user);
-  users.push(user);
-  res.json("user added");
+// Gets a user by id - id is "path parameter"
+app.get("/api/users/:id", (req,res) => {
+  let id = req.params.id;
+  console.log("Get user by ID: /users/:" + id);
+  res.json(users[0]);
 });
 
-app.get('/', (req,res) => {
-  res.sendFile(path.join(__dirname, '../my-app/build/index.html'));
-  res.json(test);
+// Create a user by id
+app.post("/api/users", (req,res) => {
+  let newUser = req.body;
+  console.log("Creating user");
+  console.log(newUser);
+  res.json(newUser);
 });
 
-
-app.listen(port, () => {
-    console.log(`Server listening on the port::${port}`);
-});
-
-// Upadating a user info 
+// Updating a user info 
 app.patch("/users/:id?info=true", () => {});
 
 // Update user task
@@ -44,14 +67,6 @@ app.patch("/users/:id?activity=true", () => {});
 // Update user task
 app.patch("/users/isAdmin=true", () => {}); 
 
-// Create a user by id
-app.post("users/:id", () => {});
 
 // Delete user by id
 app.delete("users/:id", () => {});
-
-// Get all users for searching. Client will filter the array that is returned
-app.get("/users", () => {});
-
-// Get users by id (has possible query parameters)
-app.get("/users/:id", () => {});
