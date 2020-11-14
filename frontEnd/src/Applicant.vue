@@ -2,13 +2,15 @@
   <div id="app">
     <h1> this is on the client </h1>
     <HelloWorld></HelloWorld>
+    <Footer></Footer>
   </div>
 </template>
 
 <script>
 import HelloWorld from './components/HelloWorld.vue'
+import Footer from './components/Footer.vue'
 export default {
-  name: 'App',
+  name: 'Applicant',
   data () {
     return {
       users : [],
@@ -21,19 +23,16 @@ export default {
   },
 
   components: {
-    HelloWorld
+    HelloWorld,
+    Footer,
   },
-  // mounted: {
-  //   emitToApp (value) {
-  //     this.users = value
-  //   }
-  // }
 }
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css?family=Roboto+Condensed');
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Roboto', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
