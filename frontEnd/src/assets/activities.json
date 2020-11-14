@@ -1,0 +1,121 @@
+[
+  {
+    "name": "BIG Profile",
+    "description": "Congratulations on making your account!",
+    "dueDate": "No date",
+    "status": "Complete",
+    "upload": false
+  },
+  {
+    "name": "BIG Chat",
+    "description": "A quick call with a BBBS team member to answer any questions, discuss program options and help keep your journey moving.",
+    "dueDate": "",
+    "status": "",
+    "upload": false
+  },
+  {
+    "name": "Mentoring 101",
+    "description": "An online orientation from the Alberta Mentoring Partnership that prepares you to start your journey as a mentor.  This online training will take about an hour. http://moodle.albertamentors.ca",
+    "dueDate": "To be completed prior to the BIG Fundamental Training",
+    "status": "Incomplete",
+    "upload": false
+  }, 
+  {
+    "name": "BIG Supporters - Family/Significant Other",
+    "description": "This reference must have known your for a minimum of two years. Please provide significant other, if not applicable, please provide family member.",
+    "dueDate": "",
+    "status": "Incomplete",
+    "upload": false
+  },
+  {
+    "name": "BIG Supporters - Personal",
+    "description": "This reference must have known your for a minimum of two years.",
+    "dueDate": "",
+    "status": "Incomplete",
+    "upload": false
+  },
+  {
+    "name": "BIG Fundamentals",
+    "description": "Your 3.5 hour training session with BBBS staff and other mentors. Flexiblity for training dates will be made avaliable through our scheduling database - Acuity. A link to Acuity will be sent to you by BBBS upon completion of your prescreen",
+    "dueDate": "",
+    "status": "Incomplete",
+    "upload": false
+  }, 
+  {
+    "name": "BIG Checks - Police",
+    "description": "When you have received your results from the Calgary Police, please share the results throught the Calgary Police Website to BBBS!",
+    "dueDate": "As soon as possible",
+    "status": "Incomplete",
+    "upload": false
+  }, 
+  {
+    "name": "BIG Checks - RCMP Check",
+    "description": "Please remember to share with BBBS! If you live out of the city of Calgary, be prepared that you will be completing a RCMP check instead.",
+    "dueDate": "As soon as possible",
+    "status": "Incomplete",
+    "upload": false
+  }, 
+  {
+    "name": "BIG Checks - Intervention Record Check",
+    "description": "Will be provided to you electronically or in paper form from BBBS.",
+    "dueDate": "As soon as possible",
+    "status": "Incomplete",
+    "upload": false
+  }, 
+  {
+    "name": "BIG Bio",
+    "description": "Your interview with our BBBS team to get to know you and help determine your matchablity.",
+    "dueDate": "Prior to interview",
+    "status": "Incomplete",
+    "upload": false
+  }, 
+  {
+    "name": "BIG Extras - Confidentiality",
+    "description": "This document is to ensure privacy for all parties involved.",
+    "dueDate": "Prior to interview",
+    "status": "Incomplete",
+    "upload": false
+  }, 
+  {
+    "name": "BIG Extras - Media Consent",
+    "description": "This document gives the option for you image to be used in BBBS communication and marketing materials.",
+    "dueDate": "Prior to interview",
+    "status": "Incomplete",
+    "upload": false
+  }, 
+  {
+    "name": "BIG Extras - Offence Declaration",
+    "description": "An additional and ongoing form to discuss to declare any changes in your criminal record status.",
+    "dueDate": "To be completed anually",
+    "status": "Incomplete",
+    "upload": false
+  }, 
+  {
+    "name": "BIG Extras - Home Assessment",
+    "description": "If deemed necessary at interview",
+    "dueDate": "To be decided",
+    "status": "Incomplete",
+    "upload": true
+  }, 
+  {
+    "name": "BIG Extras - Car Insurance",
+    "description": "Please provide a copy of your full page policy (not just the pink slip), indicating your Third Party Liability coverage as at least $1,000,000",
+    "dueDate": "Within 2 months of application",
+    "status": "Incomplete",
+    "upload": false
+  }, 
+  {
+    "name": "You are a BIG Deal!",
+    "description": "You are ready to be matched with your Little Brother/Sister!",
+    "dueDate": "Prior to interview",
+    "status": "Incomplete",
+    "upload": false
+  },
+  {
+    "name": "You are no BIG Deal :(",
+    "description": "Did not get accepted",
+    "dueDate": "No due date",
+    "status": "Incomplete",
+    "upload": false
+  }
+]
