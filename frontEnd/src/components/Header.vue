@@ -3,6 +3,7 @@
         color="primary"
         padding-left="1rem"
         padding-right="1rem"
+        flat
     >
         <v-btn icon rounded>
             <v-icon>mdi-bell</v-icon>
@@ -21,13 +22,7 @@
         >
         Log out
         </v-btn>
-
-        <v-menu
-            left
-            bottom
-        >
-
-        </v-menu>
+        
     </v-app-bar>
 </template>
 
