@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <Header></Header>
     <h1> this is on the client </h1>
     <HelloWorld></HelloWorld>
     <Footer></Footer>
@@ -7,6 +8,7 @@
 </template>
 
 <script>
+import Header from './components/Header.vue'
 import HelloWorld from './components/HelloWorld.vue'
 import Footer from './components/Footer.vue'
 export default {
@@ -23,6 +25,7 @@ export default {
   },
 
   components: {
+    Header,
     HelloWorld,
     Footer,
   },
