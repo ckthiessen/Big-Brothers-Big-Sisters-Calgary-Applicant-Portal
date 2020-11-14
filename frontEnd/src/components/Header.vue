@@ -11,9 +11,11 @@
         
         <v-spacer></v-spacer>
 
-        <v-btn icon rounded>
-            <v-icon>mdi-account</v-icon>
+        <v-btn rounded elevation="0">
+            Mr. Worldwide
+            <v-icon right>mdi-account</v-icon>
         </v-btn>
+        <!-- add name next to icon -->
         
         <v-btn 
             text
