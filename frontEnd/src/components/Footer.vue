@@ -1,5 +1,6 @@
 <template>
   <v-footer
+    display="flex"
     color="primary"
     padding-left="1rem"
     padding-right="1rem"
@@ -20,14 +21,13 @@
         {{ link.text }}
       </v-btn>
     </v-col>
-    <v-col
+    <v-col align="right">
+      <v-btn
         text
-        font-family='Roboto, sans-serif'
-        rounded
-        align="right"
-        class="primary"
+        disabled
       >
-      © 2020 - Big Brothers Big Sisters Calgary
+        © 2020 - Big Brothers Big Sisters Calgary
+      </v-btn>
       </v-col>
     </v-row>
   </v-footer>
