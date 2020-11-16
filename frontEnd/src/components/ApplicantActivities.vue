@@ -7,12 +7,12 @@
       </v-row>
       <v-divider></v-divider>
       <v-expansion-panels accordion focusable >
-        <div v-for="task in tasks" :key="task.name" width=100% style="width: 1800px">
+        <div v-for="(task, index) in tasks" :key="task.name" width=100% style="width: 1800px">
           <v-expansion-panel >
             <v-expansion-panel-header>
             <v-row>
               <v-col>
-                <v-btn text> {{ task.name }} </v-btn>
+                {{ task.name }} 
               </v-col>
               <v-col>
                 <v-chip text-color="black" class="ma-2" :color="statusColor[task.status]"> 
@@ -35,7 +35,7 @@
             </v-expansion-panel-header>
             <v-expansion-panel-content>
               <p class="float-left mt-7" style="width: 40%; text-align: left"> {{ task.description }} </p>
-              <v-btn v-if="!noActions.includes(task.name)" class="float-right mt-5"> Mark Complete </v-btn>
+              <v-btn @click="changeStatus(task.status, index)" v-if="!noActions.includes(task.name)" class="float-right mt-5"> Mark Complete </v-btn>
               <v-btn v-if="task.upload" class="float-right mt-5 mr-5"> Upload Document </v-btn>
             </v-expansion-panel-content>
           </v-expansion-panel>
@@ -47,8 +47,11 @@
 </template>
 
 <script>
-// TODO:
-//EXAMPLE Vue component:
+// TODO: Test with mocked out API object
+// TODO: Handle due dates
+// TODO: Fix alignment
+// TODO: Figure out how to upload docs
+
 // import {getAllUsers} from "../services/apiServices" //Import any func you need
 
 export default {
@@ -79,26 +82,17 @@ export default {
     //   return this.
     // }
   },
-  methods: {},
+  methods: {
+    changeStatus(status, index) {
+      let selectedTask = this.tasks[index];
+      if(selectedTask.status === "Incomplete") {
+        selectedTask.status = "Complete"
+      }
+    }
+  },
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-/* Vertically center the text in each row */
-div .col {
-  margin: auto 0 auto 0;
-}
-a {
-  color: #8A8A8A;
-}
-a:visited {
-  color: #8A8A8A;
-}
-a:active {
-  color: #8A8A8A;
-}
-a:hover {
-  color: #8A8A8A;
-}
 </style>
