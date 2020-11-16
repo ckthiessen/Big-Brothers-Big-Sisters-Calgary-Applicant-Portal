@@ -1,14 +1,16 @@
 <template>
   <div id="app">
-    <h1> this is on the client </h1>
+    <!-- <h1> this is on the client </h1>
     <HelloWorld></HelloWorld>
-    <Footer></Footer>
+    <Footer></Footer> -->
+    <router-view/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-import Footer from './components/Footer.vue'
+// import HelloWorld from './components/HelloWorld.vue'
+// import Footer from './components/Footer.vue'
+
 export default {
   name: 'Applicant',
   data () {
@@ -23,8 +25,8 @@ export default {
   },
 
   components: {
-    HelloWorld,
-    Footer,
+    // HelloWorld,
+    // Footer,
   },
 }
 </script>
@@ -40,3 +42,4 @@ export default {
   margin-top: 60px;
 }
 </style>
+

@@ -1,0 +1,18 @@
+<template>
+  <h1>This is the signup page</h1>
+</template>
+
+<script>
+
+export default {
+  name: 'Signup',
+  data () {
+    return {
+      message1: 'Hey!',
+      message2: 'Hey!',
+      message3: 'Hey!',
+      message4: 'Hey!',
+    }
+  }
+}
+</script>
