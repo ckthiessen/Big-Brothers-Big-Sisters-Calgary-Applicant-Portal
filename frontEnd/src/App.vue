@@ -1,12 +1,14 @@
 <template>
   <div id="app">
-    <h1> this is on the client </h1>
-    <HelloWorld></HelloWorld>
+    <v-app>
+    <applicant-activities class="mx-auto">
+    </applicant-activities>
+  </v-app>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import ApplicantActivities from './components/ApplicantActivities.vue';
 export default {
   name: 'App',
   data () {
@@ -21,7 +23,7 @@ export default {
   },
 
   components: {
-    HelloWorld
+    "applicant-activities": ApplicantActivities
   },
   // mounted: {
   //   emitToApp (value) {
