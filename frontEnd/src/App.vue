@@ -1,10 +1,12 @@
 <template>
+  <v-app>
   <div id="app">
     <!-- <h1> this is on the client </h1>
     <HelloWorld></HelloWorld>
     <Footer></Footer> -->
     <router-view/>
   </div>
+  </v-app>
 </template>
 
 <script>
