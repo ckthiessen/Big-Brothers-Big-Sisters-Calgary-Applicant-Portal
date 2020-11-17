@@ -6,7 +6,7 @@
         justify="center">
         <v-col
           cols="12"
-          sm="6"
+          sm="10"
         >
           <v-text-field
             v-model="firstName"
@@ -74,20 +74,12 @@
         </v-col>
       </v-row>
     </v-container>
-    <v-container>
-      <v-row>
-        <v-col>
-
-        </v-col>
-        <v-col>
-          
-        </v-col>
-      </v-row>
-    </v-container>
   </v-form>
 </template>
 
 <script>
+import {v4 as uuidv4} from 'uuid';
+import {createUser} from "../services/apiServices";
 
 export default {
   name: 'Signup',
@@ -100,6 +92,7 @@ export default {
         checkpassword: '',
         passwordVisible: false,
         isValid: true,
+
         emailrules: [ 
         v => 
         !!v || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) 
@@ -120,7 +113,14 @@ export default {
 
     methods:{
       signUp(){
-        console.log("Signing up now!")
+        console.log("Signing up now!");
+        let userInfo = {
+          'id' : uuidv4(),
+          'name' : this.firstName + ' ' + this.lastName,
+          'email' : this.email,
+          'password' : this.password,
+        };
+        createUser(userInfo);
       },
     }
 }
