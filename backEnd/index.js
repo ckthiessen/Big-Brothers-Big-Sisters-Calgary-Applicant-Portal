@@ -5,6 +5,27 @@ const app = express();
 const bodyParser = require("body-parser");
 const port = 3080;
 
+//firebase initalization
+const admin = require('firebase-admin');
+
+const serviceAccount = require('./credentials/firebaseCredentials.json');
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
+const db = admin.firestore();
+
+async function test(){
+  const snapshot = await db.collection('users').get();
+  snapshot.forEach((doc) => {
+    console.log(doc.id, '=>', doc.data());
+  });
+}
+test();
+
+
+
 // place holder for the data
 const users = [{"id": 1, "name": "Himika", 
 "userType": "Admin", "Email": "Test@Testing.com",
