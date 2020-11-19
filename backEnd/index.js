@@ -93,7 +93,7 @@ app.delete("/api/users/:id", (req,res) => {
   res.json(id + " was deleted");
 });
 
-// Update user task - this can be called by the admin OR user
+// Update user - this can be called by the admin OR user
 // receives a json from the client
 app.put("/api/users", (req,res) => {
   let updatedUser = req.body;
