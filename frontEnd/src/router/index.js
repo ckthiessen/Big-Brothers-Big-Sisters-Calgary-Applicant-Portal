@@ -4,6 +4,7 @@ import Signup from '../views/Signup.vue'
 import Signin from '../views/Signin.vue'
 import Forgot from '../views/Forgot.vue'
 import Administrator from '../views/Administrator.vue'
+import ApplicantPortal from '../views/ApplicantPortal.vue'
 // import AdminApplicant from '../views/AdminApplicant.vue'
 
 Vue.use(VueRouter);
@@ -26,6 +27,10 @@ const routes = [
     component: Administrator
   },
   // Still need to add the dynamic routes
+  {
+    path: '/applicant/:id',
+    component: ApplicantPortal
+  }
 ]
 
 const router = new VueRouter({
