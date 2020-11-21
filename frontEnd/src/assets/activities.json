@@ -9,7 +9,7 @@
   {
     "name": "BIG Chat",
     "description": "A quick call with a BBBS team member to answer any questions, discuss program options and help keep your journey moving.",
-    "dueDate": "",
+    "dueDate": "Due a week within application",
     "status": "Incomplete",
     "upload": false
   },
@@ -23,21 +23,28 @@
   {
     "name": "BIG Supporters - Family/Partner",
     "description": "This reference must have known your for a minimum of two years. Please provide significant other, if not applicable, please provide family member.",
-    "dueDate": "",
+    "dueDate": "Completed within a month of application",
     "status": "Incomplete",
     "upload": false
   },
   {
     "name": "BIG Supporters - Personal",
     "description": "This reference must have known your for a minimum of two years.",
-    "dueDate": "",
+    "dueDate": "Completed within a month of application",
+    "status": "Incomplete",
+    "upload": false
+  },
+  {
+    "name": "BIG Supporters - Employer",
+    "description": "This reference must have known your for a minimum of two years. Please provide your current employer, if this individual has known you less than two years, please be prepared to provide an additional reference.",
+    "dueDate": "Completed within a month of application",
     "status": "Incomplete",
     "upload": false
   },
   {
     "name": "BIG Fundamentals",
     "description": "Your 3.5 hour training session with BBBS staff and other mentors. Flexiblity for training dates will be made avaliable through our scheduling database - Acuity. A link to Acuity will be sent to you by BBBS upon completion of your prescreen",
-    "dueDate": "",
+    "dueDate": "To be completed 2 months within application",
     "status": "Incomplete",
     "upload": false
   },
@@ -65,7 +72,7 @@
   {
     "name": "BIG Bio",
     "description": "Your interview with our BBBS team to get to know you and help determine your matchablity.",
-    "dueDate": "Prior to interview",
+    "dueDate": "Within 2 months of application",
     "status": "Incomplete",
     "upload": false
   },
@@ -88,14 +95,14 @@
     "description": "An additional and ongoing form to discuss to declare any changes in your criminal record status.",
     "dueDate": "To be completed anually",
     "status": "Incomplete",
-    "upload": false
+    "upload": true
   },
   {
     "name": "BIG Extras - Home Assessment",
     "description": "If deemed necessary at interview",
     "dueDate": "To be decided",
     "status": "Incomplete",
-    "upload": true
+    "upload": false
   },
   {
     "name": "BIG Extras - Car Insurance",
