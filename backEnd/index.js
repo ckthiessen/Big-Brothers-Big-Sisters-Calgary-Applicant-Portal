@@ -16,13 +16,14 @@ const users = [{
   "requiresHomeAssessment": false,
   "tasks": [
      {
-      "name": "Big Project",
+      "name": "BIG Profile",
       "dueDate":"2020-05-09",
       "isSubmitted": false,
-      "isApproved": false,
+      "isApproved": true,
+      "upload" : null,
     },
     {
-      "name": "Big Thing",
+      "name": "BIG Chat",
       "dueDate":"2020-05-09",
       "isSubmitted": false,
       "isApproved": false,

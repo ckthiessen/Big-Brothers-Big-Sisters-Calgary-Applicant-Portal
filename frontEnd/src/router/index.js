@@ -28,7 +28,7 @@ const routes = [
   },
   // Still need to add the dynamic routes
   {
-    path: '/applicant/:id',
+    path: '/applicant/',
     component: ApplicantPortal
   }
 ]

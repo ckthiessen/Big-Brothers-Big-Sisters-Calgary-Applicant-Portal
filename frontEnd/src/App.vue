@@ -11,7 +11,6 @@
 </template>
 
 <script>
-import ApplicantActivities from './components/ApplicantActivities.vue';
 // import Header from './components/Header.vue'
 // import HelloWorld from './components/HelloWorld.vue'
 // import Footer from './components/Footer.vue'
@@ -27,10 +26,6 @@ export default {
     emitToApp (value) {
       console.log(value);
     }
-  },
-
-  components: {
-    "applicant-portal": ApplicantPortal
   },
 }
 </script>
