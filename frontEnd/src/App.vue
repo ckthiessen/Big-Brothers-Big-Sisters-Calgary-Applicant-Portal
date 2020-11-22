@@ -1,16 +1,23 @@
 <template>
+  <v-app>
   <div id="app">
-    <v-app>
-    <applicant-activities class="mx-auto">
-    </applicant-activities>
-  </v-app>
+    <!-- <Header></Header>
+    <h1> this is on the client </h1>
+    <HelloWorld></HelloWorld>
+    <Footer></Footer> -->
+    <router-view/>
   </div>
+  </v-app>
 </template>
 
 <script>
 import ApplicantActivities from './components/ApplicantActivities.vue';
+// import Header from './components/Header.vue'
+// import HelloWorld from './components/HelloWorld.vue'
+// import Footer from './components/Footer.vue'
+
 export default {
-  name: 'App',
+  name: 'Applicant',
   data () {
     return {
       users : [],
@@ -23,19 +30,15 @@ export default {
   },
 
   components: {
-    "applicant-activities": ApplicantActivities
+    "applicant-portal": ApplicantPortal
   },
-  // mounted: {
-  //   emitToApp (value) {
-  //     this.users = value
-  //   }
-  // }
 }
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css?family=Roboto+Condensed');
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Roboto', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -43,3 +46,4 @@ export default {
   margin-top: 60px;
 }
 </style>
+

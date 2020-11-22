@@ -1,9 +1,10 @@
 <template>
   <v-card width="90%" class="mx-auto">
+    <header></header>
     <v-card-title> Activities </v-card-title>
     <v-container>
-     <v-row justify-space-around>
-        <v-col cols="1" class="d-flex flex-left pl-6 pr-0"> Name </v-col>
+     <v-row>
+        <v-col  cols="1" > <span> Name </span> </v-col>
         <v-col cols="2" offset="2" class="pl-0"> Status </v-col>
         <v-col cols="1" offset="1" class="pl-0">  Due Date </v-col>
         <v-col > Upload </v-col>
@@ -65,6 +66,7 @@
         </div>
       </v-expansion-panels>
     </v-container>
+    <footer></footer>
   </v-card>
 </template>
 
@@ -76,14 +78,16 @@
 // TODO: How to update tasks application status in the backend? --> Ditto 
 // TODO: Decide whether will refactor out activities.json --> Ditto
 
+import Header from './components/Header.vue'
+import Footer from './components/Footer.vue'
 
-import {getUserByID} from "../services/apiServices" //Import any func you need
+// import {getUserByID} from "../services/apiServices" //Import any func you need
 
 export default {
   data() {
     return {
       applicant: {},
-      tasks: [],
+      tasks: require("../assets/activities.json"),
       headers: ["Name", "Status", "Due Date", "Upload"],
       status: {
         Complete: {
@@ -115,6 +119,10 @@ export default {
         "You are a BIG Deal!",
       ],
     };
+  },
+  components: {
+    "header": Header,
+    "footer": Footer,
   },
   // props: {
   //   applicant: Object,
