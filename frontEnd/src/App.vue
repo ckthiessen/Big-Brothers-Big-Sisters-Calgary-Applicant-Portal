@@ -27,12 +27,6 @@ export default {
       console.log(value);
     }
   },
-
-  components: {
-    // Header,
-    // HelloWorld,
-    // Footer,
-  },
 }
 </script>
 

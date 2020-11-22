@@ -6,21 +6,28 @@ const bodyParser = require("body-parser");
 const port = 3080;
 
 // place holder for the data
-const users = [{"id": 1, "name": "Himika", 
-"userType": "Admin", "Email": "Test@Testing.com",
-"Activities": [
+const users = [{
+  "id": 1, 
+  "name": "Himika", 
+  "email": "Test@Testing.com",
+  "notifications": [],
+  "isAdmin": false,
+  "isCommunityMentor": false, 
+  "requiresHomeAssessment": false,
+  "tasks": [
      {
-      "taskName": "Big Project",
+      "name": "BIG Profile",
+      "dueDate":"2020-05-09",
+      "isSubmitted": false,
+      "isApproved": true,
+      "upload" : null,
+    },
+    {
+      "name": "BIG Chat",
       "dueDate":"2020-05-09",
       "isSubmitted": false,
       "isApproved": false,
     },
-    {
-      "taskName": "Big Thing",
-      "dueDate":"2020-05-09",
-      "isSubmitted": false,
-      "isApproved": false,
-    }
   ]
 }];
 

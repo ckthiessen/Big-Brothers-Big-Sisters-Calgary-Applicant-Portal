@@ -33,26 +33,8 @@ const routes = [
   },
   // Still need to add the dynamic routes
   {
-    path: '/applicant/:id',
-    component: ApplicantPortal,
-    meta: {requiresAuth: true}
-  },
-  {
-    path: '/admin/home',
-    component: Administrator,
-    meta: {
-      requiresAuth: true,
-      requiresAdminPerm: true
-    }
-  },
-  {
-    path: '/admin/:id',
-    component: AdminApplicant,
-    meta: {
-      requiresAuth: true,
-      requiresAdminPerm: true
-    }
-
+    path: '/applicant/',
+    component: ApplicantPortal
   }
 ]
 
