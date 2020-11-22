@@ -2,8 +2,12 @@
   <v-card width="90%" class="mx-auto">
     <v-card-title> Activities </v-card-title>
     <v-container>
-      <v-row>
-        <v-col v-for="header in headers" :key="header"> {{ header }} </v-col>
+     <v-row justify-space-around>
+        <v-col cols="1" class="d-flex flex-left pl-6 pr-0"> Name </v-col>
+        <v-col cols="2" offset="2" class="pl-0"> Status </v-col>
+        <v-col cols="1" offset="1" class="pl-0">  Due Date </v-col>
+        <v-col > Upload </v-col>
+        <v-col cols="1"></v-col>
       </v-row>
       <v-divider></v-divider>
       <v-expansion-panels accordion focusable>
@@ -65,18 +69,22 @@
 </template>
 
 <script>
-// TODO: Test with mocked out API object
-// TODO: Handle due dates
-// TODO: Fix alignment
-// TODO: Figure out how to upload docs
+// TODO: Handle due dates -> Will be done on account creation
+// TODO: Fix alignment -> I have given up, someone else can try it. 
+// TODO: Figure out how to upload docs --> Wait until backend is fully functioning
+// TODO: How to handle API get error? --> Ditto
+// TODO: How to update tasks application status in the backend? --> Ditto 
+// TODO: Decide whether will refactor out activities.json --> Ditto
 
-// import {getAllUsers} from "../services/apiServices" //Import any func you need
+
+import {getUserByID} from "../services/apiServices" //Import any func you need
 
 export default {
   data() {
     return {
-      tasks: require("../assets/activities.json"),
-      headers: ["Name", "Status", "Due Date", "Upload", ""],
+      applicant: {},
+      tasks: [],
+      headers: ["Name", "Status", "Due Date", "Upload"],
       status: {
         Complete: {
           color: "complete",
@@ -99,7 +107,8 @@ export default {
         upload: "mdi-cloud-upload",
         uploadComplete: "mdi-cloud-check",
       },
-      dialog: false,
+      requiresHomeAssessment: false,
+      isCommunityMentor: false,
       noActions: [
         "BIG Profile",
         "You are no BIG Deal :(",
@@ -107,9 +116,9 @@ export default {
       ],
     };
   },
-  props: {
-    applicant: Object,
-  },
+  // props: {
+  //   applicant: Object,
+  // },
   // created() {},
   // computed: {
   // },
@@ -126,6 +135,26 @@ export default {
       return status === "InProgress" ? "Mark Incomplete" : "Request Approval"
     },
   },
+  created() {
+    getUserByID(1).then(res => {
+      for (const serverTask of Object.values(res.tasks)) {
+        let clientTask = {} 
+        clientTask.name = serverTask.name;
+        clientTask.dueDate = serverTask.dueDate; 
+        if(serverTask.isComplete) {
+            clientTask.status = "Complete"; 
+        }
+        else if(serverTask.isSubmitted) { 
+            clientTask.status = "InProgress"; 
+        } else {
+            clientTask.status = "Incomplete"; 
+        }
+        clientTask.description = "Lorem Ipsum"
+        // TODO: Refactor into getDescription using map lookup
+        this.tasks.push(clientTask);
+      }
+    })
+  }
 };
 </script>
 
