@@ -5,6 +5,7 @@ const app = express();
 const bodyParser = require("body-parser");
 const port = 3080;
 
+
 // place holder for the data
 const users = [{
   "id": 1, 
@@ -30,6 +31,8 @@ const users = [{
     },
   ]
 }];
+
+let applicants = []
 
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../my-app/build')));
@@ -64,10 +67,53 @@ app.get("/api/users/:id", (req,res) => {
 // receives a json from the client
 app.post("/api/users", (req,res) => {
   let newUser = req.body;
-  console.log("Creating user");
-  console.log(newUser);
-  //todo: Add new user to firebase
-  res.json(newUser);
+  let tasks = []
+  let taskDefaults = require("./tasks.json")
+
+  let accountCreationDate = new Date(); 
+  let requiresCalculatedDueDate = new Map([
+    ["BIG Chat", 7],
+    ["BIG Supporters - Family/Partner", 30],
+    ["BIG Supporters - Personal", 30],
+    ["BIG Supporters - Employer", 30],
+    ["BIG Fundamentals", 60],
+    ["BIG Extras - Car Insurance", 60],
+    ["BIG Bio", 60]
+  ])
+
+  taskDefaults.forEach(task => {
+    let dueDate;
+    if(requiresCalculatedDueDate.has(task.name)) {
+     let daysUntilDue = requiresCalculatedDueDate[task.name];
+     dueDate = accountCreationDate.setDate(accountCreationDate.getDate() + daysUntilDue); 
+    } else {
+      dueDate = task.dueDate;
+    }
+      tasks.push({
+        name: task.name,
+        fileUpload: null,
+        dueDate: dueDate.toLocaleString("en-US", {
+          timeZone: "America/Edmonton"
+        }),
+        isApproved: task.isApproved,
+        isSubmitted: false,
+      })
+  });
+  
+  //TODO: Add new user to firebase. Currently adds to server RAM
+  applicants.push({
+    id: newUser.id,
+    name: newUser.name,
+    email: newUser.email,
+    password: newUser.password, // TODO: Salt and hash the password or make this work with firebase authentication
+    notifications: ["Congratulations on making your account!"],
+    isAdmin: false, 
+    isCommunityMentor: false,
+    requiresHomeAssessment: false, 
+    tasks
+  })
+  console.log(applicants)
+
 });
 
 // Delete user by id
