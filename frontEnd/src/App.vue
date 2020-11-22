@@ -1,19 +1,19 @@
 <template>
   <v-app>
   <div id="app">
-    <!-- <Header></Header>
+    <Header></Header>
     <h1> this is on the client </h1>
     <HelloWorld></HelloWorld>
-    <Footer></Footer> -->
+    <Footer></Footer>
     <router-view/>
   </div>
   </v-app>
 </template>
 
 <script>
-// import Header from './components/Header.vue'
-// import HelloWorld from './components/HelloWorld.vue'
-// import Footer from './components/Footer.vue'
+import Header from './components/Header.vue'
+import HelloWorld from './components/HelloWorld.vue'
+import Footer from './components/Footer.vue'
 
 export default {
   name: 'Applicant',
@@ -29,9 +29,9 @@ export default {
   },
 
   components: {
-    // Header,
-    // HelloWorld,
-    // Footer,
+    Header,
+    HelloWorld,
+    Footer,
   },
 }
 </script>
