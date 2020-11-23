@@ -65,8 +65,10 @@ app.get("/api/users/:id", (req,res) => {
 
 // Create a user by id
 // receives a json from the client
-app.post("/api/users", (req,res) => {
+app.post("/api/users", (req, res) => {
+  console.log(req.body);
   let newUser = req.body;
+  console.log(newUser);
   let tasks = []
   let taskDefaults = require("./tasks.json")
 
@@ -84,17 +86,19 @@ app.post("/api/users", (req,res) => {
   taskDefaults.forEach(task => {
     let dueDate;
     if(requiresCalculatedDueDate.has(task.name)) {
-     let daysUntilDue = requiresCalculatedDueDate[task.name];
-     dueDate = accountCreationDate.setDate(accountCreationDate.getDate() + daysUntilDue); 
+     let daysUntilDue = requiresCalculatedDueDate.get(task.name);
+     let calculatedDueDate = new Date();
+     calculatedDueDate.setDate(accountCreationDate.getDate() + daysUntilDue);
+     dueDate = calculatedDueDate.toLocaleDateString("en-CA", {
+       timeZone: "America/Edmonton"
+     });
     } else {
       dueDate = task.dueDate;
     }
       tasks.push({
         name: task.name,
         fileUpload: null,
-        dueDate: dueDate.toLocaleString("en-US", {
-          timeZone: "America/Edmonton"
-        }),
+        dueDate: dueDate,
         isApproved: task.isApproved,
         isSubmitted: false,
       })
@@ -113,7 +117,8 @@ app.post("/api/users", (req,res) => {
     tasks
   })
   console.log(applicants)
-
+  tasks.forEach(task => console.log(task));
+  res.json(newUser.id + " was created")
 });
 
 // Delete user by id

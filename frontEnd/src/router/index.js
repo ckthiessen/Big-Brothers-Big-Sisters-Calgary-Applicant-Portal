@@ -44,29 +44,29 @@ const router = new VueRouter({
   routes
 });
 
-router.beforeEach((to, from, next) => {
-  //Adds this logic to check whether each route is authenticated
-  //this guards users from accessing certain routes ex: Admin/ Applicant dashboard etc
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-  const isAdmin = to.matched.some(record => record.meta.isAdmin);
-  //Add firebase logic here
-  /*
-  const isAuthenticated = firebase.auth().currentUser;
-  const hasAdminPerms = firebase.auth().currentUser.isAdmin === true;
+// router.beforeEach((to, from, next) => {
+//   //Adds this logic to check whether each route is authenticated
+//   //this guards users from accessing certain routes ex: Admin/ Applicant dashboard etc
+//   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+//   const isAdmin = to.matched.some(record => record.meta.isAdmin);
+//   //Add firebase logic here
+//   /*
+//   const isAuthenticated = firebase.auth().currentUser;
+//   const hasAdminPerms = firebase.auth().currentUser.isAdmin === true;
 
-  if(requiresAuth & !isAutheticated){
-    next("/signin");
-  }else{
-    next()
-  }
+//   if(requiresAuth & !isAutheticated){
+//     next("/signin");
+//   }else{
+//     next()
+//   }
 
-  if(requiresAdminPerm & !hasAdminPerm) {
-    next("/signin");
-  }else{
-    next()
-  }
-  */
+//   if(requiresAdminPerm & !hasAdminPerm) {
+//     next("/signin");
+//   }else{
+//     next()
+//   }
+//   */
 
-})
+// })
 
 export default router
