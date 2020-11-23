@@ -5,7 +5,7 @@ import Signin from '../views/Signin.vue'
 import Forgot from '../views/Forgot.vue'
 import Administrator from '../views/Administrator.vue'
 import ApplicantPortal from '../views/ApplicantPortal.vue'
-import AdminApplicant from '../views/AdminApplicant.vue'
+//import AdminApplicant from '../views/AdminApplicant.vue'
 
 //import firebase
 /*
@@ -43,11 +43,11 @@ const router = new VueRouter({
   routes
 });
 
-router.beforeEach((to, from, next) => {
-  //Adds this logic to check whether each route is authenticated
-  //this guards users from accessing certain routes ex: Admin/ Applicant dashboard etc
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-  const isAdmin = to.matched.some(record => record.meta.isAdmin);
+// router.beforeEach((to, from, next) => {
+//   //Adds this logic to check whether each route is authenticated
+//   //this guards users from accessing certain routes ex: Admin/ Applicant dashboard etc
+//   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+//   const isAdmin = to.matched.some(record => record.meta.isAdmin);
   //Add firebase logic here
   /*
   const isAuthenticated = firebase.auth().currentUser;
@@ -66,6 +66,6 @@ router.beforeEach((to, from, next) => {
   }
   */
 
-})
+// //
 
 export default router
