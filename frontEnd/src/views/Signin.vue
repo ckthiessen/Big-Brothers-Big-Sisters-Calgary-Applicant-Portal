@@ -65,7 +65,10 @@ export default {
   name: 'Signin',
   data () {
     return {
-      id: ''
+      id: '',
+      email: '',
+      password: '',
+      passwordVisible: false,
     }
   }
 }
