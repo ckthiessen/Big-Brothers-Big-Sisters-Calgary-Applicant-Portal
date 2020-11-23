@@ -21,7 +21,15 @@ const users = [{"id": 1, "name": "Himika",
       "isSubmitted": false,
       "isApproved": false,
     }
-  ]
+  ],
+"Notifications": [
+  {
+    "taskName": "Big Thing"
+  },
+  {
+    "taskName": "Big Project"
+  }
+]
 }];
 
 app.use(bodyParser.json());

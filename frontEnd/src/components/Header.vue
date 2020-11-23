@@ -44,7 +44,7 @@
                 v-for="(notification, index) in notifications"
                 :key="index"
               >
-                <v-list-item-subtitle>{{ notification.title }}</v-list-item-subtitle>
+                <v-list-item-subtitle>{{ notification }}</v-list-item-subtitle>
               </v-list-item>
             </v-list>
           </v-card>
@@ -66,7 +66,7 @@
             rounded 
             elevation="0"
           >
-            Steve Buscemi
+            {{ name }}
             <v-icon right>mdi-account</v-icon>
           </v-btn>
         </template>
@@ -92,9 +92,9 @@
             <v-divider></v-divider>
             <v-list-item>
               <v-list-item-content>
-                <v-list-item-subtitle align="left">Steve Buscemi</v-list-item-subtitle>
-                <v-list-item-subtitle align="left">Community Mentor</v-list-item-subtitle>
-                <v-list-item-subtitle align="left">steve@gmail.com</v-list-item-subtitle>
+                <v-list-item-subtitle align="left">{{ name }}</v-list-item-subtitle>
+                <v-list-item-subtitle align="left">{{ type }}</v-list-item-subtitle>
+                <v-list-item-subtitle align="left">{{ email }}</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
           </v-list>
@@ -105,6 +105,7 @@
             text
             rounded
             font-family='Roboto, sans-serif'
+            @click="$router.push('/signin')"
         >
         Log out
         </v-btn>
@@ -113,14 +114,32 @@
 </template>
 
 <script>
+import {getUserByID} from "../services/apiServices"
     export default {
         data: () => ({
             menu: false,
-            notifications:[
-              {title: 'Administrator approved your resume'},
-              {title: 'Administrator approved your automobile insurance'},
-              {title: 'Administrator approved your family references'},
-            ]
+            notifications:[],
+            name: '',
         }),
+
+        created(){
+          this.getUser(); //call when instance is new
+        },
+        methods: {
+          async getUser(){
+            await getUserByID(1).then(response => {
+              this.user = response;
+              this.name = this.user.name;
+              this.type = this.user.userType;
+              this.email = this.user.Email;
+              for (let i = 0; i < this.user["Notifications"].length; i++) {
+                let notification = this.user["Notifications"][i];
+                console.log(notification.taskName);
+                this.notifications.push("Admin has approved " + notification.taskName);
+                console.log(this.notifications);
+              }
+            });
+          }
+        },
     }
 </script>
