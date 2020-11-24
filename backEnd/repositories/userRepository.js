@@ -8,7 +8,6 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
-
 module.exports = {
   
   createUser: async function(toCreate) {
@@ -20,7 +19,7 @@ module.exports = {
   updateUser: async function(toUpdate) {
     console.log('updating user: ');
     console.log(toUpdate);
-    let updated = await db.collection('users').doc(toUpdate.id).update(toUpdate);
+    await db.collection('users').doc(toUpdate.id).update(toUpdate);
     console.log('user: ' + toUpdate.id + ' updated.');
   },
 
