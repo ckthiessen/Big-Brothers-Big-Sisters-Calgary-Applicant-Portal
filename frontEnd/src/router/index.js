@@ -49,17 +49,10 @@ const router = new VueRouter({
 //   //this guards users from accessing certain routes ex: Admin/ Applicant dashboard etc
 //   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 //   const isAdmin = to.matched.some(record => record.meta.isAdmin);
-<<<<<<< HEAD
-//   //Add firebase logic here
-//   /*
-//   const isAuthenticated = firebase.auth().currentUser;
-//   const hasAdminPerms = firebase.auth().currentUser.isAdmin === true;
-=======
   //Add firebase logic here
   /*
   const isAuthenticated = firebase.auth().currentUser;
   const hasAdminPerms = firebase.auth().currentUser.isAdmin === true;
->>>>>>> 2e82c295c904bc0fd4ab6c29f2b67ba3e9b075bd
 
 //   if(requiresAuth & !isAutheticated){
 //     next("/signin");
@@ -73,11 +66,5 @@ const router = new VueRouter({
 //     next()
 //   }
 //   */
-
-<<<<<<< HEAD
-// })
-=======
-// //
->>>>>>> 2e82c295c904bc0fd4ab6c29f2b67ba3e9b075bd
 
 export default router
