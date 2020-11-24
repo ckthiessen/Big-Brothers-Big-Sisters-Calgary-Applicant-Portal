@@ -70,7 +70,7 @@ app.post("/api/users", async (req, res) => {
 app.delete("/api/users/:id", async (req,res) => {
   let id = req.params.id;
   console.log("Delete User by ID: /users/:" + id);
-  
+  let result = userRepository.deleteUser(id);
   res.json(id + " was deleted");
 });
 
