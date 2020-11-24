@@ -123,12 +123,7 @@ import {getUserByID} from "../services/apiServices"
         }),
 
         created(){
-          this.getUser(); //call when instance is new
-        },
-        methods: {
-          async getUser(){
-            //currently retrieving user with ID = 1
-            await getUserByID(1).then(response => {
+          getUserByID(1).then(response => {
               //get user information
               this.user = response;
               this.name = this.user.name;
@@ -152,7 +147,6 @@ import {getUserByID} from "../services/apiServices"
                 } 
               }
             });
-          }
         },
     }
 </script>
