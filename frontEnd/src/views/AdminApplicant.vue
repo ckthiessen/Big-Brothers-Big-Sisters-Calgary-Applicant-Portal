@@ -52,10 +52,12 @@ export default {
     'Footer': Footer
   },
 
-  created()   {
+  created(){
     this.id = this.$route.params.id;
+    console.log(this.id)
     //let defaults = require("../assets/defaults.json");
     getUserByID().then(res => {
+      console.log(res)
       this.applicant = res
       console.log(this.applicant)
       for (const task in res.tasks) {
