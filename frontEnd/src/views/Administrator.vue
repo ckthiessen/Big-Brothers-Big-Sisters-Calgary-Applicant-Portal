@@ -16,7 +16,11 @@
       :headers="headers"
       :items="users"
       :search="search"
+      item-key="id"
     >
+      <template v-slot:item.name="{item}">
+        <td @click="goToApplicantView(item.id)">{{item.name}}</td>
+      </template>
       <template v-slot:item.status="{ item }">
         <v-chip
           :color="getColor(item.status)"
@@ -27,9 +31,7 @@
       </template>
       <template v-slot:item.waitingApproval="{ item }">
         <v-icon :color="item.waitingApproval === 'mdi-check-circle' ? 'green': 'inprogress'">
-          {{
-            item.waitingApproval
-          }}
+          {{item.waitingApproval}}
         </v-icon>
 
       </template>
@@ -49,6 +51,8 @@
       'Header' : Header,
       'Footer' : Footer
     },
+    props: {
+    },
     data () {
       return {
         search: '',
@@ -56,7 +60,8 @@
           {
             text: 'Name',
             align: 'start',
-            sortable: false,
+            selectable: true,
+            sortable: true,
             value: 'name',
           },
           { text: 'Status', value: 'status'},
@@ -105,8 +110,17 @@
         }else{
           return 'inprogress'
         }
+      },
+      
+      goToApplicantView(applicantID) {
+        this.$router.push(`/admin/${applicantID}`)
       }
     },
 
   }
 </script>
+<style scoped>
+  ::v-deep tbody tr {
+    cursor: pointer;
+  }
+</style>
