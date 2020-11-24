@@ -1,4 +1,4 @@
-let taskDefaults = require("./tasks.json")
+let taskDefaults = require("../tasks.json")
 let dateFormat = require("dateformat");
 
 let requiresCalculatedDueDate = new Map([

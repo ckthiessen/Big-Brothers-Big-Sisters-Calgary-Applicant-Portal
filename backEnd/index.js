@@ -4,8 +4,8 @@ const path = require('path');
 const app = express();
 const bodyParser = require("body-parser");
 const port = 3080;
-const userRepository = require('./userRepository');
-const taskFactory = require('./taskFactory');
+const userRepository = require('./repositories/userRepository');
+const taskFactory = require('./tasks/taskFactory');
 
 let applicants = []
 
