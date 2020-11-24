@@ -27,7 +27,11 @@ module.exports = {
   },
   getUserById: async function(id) {
     console.log('getAllUsers');
-    const snapshot = await db.collection('users').where('id','==',id).get();
-    return snapshot.data();    
+    const found = db.collection('users').doc(id);
+    const doc = await found.get();
+    if (doc.exists) {
+      return doc.data();    
+    }
+    throw "Not Found";
   }
 };

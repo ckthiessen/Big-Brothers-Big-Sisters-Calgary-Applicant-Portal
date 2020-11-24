@@ -33,8 +33,9 @@ app.get('/api/users', async (req, res) => {
 app.get("/api/users/:id", async (req,res) => {
   let id = req.params.id;
   console.log("Get user by ID: /users/:" + id);
-  //todo: Search user by ID in firebase and return that
-  res.json(users[0]);
+  let found = await userRepository.getUserById(id);
+  console.log(found);
+  res.json(found);
 });
 
 // Create a user by id
@@ -69,7 +70,7 @@ app.post("/api/users", async (req, res) => {
 app.delete("/api/users/:id", async (req,res) => {
   let id = req.params.id;
   console.log("Delete User by ID: /users/:" + id);
-  //todo: find user in firebase and delete
+  
   res.json(id + " was deleted");
 });
 
