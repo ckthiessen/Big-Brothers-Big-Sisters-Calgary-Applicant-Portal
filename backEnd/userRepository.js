@@ -8,6 +8,7 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
+
 module.exports = {
   getAllUsers: async function () {
     console.log('getAllUsers');
@@ -18,6 +19,11 @@ module.exports = {
       users.push(doc.data());
     });
     return users;
+  },
+  createUser: async function(toCreate) {
+    console.log('createUser: ' + toCreate);
+    let created = await db.collection('users').doc(toCreate.id).set(toCreate);
+    console.log('created user: ' + created);
   },
   getUserById: async function(id) {
     console.log('getAllUsers');

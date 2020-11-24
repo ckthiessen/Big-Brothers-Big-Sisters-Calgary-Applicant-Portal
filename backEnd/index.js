@@ -5,34 +5,7 @@ const app = express();
 const bodyParser = require("body-parser");
 const port = 3080;
 const userRepository = require('./userRepository');
-
-
-
-// place holder for the data
-const users = [{
-  "id": 1,
-  "name": "Himika",
-  "email": "Test@Testing.com",
-  "notifications": [],
-  "isAdmin": false,
-  "isCommunityMentor": false,
-  "requiresHomeAssessment": false,
-  "tasks": [
-    {
-      "name": "BIG Profile",
-      "dueDate": "2020-05-09",
-      "isSubmitted": false,
-      "isApproved": true,
-      "upload": null,
-    },
-    {
-      "name": "BIG Chat",
-      "dueDate": "2020-05-09",
-      "isSubmitted": false,
-      "isApproved": false,
-    },
-  ]
-}];
+const taskFactory = require('./taskFactory');
 
 let applicants = []
 
@@ -43,7 +16,6 @@ app.use(cors());
 app.listen(port, () => {
   console.log(`Server listening on the port::${port}`);
 });
-
 
 //below are the API methods, matched with apiServices in the Front End
 //NOTE: requires firebase integration, uses "users" variable for testing
@@ -67,66 +39,28 @@ app.get("/api/users/:id", async (req,res) => {
 
 // Create a user by id
 // receives a json from the client
-app.post("/api/users", (req, res) => {
-  let newUser = req.body;
+app.post("/api/users", async (req, res) => {
+  let toCreate = req.body;
+  let tasks = taskFactory.getDefaultTasks();
+  let notificationDate = new Date().toLocaleDateString("en-CA", { timeZone: "America/Edmonton" });
 
-  let tasks = []
-  let taskDefaults = require("./tasks.json")
+  console.log('newUser:');
+  console.log(req.body);
 
-  let requiresCalculatedDueDate = new Map([
-    ["BIG Chat", 7],
-    ["BIG Supporters - Family/Partner", 30],
-    ["BIG Supporters - Personal", 30],
-    ["BIG Supporters - Employer", 30],
-    ["BIG Fundamentals", 60],
-    ["BIG Extras - Car Insurance", 60],
-    ["BIG Bio", 60]
-  ])
-
-  taskDefaults.forEach(task => {
-    let dueDate;
-    if (requiresCalculatedDueDate.has(task.name)) {
-      let daysUntilDue = requiresCalculatedDueDate.get(task.name);
-      let calculatedDueDate = new Date();
-      calculatedDueDate.setDate(calculatedDueDate.getDate() + daysUntilDue);
-      dueDate = calculatedDueDate.toLocaleDateString("en-CA", {
-        timeZone: "America/Edmonton"
-      });
-    } else {
-      dueDate = task.dueDate;
-    }
-    tasks.push({
-      name: task.name,
-      fileUpload: null,
-      dueDate: dueDate,
-      isApproved: task.isApproved,
-      isSubmitted: false,
-    })
-  });
-
-  let accountCreationDate = new Date();
-  let notificationDate = accountCreationDate.toLocaleDateString("en-CA", {
-    timeZone: "America/Edmonton"
-  });
-
-  //TODO: Add new user to firebase. Currently adds to server RAM
-  applicants.push({
-    id: newUser.id,
-    name: newUser.name,
-    email: newUser.email,
-    password: newUser.password, // TODO: Salt and hash the password or make this work with firebase authentication
-    notifications: [
+    // password: newUser.password, // TODO: Salt and hash the password or make this work with firebase authentication
+    toCreate.notifications = [
       {
         message: "Congratulations on making your account!",
         date: notificationDate
       }
-    ],
-    isAdmin: false,
-    isCommunityMentor: false,
-    requiresHomeAssessment: false,
-    tasks
-  })
-  res.json(newUser.id + " was created")
+    ];
+    toCreate.isAdmin = false;
+    toCreate.isCommunityMentor = false;
+    toCreate.requiresHomeAssessment =  false;
+    toCreate.tasks = tasks;
+  console.log(toCreate);
+  await userRepository.createUser(toCreate);
+  res.json(toCreate.id + " was created")
 });
 
 // Delete user by id
