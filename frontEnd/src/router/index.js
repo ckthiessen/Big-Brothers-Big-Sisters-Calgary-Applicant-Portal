@@ -1,3 +1,4 @@
+/* eslint-disable */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Signup from '../views/Signup.vue'
@@ -53,19 +54,17 @@ const router = new VueRouter({
   const isAuthenticated = firebase.auth().currentUser;
   const hasAdminPerms = firebase.auth().currentUser.isAdmin === true;
 
-  if(requiresAuth & !isAutheticated){
-    next("/signin");
-  }else{
-    next()
-  }
+//   if(requiresAuth & !isAutheticated){
+//     next("/signin");
+//   }else{
+//     next()
+//   }
 
-  if(requiresAdminPerm & !hasAdminPerm) {
-    next("/signin");
-  }else{
-    next()
-  }
-  */
-
-// //
+//   if(requiresAdminPerm & !hasAdminPerm) {
+//     next("/signin");
+//   }else{
+//     next()
+//   }
+//   */
 
 export default router
