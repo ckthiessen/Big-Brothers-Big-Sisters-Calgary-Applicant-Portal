@@ -1,39 +1,22 @@
 <template>
+  <v-app>
   <div id="app">
-    <h1> this is on the client </h1>
-    <HelloWorld></HelloWorld>
+    <router-view></router-view>
   </div>
+  </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-export default {
-  name: 'App',
-  data () {
-    return {
-      users : [],
-    }
-  },
-  methods : {
-    emitToApp (value) {
-      console.log(value);
-    }
-  },
 
-  components: {
-    HelloWorld
-  },
-  // mounted: {
-  //   emitToApp (value) {
-  //     this.users = value
-  //   }
-  // }
+export default {
+  name: 'Application',
 }
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css?family=Roboto+Condensed');
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Roboto', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -41,3 +24,4 @@ export default {
   margin-top: 60px;
 }
 </style>
+

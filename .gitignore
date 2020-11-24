@@ -1,3 +1,5 @@
+firebaseCredentials.json
+
 # Logs
 logs
 *.log
@@ -125,3 +127,6 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+# credentials
+*/credentials
