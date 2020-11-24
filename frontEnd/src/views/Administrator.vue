@@ -25,6 +25,14 @@
           {{ item.status }}
         </v-chip>
       </template>
+      <template v-slot:item.waitingApproval="{ item }">
+        <v-icon :color="item.waitingApproval === 'mdi-check-circle' ? 'green': 'inprogress'">
+          {{
+            item.waitingApproval
+          }}
+        </v-icon>
+
+      </template>
     </v-data-table>
     <Footer></Footer>
   </v-card>
@@ -52,7 +60,7 @@
             value: 'name',
           },
           { text: 'Status', value: 'status'},
-          { text: 'Last Completed Item', value: '' },
+          // { text: 'Last Completed Item', value: '' },
           { text: 'Needs Approval', value: 'waitingApproval' },
         ],
         users: []
@@ -68,37 +76,14 @@
           this.completionStatus();
         });
       },
-      /*
-      Calculates the completion status of the activities and updates the user object
-      these calculations are based on the user object with the following config
-        {
-          "id": 1,
-          "name": "Himika Dastidar",
-          "userType": "Admin",
-          "Email": "Test@Testing.com",
-          "Activities": [
-            {
-              "taskName": "Big Project",
-              "dueDate": "2020-05-09",
-              "isSubmitted": true,
-              "isApproved": true,
-            },
-            {
-              "taskName": "Big Thing",
-              "dueDate": "2020-05-09",
-              "isSubmitted": true,
-              "isApproved": true,
-            }
-          ]
-        }
-      */
       completionStatus() {
         for (let i = 0; i < this.users.length; i++) {
           let user = this.users[i];
           let completedCount = 0;
           let awaitingApproval = false;
-          for (let j = 0; j < user["Activities"].length; j++) {
-            let activity = user["Activities"][j]
+          
+          for (let j = 0; j < user["tasks"].length; j++) {
+            let activity = user["tasks"][j]
             if (activity["isApproved"] === true) {
               completedCount += 1
             }
@@ -106,8 +91,8 @@
               awaitingApproval = true;
             }
           }
-          user.status = completedCount === user["Activities"].length ? "Completed" : (completedCount + "/" + user["Activities"].length + " completed");
-          user.waitingApproval = awaitingApproval ? "true" : "false";       //REPLACE ME WITH ICONS LATER!
+          user.status = completedCount === user["tasks"].length ? "Completed" : (completedCount + "/" + user["tasks"].length + " completed");
+          user.waitingApproval = awaitingApproval ? "mdi-check-circle" : "mdi-alert";
         }
         return this.users;
       },
@@ -122,5 +107,6 @@
         }
       }
     },
+
   }
 </script>
