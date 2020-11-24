@@ -16,12 +16,21 @@ module.exports = {
     let created = await db.collection('users').doc(toCreate.id).set(toCreate);
     console.log('created user: ' + created);
   },
+
+  updateUser: async function(toUpdate) {
+    console.log('updating user: ');
+    console.log(toUpdate);
+    let updated = await db.collection('users').doc(toUpdate.id).update(toUpdate);
+    console.log('user: ' + toUpdate.id + ' updated.');
+  },
+
   deleteUser: async function(idToDelete) {
     console.log('delete User: ' + idToDelete);
     let success = await db.collection('users').doc(idToDelete).delete();
 
     console.log('Deleted user: ' + success);
   },
+
   //search functions
   getAllUsers: async function () {
     console.log('getAllUsers');
@@ -33,6 +42,7 @@ module.exports = {
     });
     return users;
   },
+
   getUserById: async function(id) {
     console.log('getAllUsers');
     const found = db.collection('users').doc(id);

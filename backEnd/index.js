@@ -44,10 +44,6 @@ app.post("/api/users", async (req, res) => {
   let toCreate = req.body;
   let tasks = taskFactory.getDefaultTasks();
   let notificationDate = new Date().toLocaleDateString("en-CA", { timeZone: "America/Edmonton" });
-
-  console.log('newUser:');
-  console.log(req.body);
-
     // password: newUser.password, // TODO: Salt and hash the password or make this work with firebase authentication
     toCreate.notifications = [
       {
@@ -59,9 +55,9 @@ app.post("/api/users", async (req, res) => {
     toCreate.isCommunityMentor = false;
     toCreate.requiresHomeAssessment =  false;
     toCreate.tasks = tasks;
-  console.log(toCreate);
+    
   await userRepository.createUser(toCreate);
-  res.json(toCreate.id + " was created")
+  res.json(toCreate.id)
 });
 
 // Delete user by id
@@ -77,9 +73,9 @@ app.delete("/api/users/:id", async (req,res) => {
 // Update user - this can be called by the admin OR user
 // receives a json from the client
 app.put("/api/users", async (req,res) => {
-  let updatedUser = req.body;
+  let toUpdate = req.body;
   console.log("Updating user");
-  console.log(updatedUser);
-  //todo: Update user in Firebase
-  res.json(updatedUser);
+  console.log(toUpdate);
+  let updated = await userRepository.updateUser(toUpdate);
+  res.json(updated);
 }); 
