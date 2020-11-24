@@ -4,26 +4,7 @@ const path = require('path');
 const app = express();
 const bodyParser = require("body-parser");
 const port = 3080;
-
-//firebase initalization
-const admin = require('firebase-admin');
-
-const serviceAccount = require('./credentials/firebaseCredentials.json');
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
-
-const db = admin.firestore();
-
-async function test(){
-  const snapshot = await db.collection('users').get();
-  snapshot.forEach((doc) => {
-    console.log(doc.id, '=>', doc.data());
-  });
-}
-test();
-
+const userRepository = require('./userRepository');
 
 
 // place holder for the data
@@ -59,15 +40,15 @@ app.listen(port, () => {
 
 // Get all users for searching. Client will filter the array that is returned
 // sends list of users up to the client
-app.get('/api/users', (req, res) => {
+app.get('/api/users', async (req, res) => {
   console.log("get all users")
-  //todo: Get users from Firebase
+  let users = await userRepository.getAllUsers();
   res.json(users);
 });
 
 // Gets a user by id - id is "path parameter"
 // sends a single user up to the client
-app.get("/api/users/:id", (req,res) => {
+app.get("/api/users/:id", async (req,res) => {
   let id = req.params.id;
   console.log("Get user by ID: /users/:" + id);
   //todo: Search user by ID in firebase and return that
@@ -86,7 +67,7 @@ app.post("/api/users", (req,res) => {
 
 // Delete user by id
 // receives a user ID to delete from client
-app.delete("/api/users/:id", (req,res) => {
+app.delete("/api/users/:id", async (req,res) => {
   let id = req.params.id;
   console.log("Delete User by ID: /users/:" + id);
   //todo: find user in firebase and delete
@@ -95,7 +76,7 @@ app.delete("/api/users/:id", (req,res) => {
 
 // Update user - this can be called by the admin OR user
 // receives a json from the client
-app.put("/api/users", (req,res) => {
+app.put("/api/users", async (req,res) => {
   let updatedUser = req.body;
   console.log("Updating user");
   console.log(updatedUser);
