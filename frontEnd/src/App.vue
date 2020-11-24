@@ -1,38 +1,15 @@
 <template>
   <v-app>
   <div id="app">
-    <!-- <Header></Header>
-    <h1> this is on the client </h1>
-    <HelloWorld></HelloWorld>
-    <Footer></Footer> -->
-    <router-view/>
+    <router-view></router-view>
   </div>
   </v-app>
 </template>
 
 <script>
-// import Header from './components/Header.vue'
-// import HelloWorld from './components/HelloWorld.vue'
-// import Footer from './components/Footer.vue'
 
 export default {
-  name: 'Applicant',
-  data () {
-    return {
-      users : [],
-    }
-  },
-  methods : {
-    emitToApp (value) {
-      console.log(value);
-    }
-  },
-
-  components: {
-    // Header,
-    // HelloWorld,
-    // Footer,
-  },
+  name: 'Application',
 }
 </script>
 

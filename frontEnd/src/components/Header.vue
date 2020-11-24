@@ -127,16 +127,29 @@ import {getUserByID} from "../services/apiServices"
         },
         methods: {
           async getUser(){
+            //currently retrieving user with ID = 1
             await getUserByID(1).then(response => {
+              //get user information
               this.user = response;
               this.name = this.user.name;
-              this.type = this.user.userType;
-              this.email = this.user.Email;
-              for (let i = 0; i < this.user["Notifications"].length; i++) {
-                let notification = this.user["Notifications"][i];
-                console.log(notification.taskName);
-                this.notifications.push("Admin has approved " + notification.taskName);
-                console.log(this.notifications);
+              if (this.user.isAdmin === true) {
+                this.type = "Administrator";
+              } else if (this.user.isCommunityMentor === true) {
+                this.type = "Community Mentor";
+              } else {
+                this.type = "Education Mentor";
+              }
+              this.email = this.user.email;
+              //get notifications for user
+              if (this.user["notifications"].length === 0) {
+                this.notifications.push("No notifications");
+              } else {
+                for (let i = 0; i < this.user["notifications"].length; i++) {
+                  let notification = this.user["notifications"][i];
+                  console.log(notification);
+                  this.notifications.push(notification.message + "   " + notification.date);
+                  console.log(this.notifications);
+                } 
               }
             });
           }

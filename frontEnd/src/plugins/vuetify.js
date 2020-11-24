@@ -1,3 +1,4 @@
+import '@mdi/font/css/materialdesignicons.css';
 import Vue from 'vue';
 import Vuetify from 'vuetify/lib';
 
@@ -15,7 +16,7 @@ export default new Vuetify({
         accent: "2DCCD3",             //TURQUIOSE FOR BUTTON
         complete: "2DCCD3",           //turquoise for complete tasks
         inprogress: "FFB81C",         //yellow for inprogress      
-        needsattention: "D32F2F",     //red for needs attention
+        needsattention: "F44336",     //red for needs attention
       }
     }
   }

@@ -12,10 +12,14 @@ export async function getUserByID(id) {
 }
 //client side function for creating a user - pass in the user json object
 export async function createUser(user){
+  console.log(user);
   const response = await fetch('/api/users',
     {
       method: 'POST',
-      body: JSON.stringify(user)
+      body: JSON.stringify(user),
+      headers: {
+        'Content-Type': 'application/json'
+      }
     }
   );
   return await response.json();
