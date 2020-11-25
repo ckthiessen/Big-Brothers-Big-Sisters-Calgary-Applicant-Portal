@@ -22,23 +22,40 @@ app.listen(port, () => {
 // Get all users for searching. Client will filter the array that is returned
 // sends list of users up to the client
 app.get('/api/users', async (req, res) => {
-  console.log("get all users")
-  let users = await userRepository.getAllUsers();
-  res.json(users);
+  try{
+    console.log("get all users")
+    let users = await userRepository.getAllUsers();
+    res.json(users);
+  }
+  catch(error) {
+    console.log('error' + error);
+    res.status(400);
+    res.json(error);
+  }
 });
 
 // Gets a user by id - id is "path parameter"
 // sends a single user up to the client
 app.get("/api/users/:id", async (req,res) => {
   let id = req.params.id;
-  console.log("Get user by ID: /users/:" + id);
-  let found = await userRepository.getUserById(id);
-  console.log(found);
-  res.json(found);
+  try {
+    userValidator.validateID(id);
+
+    console.log("Get user by ID: /users/:" + id);
+    let found = await userRepository.getUserById(id);
+    console.log(found);
+    res.json(found);
+  }
+  catch(error) {
+    console.log('error' + error);
+    res.status(400);
+    res.json(error);
+  }
 });
 
 // Create a user by id
 // receives a json from the client
+//assumes that the json received includes: email, Name, Password and ID
 app.post("/api/users", async (req, res) => {
   let toCreate = req.body;
 

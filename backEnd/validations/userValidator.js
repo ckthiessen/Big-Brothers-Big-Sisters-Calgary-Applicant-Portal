@@ -30,5 +30,11 @@ module.exports = {
                             .RuleFor(id).IsNotNullOrWhitespace().ErrorMessage("Id cannot be empty");
 
         checkValidation(validation);
+    },
+    validateID: function(id) {
+        console.log('validating user id');
+        let validation = new FluentValidation()
+                            .config(config)
+                            .RuleFor(id).IsNotNullOrWhitespace().ErrorMessage("The Id cannot be empty")
     }
 }

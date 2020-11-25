@@ -1,6 +1,8 @@
+//this class builds and generates the default tasks when creating a user
 let taskDefaults = require("../tasks.json")
 let dateFormat = require("dateformat");
 
+//these are the tasks that require calculated due dates
 let requiresCalculatedDueDate = new Map([
   ["BIG Chat", 7],
   ["BIG Supporters - Family/Partner", 30],
@@ -11,6 +13,7 @@ let requiresCalculatedDueDate = new Map([
   ["BIG Bio", 60]
 ])
 
+//date format
 dateFormat.i18n = {
   dayNames: [
       'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat',
@@ -25,6 +28,7 @@ dateFormat.i18n = {
   ]
 };
 
+//module exported 
 module.exports = {
     getDefaultTasks: () => {
         let tasks = [];
