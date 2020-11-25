@@ -28,11 +28,14 @@
         <v-btn
             class="float-right mt-5"
             :disabled="item.value == 'Incomplete'"
-            @click="changeStatus(task.value, index)"
+            @click="changeStatus(item.status, tasks.indexOf(item))"
         >
           {{buttonTitle(item.status)}}
         </v-btn>
       </td>
+    </template>
+    <template v-slot:item.upload="{ item }">
+      <v-icon color="accent"> {{item.upload ? downloadIcons.upload : downloadIcons.noUpload}}</v-icon>
     </template>
   </v-data-table>
   <Footer></Footer>
@@ -55,11 +58,10 @@ export default {
   created(){
     this.id = this.$route.params.id;
     console.log(this.id)
-    //let defaults = require("../assets/defaults.json");
-    getUserByID().then(res => {
-      console.log(res)
+    getUserByID(this.id).then(res => {
+      //console.log(res)
       this.applicant = res
-      console.log(this.applicant)
+      //console.log(this.applicant)
       for (const task in res.tasks) {
         if(res.tasks[task].isApproved && res.tasks[task].isApproved){
           res.tasks[task].status = "Complete";
@@ -68,7 +70,6 @@ export default {
         }else if(!res.tasks[task].isApproved && !res.tasks[task].isApproved){
           res.tasks[task].status = "Incomplete"
         }
-        //res.tasks[task].upload = defaults[res.tasks[task].name].upload;
         this.tasks.push(res.tasks[task])
       }
     })
@@ -81,6 +82,7 @@ export default {
         id: '',
         applicant: [],
         tasks: [],
+        selectedIndex: '',
         status: {
           Complete: {
             color: "complete",
@@ -126,8 +128,6 @@ export default {
   methods: {
       async updateUser(){
         await updateUser(this.id).then(response => {
-          console.log("Current User:");
-          console.log(response);
           this.currentApplicant = response;
           this.$emit('emitToApp', response);
       });
@@ -139,10 +139,9 @@ export default {
     
     changeStatus(status, index) {
       let selectedTask = this.tasks[index];
+      console.log(selectedTask)
       if (selectedTask.status === "Requires Approval") {
-        selectedTask.status = "InProgress";
-      } else if (selectedTask.status === "InProgress") {
-        selectedTask.status = "Incomplete";
+        selectedTask.status = "Complete";
       }
     },
   }
