@@ -19,6 +19,7 @@ module.exports = {
                             .RuleFor(user.id).IsNotNullOrWhitespace().ErrorMessage("Id cannot be empty")
                             .RuleFor(user.name).IsNotNullOrWhitespace().ErrorMessage("Name cannot be empty")
                             .RuleFor(user.email).IsNotNullOrWhitespace().ErrorMessage("Email cannot be empty")
+                            .RuleFor(user.password).IsNotNullOrWhitespace().ErrorMessage("You must have a password")
                             .errors;
 
         checkValidation(validation);
@@ -31,10 +32,11 @@ module.exports = {
 
         checkValidation(validation);
     },
-    validateID: function(id) {
+    validateId: function(id) {
         console.log('validating user id');
         let validation = new FluentValidation()
-                            .config(config)
-                            .RuleFor(id).IsNotNullOrWhitespace().ErrorMessage("The Id cannot be empty")
+                            .Config(config)
+                            .RuleFor(id).IsNotNullOrWhitespace().ErrorMessage("The Id cannot be empty");
+        checkValidation(validation);
     }
 }

@@ -39,7 +39,7 @@ app.get('/api/users', async (req, res) => {
 app.get("/api/users/:id", async (req,res) => {
   let id = req.params.id;
   try {
-    userValidator.validateID(id);
+    userValidator.validateId(id);
 
     console.log("Get user by ID: /users/:" + id);
     let found = await userRepository.getUserById(id);
