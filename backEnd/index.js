@@ -66,7 +66,7 @@ app.get("/api/users/:id", (req, res) => {
 // Create a user by id
 // receives a json from the client
 app.post("/api/users", (req, res) => {
-  let newUser = req.body;
+  let newUser = req.body.user;
 
   let tasks = []
   let taskDefaults = require("./tasks.json")
@@ -124,6 +124,14 @@ app.post("/api/users", (req, res) => {
     requiresHomeAssessment: false,
     tasks
   })
+
+  console.log("New user created: ")
+  console.log(Object.entries(applicants[applicants.length-1]))
+
+  console.log("Tasks: ")
+  tasks.forEach(task => console.log(Object.entries(task)));
+
+
   res.json(newUser.id + " was created")
 });
 
@@ -139,7 +147,7 @@ app.delete("/api/users/:id", (req, res) => {
 // Update user task - this can be called by the admin OR user
 // receives a json from the client
 app.put("/api/users", (req, res) => {
-  let updatedUser = req.body;
+  let updatedUser = req.body.user;
   console.log("Updating user");
   console.log(updatedUser);
   //todo: Update user in Firebase
