@@ -5,24 +5,21 @@
     <v-data-table
     :headers="Headers"
     :items="tasks"
-    :single-expand="singleExpand"
-    :expanded.sync="expanded"
-    item-key="name"
-    show-expand
+    item-key="index"
     class="elevation-1"
   >
     <template v-slot:top>
       <v-toolbar flat>
         <v-toolbar-title>{{applicant.name}}</v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-switch
+        <!-- <v-switch
           v-model="singleExpand"
           label="Single expand"
           class="mt-2"
-        ></v-switch>
+        ></v-switch> -->
       </v-toolbar>
     </template>
-    <template v-slot:expanded-item="{ headers, item }">
+    <!-- <template v-slot:expanded-item="{ headers, item }">
       <td :colspan="headers.length">
         More info about {{ item.name }}
         <v-btn
@@ -33,9 +30,22 @@
           {{buttonTitle(item.status)}}
         </v-btn>
       </td>
-    </template>
+    </template> -->
     <template v-slot:item.upload="{ item }">
       <v-icon color="accent"> {{item.upload ? downloadIcons.upload : downloadIcons.noUpload}}</v-icon>
+    </template>
+    <template v-slot:item.buttonTitle="{item}">
+      <td>
+      <v-btn
+        rounded
+        color="accent"
+        dark
+        :disabled="item.value == 'Incomplete'"
+        @click="changeStatus(item.status, tasks.indexOf(item))"
+        >
+        {{item.buttonTitle}}
+      </v-btn>
+      </td>
     </template>
   </v-data-table>
   <Footer></Footer>
@@ -57,24 +67,28 @@ export default {
 
   created(){
     this.id = this.$route.params.id;
-    //console.log(this.id)
     getUserByID(this.id).then(res => {
-      //console.log(res)
-      this.applicant = res.data
-      //console.log(this.applicant)
-      let servertasks = res.data.tasks
-      // console.log(servertasks)
-      for (const task in servertasks) {
-        if(servertasks[task].isApproved && servertasks[task].isApproved){
-          servertasks[task].status = "Complete";
-        }else if(servertasks[task].isSubmitted && !servertasks[task].isApproved){
-          servertasks[task].status = "Requires Approval"
-        }else if(!servertasks[task].isApproved && !servertasks[task].isApproved){
-          servertasks[task].status = "Incomplete"
+        this.applicant = res.data
+        let servertasks = res.data.tasks
+        for (const task in servertasks) {
+          if(servertasks[task].isApproved && servertasks[task].isApproved){
+            servertasks[task].status = "Complete";
+            servertasks[task].buttonTitle = "Mark Incomplete"
+          }else if(servertasks[task].isSubmitted && !servertasks[task].isApproved){
+            servertasks[task].status = "Requires Approval"
+            servertasks[task].buttonTitle = "Mark Complete"
+          }else if(!servertasks[task].isApproved && !servertasks[task].isApproved){
+            servertasks[task].status = "Incomplete"
+            servertasks[task].buttonTitle = "Mark Complete"
+
+          }
+          this.tasks.push(servertasks[task])
         }
-        this.tasks.push(servertasks[task])
-      }
-    });
+      });
+    window.onload = () => {
+      setInterval(function() {
+      }, 500)
+    };
   },
 
   data(){
@@ -123,30 +137,41 @@ export default {
             text: 'Download',
             align: 'start',
             value: 'upload',
+          },
+          {
+            text: 'Button',
+            align: 'middle',
+            value: 'buttonTitle'
           }
         ],
       }
   },
+
   methods: {
-    async updateUser(){
-      await updateUser(this.id).then(response => {
-        this.applicant = response;
-        this.$emit('emitToApp', response);
+    async updateUser(applicant){
+      await updateUser(applicant).then(response => {
+        this.applicant = response.data;
+        console.log(this.applicant)
+        this.$emit('emitToApp', response.data);
     });
     },
     
-    buttonTitle(status) {
-      return status === "Requires Approval" ? "Mark Complete" : "Awaiting Completion"
-    },
-    
-    changeStatus(status, index) {
+    changeStatus: function(status, index) {
       let selectedTask = this.tasks[index];
-      if (selectedTask.status === "Requires Approval") {
+      console.log(index)
+      if (selectedTask.status === "Requires Approval" || selectedTask.status === "Incomplete") {
         selectedTask.status = "Complete";
+        selectedTask.buttonTitle = "Mark Incomplete";
+        this.applicant.tasks[index].isSubmitted = true;
+        this.applicant.tasks[index].isApproved = true;
       }else if (selectedTask.status === "Complete") {
-        selectedTask.status === "Incomplete";
+        selectedTask.status = "Incomplete";
+        selectedTask.buttonTitle = "Mark Complete";
+        this.applicant.tasks[index].isSubmitted = false;
+        this.applicant.tasks[index].isApproved = false;
       }
-    },
+      this.updateUser(this.applicant);
+    }
   }
 }
 </script>
