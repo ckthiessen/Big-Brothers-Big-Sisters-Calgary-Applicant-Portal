@@ -6,7 +6,7 @@ const bodyParser = require("body-parser");
 const port = 3080;
 
 
-// place holder for the data
+// // place holder for the data
 const users = [{
   "id": 1,
   "name": "Himika Dastidar",
