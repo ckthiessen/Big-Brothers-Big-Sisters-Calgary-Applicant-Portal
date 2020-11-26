@@ -34,7 +34,6 @@
         </v-btn>
       </td>
     </template>
-    <template v-slot:item.status="{ item }">{{item.status}}</template>
     <template v-slot:item.upload="{ item }">
       <v-icon color="accent"> {{item.upload ? downloadIcons.upload : downloadIcons.noUpload}}</v-icon>
     </template>
@@ -60,7 +59,9 @@ export default {
     this.id = this.$route.params.id;
     //console.log(this.id)
     getUserByID(this.id).then(res => {
+      //console.log(res)
       this.applicant = res
+      //console.log(this.applicant)
       for (const task in res.tasks) {
         if(res.tasks[task].isApproved && res.tasks[task].isApproved){
           res.tasks[task].status = "Complete";
@@ -81,6 +82,7 @@ export default {
         id: '',
         applicant: [],
         tasks: [],
+        selectedIndex: '',
         status: {
           Complete: {
             color: "complete",
@@ -132,7 +134,7 @@ export default {
     },
     
     buttonTitle(status) {
-      return (status === "Requires Approval" || status === "Incomplete") ? "Mark Complete" : "Mark Incomplete"
+      return status === "Requires Approval" ? "Mark Complete" : "Awaiting Completion"
     },
     
     changeStatus(status, index) {
