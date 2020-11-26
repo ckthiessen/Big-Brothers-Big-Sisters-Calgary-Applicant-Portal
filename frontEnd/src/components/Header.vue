@@ -122,7 +122,8 @@ import {getUserByID} from "../services/apiServices"
             name: "",
             type: "",
             user: {},
-            email: ""
+            email: "",
+            lastNotification: "",
         }),
 
         created(){
@@ -144,12 +145,37 @@ import {getUserByID} from "../services/apiServices"
               } else {
                 for (let i = 0; i < this.user["notifications"].length(); i++) {
                   let notification = this.user["notifications"][i];
-                  console.log(notification);
                   this.notifications.push(notification.message + "   " + notification.date);
-                  console.log(this.notifications);
+                  this.lastNotification = notification;
                 } 
               }
             });
+            //call pullNotifications() every 3 seconds
+            setInterval(function () {
+              this.pullNotifications();
+            }.bind(this), 3000); 
+        },
+        methods: {
+          pullNotifications() {
+            getUserByID(1).then(response => {
+                this.user = response.data;
+                let length = this.user["notifications"].length;
+                //if there are new notifications
+                if (length > 0 && this.user["notifications"][length - 1] !== this.lastNotification) {
+                  //display new notification
+                  let notification = this.user["notifications"][length - 1];
+                  this.notifications.push(notification.message + "   " + notification.date);
+
+                  //remove "No notifications"
+                  if (this.notifications[0] === "No notifications") {
+                    this.notifications.shift();
+                  }
+                  //set the last notification
+                  this.lastNotification = notification;
+                }
+                console.log(this.notifications);
+            })
+          }
         },
     }
 </script>
