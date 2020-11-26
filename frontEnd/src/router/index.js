@@ -18,11 +18,11 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: '/',
-    component: Signup
+    component: Signin
   },
   {
-    path: '/signin',
-    component: Signin
+    path: '/signup',
+    component: Signup
   },
   {
     path: '/forgot',

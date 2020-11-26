@@ -119,13 +119,16 @@ import {getUserByID} from "../services/apiServices"
         data: () => ({
             menu: false,
             notifications:[],
-            name: '',
+            name: "",
+            type: "",
+            user: {},
+            email: ""
         }),
 
         created(){
           getUserByID(1).then(response => {
               //get user information
-              this.user = response;
+              this.user = response.data;
               this.name = this.user.name;
               if (this.user.isAdmin === true) {
                 this.type = "Administrator";
@@ -139,7 +142,7 @@ import {getUserByID} from "../services/apiServices"
               if (this.user["notifications"].length === 0) {
                 this.notifications.push("No notifications");
               } else {
-                for (let i = 0; i < this.user["notifications"].length; i++) {
+                for (let i = 0; i < this.user["notifications"].length(); i++) {
                   let notification = this.user["notifications"][i];
                   console.log(notification);
                   this.notifications.push(notification.message + "   " + notification.date);

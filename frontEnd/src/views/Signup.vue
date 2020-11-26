@@ -79,7 +79,7 @@
 
 <script>
 import {v4 as uuidv4} from 'uuid';
-import {createUser} from "../services/apiServices";
+// import {createUser} from "../services/apiServices";
 
 export default {
   name: 'Signup',
@@ -120,7 +120,13 @@ export default {
           'email' : this.email,
           'password' : this.password,
         };
-        createUser(userInfo);
+        console.log(userInfo)
+        // createUser(userInfo)
+        // .then(res => {
+        //   if(res.statusCode === 200) {
+            
+        //   }
+        // });
       },
     }
 }
