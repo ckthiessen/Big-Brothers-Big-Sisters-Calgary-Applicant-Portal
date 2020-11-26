@@ -60,17 +60,19 @@ export default {
     //console.log(this.id)
     getUserByID(this.id).then(res => {
       //console.log(res)
-      this.applicant = res
+      this.applicant = res.data
       //console.log(this.applicant)
-      for (const task in res.tasks) {
-        if(res.tasks[task].isApproved && res.tasks[task].isApproved){
-          res.tasks[task].status = "Complete";
-        }else if(res.tasks[task].isSubmitted && !res.tasks[task].isApproved){
-          res.tasks[task].status = "Requires Approval"
-        }else if(!res.tasks[task].isApproved && !res.tasks[task].isApproved){
-          res.tasks[task].status = "Incomplete"
+      let servertasks = res.data.tasks
+      // console.log(servertasks)
+      for (const task in servertasks) {
+        if(servertasks[task].isApproved && servertasks[task].isApproved){
+          servertasks[task].status = "Complete";
+        }else if(servertasks[task].isSubmitted && !servertasks[task].isApproved){
+          servertasks[task].status = "Requires Approval"
+        }else if(!servertasks[task].isApproved && !servertasks[task].isApproved){
+          servertasks[task].status = "Incomplete"
         }
-        this.tasks.push(res.tasks[task])
+        this.tasks.push(servertasks[task])
       }
     });
   },
