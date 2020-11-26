@@ -16,9 +16,6 @@ app.listen(port, () => {
   console.log(`Server listening on the port::${port}`);
 });
 
-//below are the API methods, matched with apiServices in the Front End
-//NOTE: requires firebase integration, uses "users" variable for testing
-
 // Get all users for searching. Client will filter the array that is returned
 // sends list of users up to the client
 app.get('/api/users', async (req, res) => {
@@ -33,6 +30,28 @@ app.get('/api/users', async (req, res) => {
     res.json(error);
   }
 });
+
+//Gets a user by Email - used for logging in
+//sends a single user up to client
+//if a 401 is thrown, then the user entered the incorrect password
+
+app.post('/api/users/login', async(req,res) =>{
+  let body = req.body;
+  try {
+    userValidator.validateLogin(body);
+
+    console.log("get user by email: /api/users/login");
+    let found = await userRepository.getUserbyEmail(body);
+    console.log(found);
+    res.json(found);
+  }
+  catch(error){
+    console.log('error' + error);
+    res.status(401);
+    res.json(error);
+  }
+});
+
 
 // Gets a user by id - id is "path parameter"
 // sends a single user up to the client
@@ -118,4 +137,5 @@ app.put("/api/users", async (req,res) => {
     res.status(400);
     res.json(error);
   }
-}); 
+});
+

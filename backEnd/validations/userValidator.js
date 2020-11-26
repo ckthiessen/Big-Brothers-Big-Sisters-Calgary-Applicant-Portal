@@ -38,5 +38,14 @@ module.exports = {
                             .Config(config)
                             .RuleFor(id).IsNotNullOrWhitespace().ErrorMessage("The Id cannot be empty");
         checkValidation(validation);
+    },
+    validateLogin: function(body) {
+        console.log("validating user email");
+        let validation = new FluentValidation()
+                            .Config(config)
+                            .RuleFor(body.email).IsNotNullOrWhitespace().ErrorMessage("The email cannot be empty")
+                            //ADD A RULE TO CHECK PROPER EMAIL SYNTAX (xxx@xxx.xx)
+                            .RuleFor(body.password).IsNotNullOrWhitespace().ErrorMessage("The password cannot be empty");
+        checkValidation(validation);
     }
 }

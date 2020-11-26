@@ -43,12 +43,34 @@ module.exports = {
   },
 
   getUserById: async function(id) {
-    console.log('getAllUsers');
+    console.log('getuserbyID');
     const found = db.collection('users').doc(id);
     const doc = await found.get();
     if (doc.exists) {
       return doc.data();    
     }
     throw "Not Found";
+  },
+
+  getUserbyEmail: async function(body){
+    console.log('getuserbyEmail');
+    console.log(body);
+    const found = db.collection('users').where('email', '==', body.email);
+    const doc = await found.get();
+    if(doc.empty){
+      console.log("nothing found")
+      throw "Not Found"
+    }
+
+    let user = undefined;
+    doc.forEach(each => {
+      console.log(each.id, "=>", each.data());
+      user = each.data();
+    })
+    //checks if the password matches
+    if(user.password !== body.password){
+      throw "Invalid Password"
+    }
+    return user;
   }
 };
