@@ -12,25 +12,8 @@
       <v-toolbar flat>
         <v-toolbar-title>{{applicant.name}}</v-toolbar-title>
         <v-spacer></v-spacer>
-        <!-- <v-switch
-          v-model="singleExpand"
-          label="Single expand"
-          class="mt-2"
-        ></v-switch> -->
       </v-toolbar>
     </template>
-    <!-- <template v-slot:expanded-item="{ headers, item }">
-      <td :colspan="headers.length">
-        More info about {{ item.name }}
-        <v-btn
-            class="float-right mt-5"
-            :disabled="item.value == 'Incomplete'"
-            @click="changeStatus(item.status, tasks.indexOf(item))"
-        >
-          {{buttonTitle(item.status)}}
-        </v-btn>
-      </td>
-    </template> -->
     <template v-slot:item.upload="{ item }">
       <v-icon color="accent"> {{item.upload ? downloadIcons.upload : downloadIcons.noUpload}}</v-icon>
     </template>
@@ -85,10 +68,6 @@ export default {
           this.tasks.push(servertasks[task])
         }
       });
-    window.onload = () => {
-      setInterval(function() {
-      }, 500)
-    };
   },
 
   data(){
@@ -150,15 +129,13 @@ export default {
   methods: {
     async updateUser(applicant){
       await updateUser(applicant).then(response => {
-        this.applicant = response.data;
-        console.log(this.applicant)
-        this.$emit('emitToApp', response.data);
-    });
+          this.applicant = response.data;
+          this.$emit('emitToApp', response.data);
+      });
     },
     
     changeStatus: function(status, index) {
       let selectedTask = this.tasks[index];
-      console.log(index)
       if (selectedTask.status === "Requires Approval" || selectedTask.status === "Incomplete") {
         selectedTask.status = "Complete";
         selectedTask.buttonTitle = "Mark Incomplete";
