@@ -58,7 +58,7 @@ export default {
 
   created(){
     this.id = this.$route.params.id;
-    console.log(this.id)
+    //console.log(this.id)
     getUserByID(this.id).then(res => {
       this.applicant = res
       for (const task in res.tasks) {
@@ -71,7 +71,7 @@ export default {
         }
         this.tasks.push(res.tasks[task])
       }
-    })
+    });
   },
 
   data(){
@@ -124,11 +124,11 @@ export default {
       }
   },
   methods: {
-      async updateUser(){
-        await updateUser(this.id).then(response => {
-          this.currentApplicant = response;
-          this.$emit('emitToApp', response);
-      });
+    async updateUser(){
+      await updateUser(this.id).then(response => {
+        this.applicant = response;
+        this.$emit('emitToApp', response);
+    });
     },
     
     buttonTitle(status) {
@@ -137,9 +137,10 @@ export default {
     
     changeStatus(status, index) {
       let selectedTask = this.tasks[index];
-      console.log(selectedTask)
       if (selectedTask.status === "Requires Approval") {
         selectedTask.status = "Complete";
+      }else if (selectedTask.status === "Complete") {
+        selectedTask.status === "Incomplete";
       }
     },
   }
