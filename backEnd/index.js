@@ -26,7 +26,7 @@ app.get('/api/users', async (req, res) => {
   }
   catch(error) {
     console.log('error' + error);
-    res.status(400);
+    res.status(404); //not found error
     res.json(error);
   }
 });
@@ -47,7 +47,7 @@ app.post('/api/users/login', async(req,res) =>{
   }
   catch(error){
     console.log('error' + error);
-    res.status(401);
+    res.status(401); //unauthorized
     res.json(error);
   }
 });
@@ -67,7 +67,7 @@ app.get("/api/users/:id", async (req,res) => {
   }
   catch(error) {
     console.log('error' + error);
-    res.status(400);
+    res.status(404); //user not found
     res.json(error);
   }
 });
