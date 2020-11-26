@@ -41,7 +41,7 @@
             <v-divider></v-divider>
             <v-list>
               <v-list-item align="left"
-                v-for="(notification, index) in notifications"
+                v-for="(notification, index) in notifications.slice().reverse()"
                 :key="index"
               >
                 <v-list-item-subtitle>{{ notification }}</v-list-item-subtitle>
@@ -123,7 +123,7 @@ import {getUserByID} from "../services/apiServices"
             type: "",
             user: {},
             email: "",
-            lastNotification: "",
+            lastNotification: {},
         }),
 
         created(){
@@ -142,11 +142,12 @@ import {getUserByID} from "../services/apiServices"
               //get notifications for user
               if (this.user["notifications"].length === 0) {
                 this.notifications.push("No notifications");
+                this.lastNotification = "No notifications";
               } else {
-                for (let i = 0; i < this.user["notifications"].length(); i++) {
+                for (let i = 0; i < this.user["notifications"].length; i++) {
                   let notification = this.user["notifications"][i];
                   this.notifications.push(notification.message + "   " + notification.date);
-                  this.lastNotification = notification;
+                  this.lastNotification = notification.message + "   " + notification.date;
                 } 
               }
             });
@@ -160,20 +161,23 @@ import {getUserByID} from "../services/apiServices"
             getUserByID(1).then(response => {
                 this.user = response.data;
                 let length = this.user["notifications"].length;
-                //if there are new notifications
-                if (length > 0 && this.user["notifications"][length - 1] !== this.lastNotification) {
-                  //display new notification
+                if (length > 0) {
+                  //check the last notification
                   let notification = this.user["notifications"][length - 1];
-                  this.notifications.push(notification.message + "   " + notification.date);
+                  //if last notification is not new
+                  if (this.lastNotification === notification.message + "   " + notification.date) {
+                    return;
+                  }
 
+                  //display new notification
+                  this.notifications.push(notification.message + "   " + notification.date);
                   //remove "No notifications"
                   if (this.notifications[0] === "No notifications") {
                     this.notifications.shift();
                   }
-                  //set the last notification
-                  this.lastNotification = notification;
+                  //set the last notification again
+                  this.lastNotification = notification.message + "   " + notification.date;
                 }
-                console.log(this.notifications);
             })
           }
         },
