@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <Header></Header>
+    <!-- <Header></Header> -->
     <v-card-title>
       Applicants
       <v-spacer></v-spacer>
@@ -16,7 +16,11 @@
       :headers="headers"
       :items="users"
       :search="search"
+      item-key="id"
     >
+      <template v-slot:item.name="{item}">
+        <td @click="goToApplicantView(item.id)">{{item.name}}</td>
+      </template>
       <template v-slot:item.status="{ item }">
         <v-chip
           :color="getColor(item.status)"
@@ -27,9 +31,7 @@
       </template>
       <template v-slot:item.waitingApproval="{ item }">
         <v-icon :color="item.waitingApproval === 'mdi-check-circle' ? 'green': 'inprogress'">
-          {{
-            item.waitingApproval
-          }}
+          {{item.waitingApproval}}
         </v-icon>
 
       </template>
@@ -40,14 +42,16 @@
 
 <script>
   import {getAllUsers} from "../services/apiServices";
-  import Header from "../components/Header.vue";
+  //import Header from "../components/Header.vue";
   import Footer from "../components/Footer.vue";
 
   export default {
     name: 'Administrator',
     components: {
-      'Header' : Header,
+      //'Header' : Header,
       'Footer' : Footer
+    },
+    props: {
     },
     data () {
       return {
@@ -56,7 +60,8 @@
           {
             text: 'Name',
             align: 'start',
-            sortable: false,
+            selectable: true,
+            sortable: true,
             value: 'name',
           },
           { text: 'Status', value: 'status'},
@@ -72,7 +77,8 @@
     methods: {
       async getUserList(){
         await getAllUsers().then(response => {
-          this.users = response;
+          console.log(response.data)
+          this.users = response.data;
           this.completionStatus();
         });
       },
@@ -105,8 +111,17 @@
         }else{
           return 'inprogress'
         }
+      },
+      
+      goToApplicantView(applicantID) {
+        this.$router.push(`/admin/${applicantID}`)
       }
     },
 
   }
 </script>
+<style scoped>
+  ::v-deep tbody tr {
+    cursor: pointer;
+  }
+</style>

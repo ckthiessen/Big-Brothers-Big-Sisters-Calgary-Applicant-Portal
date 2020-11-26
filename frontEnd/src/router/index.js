@@ -6,7 +6,7 @@ import Signin from '../views/Signin.vue'
 import Forgot from '../views/Forgot.vue'
 import Administrator from '../views/Administrator.vue'
 import ApplicantPortal from '../views/ApplicantPortal.vue'
-//import AdminApplicant from '../views/AdminApplicant.vue'
+import AdminApplicant from '../views/AdminApplicant.vue'
 
 //import firebase
 /*
@@ -36,6 +36,11 @@ const routes = [
   {
     path: '/applicant/',
     component: ApplicantPortal
+  },
+  {
+    path: '/admin/:id',
+    component: AdminApplicant,
+    props: (route) => ({id: route.params.id})
   }
 ]
 

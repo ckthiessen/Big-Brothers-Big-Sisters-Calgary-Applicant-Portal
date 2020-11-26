@@ -6,10 +6,10 @@ const bodyParser = require("body-parser");
 const port = 3080;
 
 
-// place holder for the data
+// // place holder for the data
 const users = [{
   "id": 1,
-  "name": "Himika",
+  "name": "Himika Dastidar",
   "email": "Test@Testing.com",
   "notifications": [],
   "isAdmin": false,
@@ -19,8 +19,8 @@ const users = [{
     {
       "name": "BIG Profile",
       "dueDate": "2020-05-09",
-      "isSubmitted": false,
-      "isApproved": true,
+      "isSubmitted": true,
+      "isApproved": false,
       "upload": null,
     },
     {
@@ -29,8 +29,70 @@ const users = [{
       "isSubmitted": false,
       "isApproved": false,
     },
+    {
+      "name": "BIG Supporters - Family",
+      "dueDate": "2020-05-09",
+      "isSubmitted": false,
+      "isApproved": false,
+      "upload": true
+    },
+    {
+      "name": "BIG Supporters - Friend",
+      "dueDate": "2020-05-09",
+      "isSubmitted": true,
+      "isApproved": true,
+    },
+    {
+      "name": "BIG Supporters - Mentor",
+      "dueDate": "2020-05-09",
+      "isSubmitted": false,
+      "isApproved": false,
+    },
   ]
-}];
+},
+{
+  "id": 2,
+  "name": "Cole Theissen",
+  "email": "Test2@Testing.com",
+  "notifications": [],
+  "isAdmin": false,
+  "isCommunityMentor": false,
+  "requiresHomeAssessment": false,
+  "tasks": [
+    {
+      "name": "BIG Profile",
+      "dueDate": "2020-05-09",
+      "isSubmitted": true,
+      "isApproved": true,
+      "upload": null,
+    },
+    {
+      "name": "BIG Chat",
+      "dueDate": "2020-05-09",
+      "isSubmitted": true,
+      "isApproved": true,
+    },
+    {
+      "name": "BIG Supporters - Family",
+      "dueDate": "2020-05-09",
+      "isSubmitted": false,
+      "isApproved": false,
+    },
+    {
+      "name": "BIG Supporters - Friend",
+      "dueDate": "2020-05-09",
+      "isSubmitted": false,
+      "isApproved": false,
+    },
+    {
+      "name": "BIG Supporters - Mentor",
+      "dueDate": "2020-05-09",
+      "isSubmitted": false,
+      "isApproved": false,
+    },
+  ] 
+}
+];
 
 let applicants = []
 
@@ -41,7 +103,6 @@ app.use(cors());
 app.listen(port, () => {
   console.log(`Server listening on the port::${port}`);
 });
-
 
 //below are the API methods, matched with apiServices in the Front End
 //NOTE: requires firebase integration, uses "users" variable for testing
