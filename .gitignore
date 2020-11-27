@@ -128,3 +128,6 @@ pnpm-debug.log*
 
 # credentials
 */credentials
+
+#Rhistory
+.Rhistory

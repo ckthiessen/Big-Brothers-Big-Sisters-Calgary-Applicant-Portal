@@ -12,7 +12,7 @@ export async function getUserByID(id) {
 }
 
 export async function createUser(user){
-  const response = await axios.post('/api/users', { user });
+  const response = await axios.post('/api/users', user);
   return await response;
 }
 
@@ -24,7 +24,7 @@ export async function deleteUserByID(id) {
 //client side function for updating a user (profile or ID) (admin or user)
 //pass in the user json object
 export async function updateUser(user){
-  const response = await axios.put('/api/users',  user );
+  const response = await axios.put('/api/users', user);
   return await response;
 }
 
