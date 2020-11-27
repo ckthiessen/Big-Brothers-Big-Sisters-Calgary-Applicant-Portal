@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <!-- <Header></Header> -->
+    <Header></Header>
     <v-card-title>
       Applicants
       <v-spacer></v-spacer>
@@ -42,13 +42,13 @@
 
 <script>
   import {getAllUsers} from "../services/apiServices";
-  //import Header from "../components/Header.vue";
+  import Header from "../components/Header.vue";
   import Footer from "../components/Footer.vue";
 
   export default {
     name: 'Administrator',
     components: {
-      //'Header' : Header,
+      'Header' : Header,
       'Footer' : Footer
     },
     props: {
@@ -65,7 +65,6 @@
             value: 'name',
           },
           { text: 'Status', value: 'status'},
-          // { text: 'Last Completed Item', value: '' },
           { text: 'Needs Approval', value: 'waitingApproval' },
         ],
         users: []
