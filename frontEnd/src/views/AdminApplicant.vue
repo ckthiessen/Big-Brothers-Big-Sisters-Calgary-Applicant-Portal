@@ -39,7 +39,7 @@
   import Header from "../components/Header.vue"
   import Footer from "../components/Footer.vue"
   import {getUserByID, updateUser} from "../services/apiServices"
-;
+  
 export default {
   name: 'AdminApplicant',
 
