@@ -105,7 +105,7 @@
             text
             rounded
             font-family='Roboto, sans-serif'
-            @click="$router.push('/signin')"
+            @click="$router.push('/')"
         >
         Log out
         </v-btn>
