@@ -24,6 +24,14 @@ export async function deleteUserByID(id) {
 //client side function for updating a user (profile or ID) (admin or user)
 //pass in the user json object
 export async function updateUser(user){
-  const response = await axios.put('/api/users', { user });
+  const response = await axios.put('/api/users',  user );
+  return await response;
+}
+
+//client side function for getting a user by EMAIL
+//Used for logging in
+//If the response received is a 401 error, then the user is unauthorized because their password is mismatched
+export async function getUserByEmail(body){
+  const response = await axios.post('/api/users/login', body );
   return await response;
 }

@@ -34,8 +34,9 @@ const routes = [
   },
   // Still need to add the dynamic routes
   {
-    path: '/applicant/',
-    component: ApplicantPortal
+    path: '/applicant/:id',
+    component: ApplicantPortal,
+    props: (route) => ({id: route.params.id})
   },
   {
     path: '/admin/:id',

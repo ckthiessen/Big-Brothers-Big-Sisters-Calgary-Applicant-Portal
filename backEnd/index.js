@@ -4,97 +4,9 @@ const path = require('path');
 const app = express();
 const bodyParser = require("body-parser");
 const port = 3080;
-
-
-// // place holder for the data
-const users = [{
-  "id": 1,
-  "name": "Himika Dastidar",
-  "email": "Test@Testing.com",
-  "notifications": [],
-  "isAdmin": false,
-  "isCommunityMentor": false,
-  "requiresHomeAssessment": false,
-  "tasks": [
-    {
-      "name": "BIG Profile",
-      "dueDate": "2020-05-09",
-      "isSubmitted": true,
-      "isApproved": false,
-      "upload": null,
-    },
-    {
-      "name": "BIG Chat",
-      "dueDate": "2020-05-09",
-      "isSubmitted": false,
-      "isApproved": false,
-    },
-    {
-      "name": "BIG Supporters - Family",
-      "dueDate": "2020-05-09",
-      "isSubmitted": false,
-      "isApproved": false,
-      "upload": true
-    },
-    {
-      "name": "BIG Supporters - Friend",
-      "dueDate": "2020-05-09",
-      "isSubmitted": true,
-      "isApproved": true,
-    },
-    {
-      "name": "BIG Supporters - Mentor",
-      "dueDate": "2020-05-09",
-      "isSubmitted": false,
-      "isApproved": false,
-    },
-  ]
-},
-{
-  "id": 2,
-  "name": "Cole Theissen",
-  "email": "Test2@Testing.com",
-  "notifications": [],
-  "isAdmin": false,
-  "isCommunityMentor": false,
-  "requiresHomeAssessment": false,
-  "tasks": [
-    {
-      "name": "BIG Profile",
-      "dueDate": "2020-05-09",
-      "isSubmitted": true,
-      "isApproved": true,
-      "upload": null,
-    },
-    {
-      "name": "BIG Chat",
-      "dueDate": "2020-05-09",
-      "isSubmitted": true,
-      "isApproved": true,
-    },
-    {
-      "name": "BIG Supporters - Family",
-      "dueDate": "2020-05-09",
-      "isSubmitted": false,
-      "isApproved": false,
-    },
-    {
-      "name": "BIG Supporters - Friend",
-      "dueDate": "2020-05-09",
-      "isSubmitted": false,
-      "isApproved": false,
-    },
-    {
-      "name": "BIG Supporters - Mentor",
-      "dueDate": "2020-05-09",
-      "isSubmitted": false,
-      "isApproved": false,
-    },
-  ] 
-}
-];
-
-let applicants = []
+const userRepository = require('./repositories/userRepository');
+const taskFactory = require('./tasks/taskFactory');
+const userValidator = require('./validations/userValidator');
 
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../my-app/build')));
@@ -104,113 +16,127 @@ app.listen(port, () => {
   console.log(`Server listening on the port::${port}`);
 });
 
-//below are the API methods, matched with apiServices in the Front End
-//NOTE: requires firebase integration, uses "users" variable for testing
-
 // Get all users for searching. Client will filter the array that is returned
 // sends list of users up to the client
-app.get('/api/users', (req, res) => {
-  console.log("get all users")
-  //todo: Get users from Firebase
-  res.json(users);
+app.get('/api/users', async (req, res) => {
+  try{
+    console.log("get all users")
+    let users = await userRepository.getAllUsers();
+    res.json(users);
+  }
+  catch(error) {
+    console.log('error' + error);
+    res.status(404); //not found error
+    res.json(error);
+  }
 });
+
+//Gets a user by Email - used for logging in
+//sends a single user up to client
+//if a 401 is thrown, then the user entered the incorrect password
+
+app.post('/api/users/login', async(req,res) =>{
+  let body = req.body;
+  try {
+    userValidator.validateLogin(body);
+
+    console.log("get user by email: /api/users/login");
+    let found = await userRepository.getUserbyEmail(body);
+    console.log(found);
+    res.json(found);
+  }
+  catch(error){
+    console.log('error' + error);
+    res.status(401); //unauthorized
+    res.json(error);
+  }
+});
+
 
 // Gets a user by id - id is "path parameter"
 // sends a single user up to the client
-app.get("/api/users/:id", (req, res) => {
+app.get("/api/users/:id", async (req,res) => {
   let id = req.params.id;
-  console.log("Get user by ID: /users/:" + id);
-  //todo: Search user by ID in firebase and return that
-  res.json(users[0]);
+  try {
+    userValidator.validateId(id);
+
+    console.log("Get user by ID: /users/:" + id);
+    let found = await userRepository.getUserById(id);
+    console.log(found);
+    res.json(found);
+  }
+  catch(error) {
+    console.log('error' + error);
+    res.status(404); //user not found
+    res.json(error);
+  }
 });
 
 // Create a user by id
 // receives a json from the client
-app.post("/api/users", (req, res) => {
-  let newUser = req.body.user;
+//assumes that the json received includes: email, Name, Password and ID
+app.post("/api/users", async (req, res) => {
+  let toCreate = req.body;
 
-  let tasks = []
-  let taskDefaults = require("./tasks.json")
+  try {
+    userValidator.validateUser(toCreate);
 
-  let requiresCalculatedDueDate = new Map([
-    ["BIG Chat", 7],
-    ["BIG Supporters - Family/Partner", 30],
-    ["BIG Supporters - Personal", 30],
-    ["BIG Supporters - Employer", 30],
-    ["BIG Fundamentals", 60],
-    ["BIG Extras - Car Insurance", 60],
-    ["BIG Bio", 60]
-  ])
-
-  taskDefaults.forEach(task => {
-    let dueDate;
-    if (requiresCalculatedDueDate.has(task.name)) {
-      let daysUntilDue = requiresCalculatedDueDate.get(task.name);
-      let calculatedDueDate = new Date();
-      calculatedDueDate.setDate(calculatedDueDate.getDate() + daysUntilDue);
-      dueDate = calculatedDueDate.toLocaleDateString("en-CA", {
-        timeZone: "America/Edmonton"
-      });
-    } else {
-      dueDate = task.dueDate;
-    }
-    tasks.push({
-      name: task.name,
-      fileUpload: null,
-      dueDate: dueDate,
-      isApproved: task.isApproved,
-      isSubmitted: false,
-    })
-  });
-
-  let accountCreationDate = new Date();
-  let notificationDate = accountCreationDate.toLocaleDateString("en-CA", {
-    timeZone: "America/Edmonton"
-  });
-
-  //TODO: Add new user to firebase. Currently adds to server RAM
-  applicants.push({
-    id: newUser.id,
-    name: newUser.name,
-    email: newUser.email,
-    password: newUser.password, // TODO: Salt and hash the password or make this work with firebase authentication
-    notifications: [
+    toCreate.tasks =  taskFactory.getDefaultTasks();
+    // password: newUser.password, // TODO: Salt and hash the password or make this work with firebase authentication
+    toCreate.notifications = [
       {
         message: "Congratulations on making your account!",
-        date: notificationDate
+        date: new Date().toLocaleDateString("en-CA", { timeZone: "America/Edmonton" })
       }
-    ],
-    isAdmin: false,
-    isCommunityMentor: false,
-    requiresHomeAssessment: false,
-    tasks
-  })
-
-  console.log("New user created: ")
-  console.log(Object.entries(applicants[applicants.length-1]))
-
-  console.log("Tasks: ")
-  tasks.forEach(task => console.log(Object.entries(task)));
-
-
-  res.json(newUser.id + " was created")
+    ];
+    toCreate.isAdmin = false;
+    toCreate.isCommunityMentor = false;
+    toCreate.requiresHomeAssessment =  false;
+      
+    await userRepository.createUser(toCreate); 
+    res.json(toCreate.id)
+  }
+  catch(error) {
+    console.log('error' + error);
+    res.status(400);
+    res.json(error);
+  }
 });
 
 // Delete user by id
 // receives a user ID to delete from client
-app.delete("/api/users/:id", (req, res) => {
+app.delete("/api/users/:id", async (req,res) => {
   let id = req.params.id;
   console.log("Delete User by ID: /users/:" + id);
-  //todo: find user in firebase and delete
-  res.json(id + " was deleted");
+  try {
+    userValidator.validateDelete(id);
+    await userRepository.deleteUser(id);
+    res.json(id + " was deleted");
+  }
+  catch(error) {
+    console.log('error' + error);
+    res.status(400);
+    res.json(error);
+  }
 });
 
-// Update user task - this can be called by the admin OR user
+// Update user - this can be called by the admin OR user
 // receives a json from the client
-app.put("/api/users", (req, res) => {
-  let updatedUser = req.body.user;
-  console.log("Updating user");
-  console.log(updatedUser);
-  //todo: Update user in Firebase
-  res.json(updatedUser);
-}); 
+app.put("/api/users", async (req,res) => {
+  let toUpdate = req.body;
+  console.log(toUpdate);
+  try {
+    userValidator.validateUser(toUpdate);
+
+    console.log("Updating user");
+    console.log(toUpdate);
+    await userRepository.updateUser(toUpdate);
+    res.json(toUpdate);
+  }
+  catch(error) {
+    console.log('error' + error);
+    res.status(400);
+    res.json(error);
+  }
+});
+

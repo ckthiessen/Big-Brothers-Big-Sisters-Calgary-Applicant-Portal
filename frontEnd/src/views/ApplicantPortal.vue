@@ -144,7 +144,8 @@ export default {
   },
   created() {
     let defaults = require("../assets/defaults.json");
-    getUserByID(1).then(res => {
+    //CURRENTLY just gets 123 by default, requires this to be dyanmic using AUTH
+    getUserByID(123).then(res => {
       for (const serverTask of Object.values(res.data.tasks)) {
         let clientTask = {} 
         clientTask.name = serverTask.name;

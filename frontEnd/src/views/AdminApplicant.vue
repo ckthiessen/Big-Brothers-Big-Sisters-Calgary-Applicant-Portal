@@ -147,6 +147,7 @@ export default {
         this.applicant.tasks[index].isSubmitted = false;
         this.applicant.tasks[index].isApproved = false;
       }
+      console.log(this.applicant);
       this.updateUser(this.applicant);
     }
   }
