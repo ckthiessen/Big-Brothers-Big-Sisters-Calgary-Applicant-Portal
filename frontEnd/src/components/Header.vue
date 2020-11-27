@@ -142,7 +142,7 @@ import {getUserByID} from "../services/apiServices"
               if (this.user["notifications"].length === 0) {
                 this.notifications.push("No notifications");
               } else {
-                for (let i = 0; i < this.user["notifications"].length(); i++) {
+                for (let i = 0; i < this.user["notifications"].length; i++) {
                   let notification = this.user["notifications"][i];
                   console.log(notification);
                   this.notifications.push(notification.message + "   " + notification.date);
