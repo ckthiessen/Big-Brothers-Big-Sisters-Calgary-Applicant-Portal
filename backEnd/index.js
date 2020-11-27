@@ -11,7 +11,7 @@ const users = [{
   "id": 1,
   "name": "Himika",
   "email": "Test@Testing.com",
-  "notifications": [{"message": "Congrats!", "date": "2020-10-12"}],
+  "notifications": [],
   "isAdmin": false,
   "isCommunityMentor": false,
   "requiresHomeAssessment": false,
