@@ -1,6 +1,6 @@
 <template>
   <v-card width="90%" class="mx-auto">
-    <mheader></mheader>
+    <bbbs-header></bbbs-header>
     <v-card-title> Activities </v-card-title>
     <v-container>
      <v-row>
@@ -66,7 +66,7 @@
         </div>
       </v-expansion-panels>
     </v-container>
-    <mfooter></mfooter>
+    <bbbs-footer></bbbs-footer>
   </v-card>
 </template>
 
@@ -120,8 +120,8 @@ export default {
     };
   },
   components: {
-    "mheader": Header,
-    "mfooter": Footer,
+    "bbbs-header": Header,
+    "bbbs-footer": Footer,
   },
   // props: {
   //   applicant: Object,
@@ -144,8 +144,9 @@ export default {
   },
   created() {
     let defaults = require("../assets/defaults.json");
-    getUserByID(1).then(res => {
-      for (const serverTask of Object.values(res.tasks)) {
+    //CURRENTLY just gets 123 by default, requires this to be dyanmic using AUTH
+    getUserByID(123).then(res => {
+      for (const serverTask of Object.values(res.data.tasks)) {
         let clientTask = {} 
         clientTask.name = serverTask.name;
         clientTask.dueDate = serverTask.dueDate; 

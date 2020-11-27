@@ -6,7 +6,7 @@ import Signin from '../views/Signin.vue'
 import Forgot from '../views/Forgot.vue'
 import Administrator from '../views/Administrator.vue'
 import ApplicantPortal from '../views/ApplicantPortal.vue'
-//import AdminApplicant from '../views/AdminApplicant.vue'
+import AdminApplicant from '../views/AdminApplicant.vue'
 
 //import firebase
 /*
@@ -18,11 +18,11 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: '/',
-    component: Signup
+    component: Signin
   },
   {
-    path: '/signin',
-    component: Signin
+    path: '/signup',
+    component: Signup
   },
   {
     path: '/forgot',
@@ -34,8 +34,14 @@ const routes = [
   },
   // Still need to add the dynamic routes
   {
-    path: '/applicant/',
-    component: ApplicantPortal
+    path: '/applicant/:id',
+    component: ApplicantPortal,
+    props: (route) => ({id: route.params.id})
+  },
+  {
+    path: '/admin/:id',
+    component: AdminApplicant,
+    props: (route) => ({id: route.params.id})
   }
 ]
 
