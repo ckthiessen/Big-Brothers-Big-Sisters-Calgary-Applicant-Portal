@@ -17,8 +17,9 @@
               rounded
               v-on="on"
               v-bind="attrs"
+              @click="clearNotification()"
             >
-              <v-icon>mdi-bell</v-icon>
+              <v-icon :color="getColor()">{{ seen ? "mdi-bell" : "mdi-bell-alert" }}</v-icon>
             </v-btn>
           </template>
           <v-card>
@@ -31,7 +32,6 @@
                   <v-btn
                     align="right"
                     icon
-                    @click="menu = false"
                   >
                     <v-icon small>mdi-close</v-icon>
                   </v-btn>
@@ -124,6 +124,7 @@ import {getUserByID} from "../services/apiServices"
             user: {},
             email: "",
             lastNotification: {},
+            seen: true,
         }),
 
         created(){
@@ -139,6 +140,7 @@ import {getUserByID} from "../services/apiServices"
                 this.type = "Education Mentor";
               }
               this.email = this.user.email;
+              console.log(this.seen);
               //get notifications for user
               if (this.user["notifications"].length === 0) {
                 this.notifications.push("No notifications");
@@ -171,6 +173,7 @@ import {getUserByID} from "../services/apiServices"
 
                   //display new notification
                   this.notifications.push(notification.message + "   " + notification.date);
+                  this.seen = false;
                   //remove "No notifications"
                   if (this.notifications[0] === "No notifications") {
                     this.notifications.shift();
@@ -179,6 +182,16 @@ import {getUserByID} from "../services/apiServices"
                   this.lastNotification = notification.message + "   " + notification.date;
                 }
             })
+          },
+          clearNotification() {
+            this.seen = true;
+          }, 
+          getColor() {
+            if (this.seen === true) {
+              return;
+            } else {
+              return "notificationgreen";
+            }
           }
         },
     }
