@@ -124,6 +124,7 @@ app.delete("/api/users/:id", async (req,res) => {
 // receives a json from the client
 app.put("/api/users", async (req,res) => {
   let toUpdate = req.body;
+  console.log(toUpdate);
   try {
     userValidator.validateUser(toUpdate);
 
