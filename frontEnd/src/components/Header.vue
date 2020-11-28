@@ -17,8 +17,9 @@
               rounded
               v-on="on"
               v-bind="attrs"
+              @click="clearNotification()"
             >
-              <v-icon>mdi-bell</v-icon>
+              <v-icon :color="getColor()">{{ seen ? "mdi-bell" : "mdi-bell-alert" }}</v-icon>
             </v-btn>
           </template>
           <v-card>
@@ -31,7 +32,6 @@
                   <v-btn
                     align="right"
                     icon
-                    @click="menu = false"
                   >
                     <v-icon small>mdi-close</v-icon>
                   </v-btn>
@@ -41,7 +41,7 @@
             <v-divider></v-divider>
             <v-list>
               <v-list-item align="left"
-                v-for="(notification, index) in notifications"
+                v-for="(notification, index) in notifications.slice().reverse()"
                 :key="index"
               >
                 <v-list-item-subtitle>{{ notification }}</v-list-item-subtitle>
@@ -123,7 +123,9 @@ import {getUserByID} from "../services/apiServices"
             name: "",
             type: "",
             user: {},
-            email: ""
+            email: "",
+            lastNotification: {},
+            seen: true,
         }),
         created(){
           console.log("Header log");
@@ -148,15 +150,55 @@ import {getUserByID} from "../services/apiServices"
               //get notifications for user
               if (this.user["notifications"].length === 0) {
                 this.notifications.push("No notifications");
+                this.lastNotification = "No notifications";
               } else {
                 for (let i = 0; i < this.user["notifications"].length; i++) {
                   let notification = this.user["notifications"][i];
-                  console.log(notification);
                   this.notifications.push(notification.message + "   " + notification.date);
-                  console.log(this.notifications);
+                  this.lastNotification = notification.message + "   " + notification.date;
                 } 
               }
             });
+            //call pullNotifications() every 3 seconds
+            setInterval(function () {
+              this.pullNotifications();
+            }.bind(this), 3000); 
+        },
+        methods: {
+          pullNotifications() {
+            getUserByID(this.id).then(response => {
+                this.user = response.data;
+                let length = this.user["notifications"].length;
+                if (length > 0) {
+                  //check the last notification
+                  let notification = this.user["notifications"][length - 1];
+                  //if last notification is not new
+                  if (this.lastNotification === notification.message + "   " + notification.date) {
+                    return;
+                  }
+
+                  //display new notification
+                  this.notifications.push(notification.message + "   " + notification.date);
+                  this.seen = false;
+                  //remove "No notifications"
+                  if (this.notifications[0] === "No notifications") {
+                    this.notifications.shift();
+                  }
+                  //set the last notification again
+                  this.lastNotification = notification.message + "   " + notification.date;
+                }
+            })
+          },
+          clearNotification() {
+            this.seen = true;
+          }, 
+          getColor() {
+            if (this.seen === true) {
+              return;
+            } else {
+              return "notificationgreen";
+            }
+          }
         },
     }
 </script>
