@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <Header></Header>
+    <bbbs-header></bbbs-header>
     <v-card-title>
       Applicants
       <v-spacer></v-spacer>
@@ -36,7 +36,7 @@
 
       </template>
     </v-data-table>
-    <Footer></Footer>
+    <bbbs-footer></bbbs-footer>
   </v-card>
 </template>
 
@@ -48,14 +48,13 @@
   export default {
     name: 'Administrator',
     components: {
-      'Header' : Header,
-      'Footer' : Footer
-    },
-    props: {
+      'bbbs-header' : Header,
+      'bbbs-footer' : Footer
     },
     data () {
       return {
         search: '',
+        adminID: '',
         headers: [
           {
             text: 'Name',
@@ -71,6 +70,7 @@
       }
     },
     created(){
+      this.adminID = this.$route.params.adminID;
       this.getUserList(); //call when instance is new
     },
     methods: {
@@ -113,7 +113,7 @@
       },
       
       goToApplicantView(applicantID) {
-        this.$router.push(`/admin/${applicantID}`)
+        this.$router.push(`/admin/${this.adminID}/${applicantID}`)
       }
     },
 

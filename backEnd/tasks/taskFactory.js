@@ -13,21 +13,6 @@ let requiresCalculatedDueDate = new Map([
   ["BIG Bio", 60]
 ])
 
-//date format
-dateFormat.i18n = {
-  dayNames: [
-      'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat',
-      'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
-  ],
-  monthNames: [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
-      'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
-  ],
-  timeNames: [
-      'a', 'p', 'am', 'pm', 'A', 'P', 'AM', 'PM'
-  ]
-};
-
 //module exported 
 module.exports = {
     getDefaultTasks: () => {
@@ -38,7 +23,9 @@ module.exports = {
             if (requiresCalculatedDueDate.has(task.name)) {
               let daysUntilDue = requiresCalculatedDueDate.get(task.name);
               let calculatedDueDate = new Date().setDate(new Date().getDate() + daysUntilDue);
-              dueDate = dateFormat(calculatedDueDate, "dddd, mmmm dS, yyyy, h:MM:ss TT");
+              dueDate = new Date(calculatedDueDate).toLocaleDateString("en-CA", {
+                timeZone: "America/Edmonton"
+              });
             } else {
               dueDate = task.dueDate;
             }

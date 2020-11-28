@@ -31,7 +31,7 @@
           <v-col>
             <v-btn
               color="accent"
-              @click="$router.push('/applicant/:id')"
+              @click="auth(email, password)"
             > Sign in
             </v-btn>
           </v-col>
@@ -60,8 +60,10 @@
 </template>
 
 <script>
-
+  import {getUserByEmail} from "../services/apiServices";
 export default {
+  
+  
   name: 'Signin',
   data () {
     return {
@@ -69,6 +71,19 @@ export default {
       email: '',
       password: '',
       passwordVisible: false,
+    }
+  }, 
+  methods: {
+    async auth(email, password) {
+      await getUserByEmail({ email, password })
+      .then(response => {
+        let user = response.data;
+        if(user.isAdmin){
+          this.$router.push(`/admin/home/${user.id}`)
+        }else{
+          this.$router.push(`/applicant/${user.id}`)
+        }
+      });
     }
   }
 }

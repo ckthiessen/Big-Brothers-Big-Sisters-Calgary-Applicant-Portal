@@ -1,7 +1,6 @@
 <template>
   <div>
-  <h1>This is the individual applicant view for the admin</h1>
-  <Header></Header>
+  <bbbs-header></bbbs-header>
     <v-data-table
     :headers="Headers"
     :items="tasks"
@@ -31,7 +30,7 @@
       </td>
     </template>
   </v-data-table>
-  <Footer></Footer>
+  <bbbs-footer></bbbs-footer>
   </div>
 </template>
 
@@ -44,13 +43,14 @@ export default {
   name: 'AdminApplicant',
 
   components: {
-    'Header': Header,
-    'Footer': Footer
+    'bbbs-header': Header,
+    'bbbs-footer': Footer
   },
 
   created(){
-    this.id = this.$route.params.id;
-    getUserByID(this.id).then(res => {
+    this.adminID = this.$route.params.adminID;
+    this.applicantID= this.$route.params.applicantID;
+    getUserByID(this.applicantID).then(res => {
         this.applicant = res.data
         let servertasks = res.data.tasks
         for (const task in servertasks) {
@@ -69,12 +69,12 @@ export default {
         }
       });
   },
-
   data(){
     return {
         expanded: [],
         singleExpand: false,
-        id: '',
+        applicantID: '',
+        adminID : '',
         applicant: [],
         tasks: [],
         selectedIndex: '',

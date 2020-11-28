@@ -113,20 +113,17 @@ export default {
 
     methods:{
       signUp(){
-        console.log("Signing up now!");
         let userInfo = {
           'id' : uuidv4(),
           'name' : this.firstName + ' ' + this.lastName,
           'email' : this.email,
           'password' : this.password,
         };
-        console.log(userInfo);
         createUser(userInfo)
-        .then(res => {
-          if(res.statusCode === 200) {
-            this.$route.push('/');
+        .then(() => {
+            this.$router.push(`/`);
           }
-        });
+        );
       },
     }
 }

@@ -29,19 +29,33 @@ const routes = [
     component: Forgot
   },
   {
-    path: '/admin/home',
-    component: Administrator
+    path: '/admin/home/:adminID',
+    component: Administrator,
+    props: (route) => ({ adminID: route.params.adminID }),
+    // meta: {
+    //   requiresAdminPerm: true,
+    //   requiresAuth: true,
+    // }
   },
   // Still need to add the dynamic routes
   {
-    path: '/applicant/:id',
+    path: '/applicant/:applicantID',
     component: ApplicantPortal,
-    props: (route) => ({id: route.params.id})
+    props: (route) => ({ applicantID : route.params.applicantID}),
+    // meta: {requiresAuth: true}
   },
   {
-    path: '/admin/:id',
+    path: '/admin/:adminID/:applicantID',
     component: AdminApplicant,
-    props: (route) => ({id: route.params.id})
+    // props: (route) => ({ 
+    //   adminID: route.params.adminID, 
+    //   applicantID: route.params.applicantID 
+    // }),
+    // meta: {
+    //   requiresAdminPerm: true,
+    //   requiresAuth: true,
+    // }
+    
   }
 ]
 
@@ -49,6 +63,11 @@ const router = new VueRouter({
   mode: 'history',
   routes
 });
+
+// router.beforeEach((to, from, next) => {
+//   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+//   const isAdmin = to.matched.some(record => record.meta.isAdmin);
+// });
 
 // router.beforeEach((to, from, next) => {
 //   //Adds this logic to check whether each route is authenticated

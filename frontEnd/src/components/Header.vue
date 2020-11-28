@@ -119,14 +119,21 @@ import {getUserByID} from "../services/apiServices"
         data: () => ({
             menu: false,
             notifications:[],
+            id: "",
             name: "",
             type: "",
             user: {},
             email: ""
         }),
-
         created(){
-          getUserByID(1).then(response => {
+          console.log("Header log");
+          console.log(this.$route.params);
+          if(this.$route.params.adminID) {
+              this.id = this.$route.params.adminID; 
+          } else {
+              this.id = this.$route.params.applicantID;
+          }
+          getUserByID(this.id).then(response => {
               //get user information
               this.user = response.data;
               this.name = this.user.name;
