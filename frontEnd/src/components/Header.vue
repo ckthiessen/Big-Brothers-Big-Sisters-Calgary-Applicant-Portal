@@ -160,7 +160,7 @@ import {getUserByID} from "../services/apiServices"
         },
         methods: {
           pullNotifications() {
-            getUserByID(1).then(response => {
+            getUserByID(this.id).then(response => {
                 this.user = response.data;
                 let length = this.user["notifications"].length;
                 if (length > 0) {
