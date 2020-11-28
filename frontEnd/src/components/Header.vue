@@ -140,7 +140,6 @@ import {getUserByID} from "../services/apiServices"
                 this.type = "Education Mentor";
               }
               this.email = this.user.email;
-              console.log(this.seen);
               //get notifications for user
               if (this.user["notifications"].length === 0) {
                 this.notifications.push("No notifications");
