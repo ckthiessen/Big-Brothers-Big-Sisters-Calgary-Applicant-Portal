@@ -128,7 +128,7 @@ import {getUserByID} from "../services/apiServices"
             seen: true,
             interval: "",
         }),
-        created(){
+        created() {
           console.log("Header log");
           console.log(this.$route.params);
           if(this.$route.params.adminID) {
@@ -164,6 +164,9 @@ import {getUserByID} from "../services/apiServices"
             this.interval = setInterval(function () {
               this.pullNotifications();
             }.bind(this), 3000); 
+        },
+        beforeDestroy() {
+          clearInterval(this.interval);
         },
         methods: {
           pullNotifications() {
@@ -201,7 +204,6 @@ import {getUserByID} from "../services/apiServices"
             }
           },
           logOut() {
-            clearInterval(this.interval);
             this.$router.push('/')
           }
         },
