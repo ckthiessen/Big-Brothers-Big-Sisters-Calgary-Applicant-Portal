@@ -129,8 +129,6 @@ import {getUserByID} from "../services/apiServices"
             interval: "",
         }),
         created() {
-          console.log("Header log");
-          console.log(this.$route.params);
           if(this.$route.params.adminID) {
               this.id = this.$route.params.adminID; 
           } else {

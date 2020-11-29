@@ -77,7 +77,8 @@
       async getUserList(){
         await getAllUsers().then(response => {
           console.log(response.data)
-          this.users = response.data;
+          let all_users = response.data;
+          this.users = all_users.filter(all_users => all_users.isAdmin === false);
           this.completionStatus();
         });
       },
@@ -97,7 +98,7 @@
             }
           }
           user.status = completedCount === user["tasks"].length ? "Completed" : (completedCount + "/" + user["tasks"].length + " completed");
-          user.waitingApproval = awaitingApproval ? "mdi-check-circle" : "mdi-alert";
+          user.waitingApproval = awaitingApproval ? "mdi-alert": "mdi-check-circle";
         }
         return this.users;
       },
@@ -105,7 +106,7 @@
       getColor(status) {
         if (status === "Completed") {
           return 'accent'
-        }else if (status <= "5/11") {
+        }else if (status <= "9/18") {
           return 'red'
         }else{
           return 'inprogress'

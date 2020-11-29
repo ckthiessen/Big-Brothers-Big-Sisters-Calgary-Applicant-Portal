@@ -13,8 +13,16 @@
         <v-spacer></v-spacer>
       </v-toolbar>
     </template>
+    <template v-slot:item.status="{item}">
+      <v-chip :color=getColor(item.status)> 
+        <v-icon class="pl-1" color="white" left>
+          {{getIcon(item.status)}}
+        </v-icon>
+        {{item.status}}
+      </v-chip>
+    </template>
     <template v-slot:item.upload="{ item }">
-      <v-icon color="accent"> {{item.upload ? downloadIcons.upload : downloadIcons.noUpload}}</v-icon>
+      <v-icon color="accent"> {{item.fileUpload === true ? downloadIcons.upload : downloadIcons.noUpload}}</v-icon>
     </template>
     <template v-slot:item.buttonTitle="{item}">
       <td>
@@ -22,7 +30,6 @@
         rounded
         color="accent"
         dark
-        :disabled="item.value == 'Incomplete'"
         @click="changeStatus(item.status, tasks.indexOf(item))"
         >
         {{item.buttonTitle}}
@@ -38,6 +45,7 @@
   import Header from "../components/Header.vue"
   import Footer from "../components/Footer.vue"
   import {getUserByID, updateUser} from "../services/apiServices"
+  import _ from 'lodash'
   
 export default {
   name: 'AdminApplicant',
@@ -49,21 +57,20 @@ export default {
 
   created(){
     this.adminID = this.$route.params.adminID;
-    this.applicantID= this.$route.params.applicantID;
+    this.applicantID = this.$route.params.applicantID;
     getUserByID(this.applicantID).then(res => {
         this.applicant = res.data
         let servertasks = res.data.tasks
         for (const task in servertasks) {
-          if(servertasks[task].isApproved && servertasks[task].isApproved){
+          if(servertasks[task].isSubmitted && servertasks[task].isApproved){
             servertasks[task].status = "Complete";
             servertasks[task].buttonTitle = "Mark Incomplete"
           }else if(servertasks[task].isSubmitted && !servertasks[task].isApproved){
             servertasks[task].status = "Requires Approval"
             servertasks[task].buttonTitle = "Mark Complete"
-          }else if(!servertasks[task].isApproved && !servertasks[task].isApproved){
+          }else if(!servertasks[task].isSubmitted && !servertasks[task].isApproved){
             servertasks[task].status = "Incomplete"
             servertasks[task].buttonTitle = "Mark Complete"
-
           }
           this.tasks.push(servertasks[task])
         }
@@ -71,34 +78,15 @@ export default {
   },
   data(){
     return {
-        expanded: [],
-        singleExpand: false,
         applicantID: '',
         adminID : '',
         applicant: [],
         tasks: [],
         selectedIndex: '',
-        status: {
-          Complete: {
-            color: "complete",
-            title: "Complete",
-            icon: "mdi-check-circle",
-          },
-          InProgress: {
-            color: "inprogress",
-            title: "Waiting Approval",
-            icon: "mdi-dots-horizontal-circle",
-          },
-          Incomplete: {
-            color: "needsattention",
-            title: "Incomplete",
-            icon: "mdi-alert",
-          },
-        },
         downloadIcons: {
-        noUpload: "mdi-cloud-off-outline",
-        upload: "mdi-cloud-download",
-        uploadComplete: "mdi-cloud-check",
+          noUpload: "mdi-cloud-off-outline",
+          upload: "mdi-cloud-download",
+          uploadComplete: "mdi-cloud-check",
       },
         Headers: [
           {
@@ -141,14 +129,42 @@ export default {
         selectedTask.buttonTitle = "Mark Incomplete";
         this.applicant.tasks[index].isSubmitted = true;
         this.applicant.tasks[index].isApproved = true;
+        this.applicant.notifications.push({"message" : "The administrator has approved" + selectedTask.name,
+                                            "date" : new Date().toLocaleDateString("en-CA", { timeZone: "America/Edmonton" })})
       }else if (selectedTask.status === "Complete") {
         selectedTask.status = "Incomplete";
         selectedTask.buttonTitle = "Mark Complete";
         this.applicant.tasks[index].isSubmitted = false;
         this.applicant.tasks[index].isApproved = false;
       }
-      console.log(this.applicant);
-      this.updateUser(this.applicant);
+     
+      let applicantCopy = _.cloneDeep(this.applicant);
+      for (let i = 0; i < applicantCopy.tasks.length; i++){
+        delete applicantCopy.tasks[i].status;
+        delete applicantCopy.tasks[i].buttonTitle;
+      }
+      console.log(applicantCopy)
+      this.updateUser(applicantCopy);
+    },
+
+    getColor(status) {
+      if (status === "Requires Approval"){
+        return 'inprogress'
+      }else if (status === "Complete") {
+        return 'accent'
+      }else{
+        return 'red'
+      }
+    },
+
+    getIcon(status) {
+      if (status === "Requires Approval"){
+        return 'mdi-dots-horizontal-circle'
+      }else if (status === "Complete") {
+        return 'mdi-check-circle'
+      }else if (status === "Incomplete"){
+        return 'mdi-alert'
+      }
     }
   }
 }
