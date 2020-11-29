@@ -67,10 +67,18 @@ module.exports = {
       console.log(each.id, "=>", each.data());
       user = each.data();
     })
+  
+    return user;
+  },
+
+  authenticateUser: async function(body){
+    let user = await this.getUserbyEmail(body);
     //checks if the password matches
     if(user.password !== body.password){
       throw "Invalid Password"
     }
     return user;
+
   }
+
 };

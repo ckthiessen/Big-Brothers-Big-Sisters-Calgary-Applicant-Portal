@@ -41,7 +41,7 @@ app.post('/api/users/login', async(req,res) =>{
     userValidator.validateLogin(body);
 
     console.log("get user by email: /api/users/login");
-    let found = await userRepository.getUserbyEmail(body);
+    let found = await userRepository.authenticateUser(body);
     console.log(found);
     res.json(found);
   }
@@ -77,15 +77,26 @@ app.get("/api/users/:id", async (req,res) => {
 //assumes that the json received includes: email, Name, Password and ID
 app.post("/api/users", async (req, res) => {
   let toCreate = req.body;
-
   try {
     userValidator.validateUser(toCreate);
+    //check if the user's email is found
+    userToCheck = {
+      email: toCreate.email
+    }
+    let found = await userRepository.getUserbyEmail(userToCheck);
+    //if we found a user with this email already
+    if(found !== null){
+      console.log("error 409");
+      res.status(409);
+      res.json("error user with email " + found.email + " already exists")
+      return;
+    } 
 
     toCreate.tasks =  taskFactory.getDefaultTasks();
     // password: newUser.password, // TODO: Salt and hash the password or make this work with firebase authentication
     toCreate.notifications = [
       {
-        message: "Congratulations on making your account!",
+        messzage: "Congratulations on making your account!",
         date: new Date().toLocaleDateString("en-CA", { timeZone: "America/Edmonton" })
       }
     ];
