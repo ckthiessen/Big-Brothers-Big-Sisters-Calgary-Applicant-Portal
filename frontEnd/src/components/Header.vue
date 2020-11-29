@@ -105,7 +105,7 @@
             text
             rounded
             font-family='Roboto, sans-serif'
-            @click="$router.push('/')"
+            @click="logOut()"
         >
         Log out
         </v-btn>
@@ -126,6 +126,7 @@ import {getUserByID} from "../services/apiServices"
             email: "",
             lastNotification: {},
             seen: true,
+            interval: "",
         }),
         created(){
           console.log("Header log");
@@ -160,7 +161,7 @@ import {getUserByID} from "../services/apiServices"
               }
             });
             //call pullNotifications() every 3 seconds
-            setInterval(function () {
+            this.interval = setInterval(function () {
               this.pullNotifications();
             }.bind(this), 3000); 
         },
@@ -198,6 +199,10 @@ import {getUserByID} from "../services/apiServices"
             } else {
               return "notificationgreen";
             }
+          },
+          logOut() {
+            clearInterval(this.interval);
+            this.$router.push('/')
           }
         },
     }
