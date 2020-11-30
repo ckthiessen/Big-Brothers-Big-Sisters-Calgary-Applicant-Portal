@@ -38,20 +38,24 @@
     data: () => ({
       links: [
         {
-          text: 'Support',
-          href: 'https://www.google.com/'
+          text: 'Home',
+          href: 'https://www.bbbscalgary.ca'
         },
         {
-          text: 'Help Center',
-          href: 'https://www.google.com/'
+          text: 'Complaints Policy',
+          href: 'https://bbbscalgary.ca/complaints-policy/'
+        },
+        {
+          text: 'Diversity and Inclusion Policy',
+          href: 'https://bbbscalgary.ca/diversity-inclusion-policy/'
         },
         {
           text: 'Privacy',
-          href: 'https://www.google.com/'
+          href: 'https://bbbscalgary.ca/privacy-policy/'
         },
         {
-          text: 'Terms of Service',
-          href: 'https://www.google.com/'
+          text : 'Help',
+          href: 'mailto: intake.calgary@bigbrothersbigsisters.ca'
         }
       ],
     }),
