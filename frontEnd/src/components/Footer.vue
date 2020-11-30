@@ -55,7 +55,7 @@
         },
         {
           text : 'Help',
-          href: 'mailto: intake.calgary@bigbrothersbigsisters.ca'
+          href: 'tel: 403-777-3534'
         }
       ],
     }),
