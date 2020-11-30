@@ -1,5 +1,14 @@
 <template>
-  <div>
+  <v-card width="90%" class="mx-auto">
+  <!-- <div class="d-flex flex-column justify-space-between align-center">
+      <v-img
+        src="../assets/thumbnail_Calgary_horizontal_primary_CMYK_EN.png"
+        contain
+        :aspect-ratio="16/9"
+        :width="width"
+        :height="height"
+      ></v-img>
+  </div> -->
   <bbbs-header></bbbs-header>
     <v-data-table
     :headers="Headers"
@@ -38,7 +47,7 @@
     </template>
   </v-data-table>
   <bbbs-footer></bbbs-footer>
-  </div>
+  </v-card>
 </template>
 
 <script>
@@ -78,6 +87,8 @@ export default {
   },
   data(){
     return {
+        width: window.innerWidth,
+        height: window.innerHeight, 
         applicantID: '',
         adminID : '',
         applicant: [],
@@ -145,7 +156,6 @@ export default {
         delete applicantCopy.tasks[i].status;
         delete applicantCopy.tasks[i].buttonTitle;
       }
-      console.log(applicantCopy)
       this.updateUser(applicantCopy);
     },
 

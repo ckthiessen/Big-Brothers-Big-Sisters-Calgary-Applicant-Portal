@@ -1,5 +1,14 @@
 <template>
   <v-card width="90%" class="mx-auto">
+    <!-- <div class="d-flex flex-column justify-space-between align-center">
+      <v-img
+        src="../assets/thumbnail_Calgary_horizontal_primary_CMYK_EN.png"
+        contain
+        :aspect-ratio="16/9"
+        :width="width"
+        :height="height"
+      ></v-img>
+    </div> -->
     <bbbs-header></bbbs-header>
     <v-card-title> Activities </v-card-title>
     <v-container>
@@ -85,6 +94,8 @@ import {getUserByID} from "../services/apiServices" //Import any func you need
 export default {
   data() {
     return {
+      width: window.innerWidth * 0.9,
+      height: window.innerHeight * 0.75, 
       applicant: {},
       tasks: [],
       headers: ["Name", "Status", "Due Date", "Upload"],

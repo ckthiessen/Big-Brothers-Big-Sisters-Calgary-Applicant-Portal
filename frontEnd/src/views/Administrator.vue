@@ -1,5 +1,14 @@
 <template>
-  <v-card>
+  <v-card class="mx-auto">
+    <!-- <div class="d-flex flex-column justify-space-between align-center">
+      <v-img
+        src="../assets/thumbnail_Calgary_horizontal_primary_CMYK_EN.png"
+        contain
+        :aspect-ratio="16/9"
+        :width="width"
+        :height="height"
+      ></v-img>
+    </div> -->
     <bbbs-header></bbbs-header>
     <v-card-title>
       Applicants
@@ -53,6 +62,8 @@
     },
     data () {
       return {
+        width: window.innerWidth,
+        height: window.innerHeight * 0.5, 
         search: '',
         adminID: '',
         headers: [
@@ -76,7 +87,6 @@
     methods: {
       async getUserList(){
         await getAllUsers().then(response => {
-          console.log(response.data)
           let all_users = response.data;
           this.users = all_users.filter(all_users => all_users.isAdmin === false);
           this.completionStatus();
