@@ -129,11 +129,13 @@ export default {
         selectedTask.buttonTitle = "Mark Incomplete";
         this.applicant.tasks[index].isSubmitted = true;
         this.applicant.tasks[index].isApproved = true;
-        this.applicant.notifications.push({"message" : "The administrator has approved" + selectedTask.name,
+        this.applicant.notifications.push({"message" : "The administrator has approved " + selectedTask.name,
                                             "date" : new Date().toLocaleDateString("en-CA", { timeZone: "America/Edmonton" })})
       }else if (selectedTask.status === "Complete") {
         selectedTask.status = "Incomplete";
         selectedTask.buttonTitle = "Mark Complete";
+        this.applicant.notifications.push({"message" : "The administrator has rejected your submission for " + selectedTask.name,
+                                            "date" : new Date().toLocaleDateString("en-CA", { timeZone: "America/Edmonton" })})
         this.applicant.tasks[index].isSubmitted = false;
         this.applicant.tasks[index].isApproved = false;
       }

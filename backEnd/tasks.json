@@ -2,91 +2,127 @@
   {
     "name": "BIG Profile",
     "dueDate": "No date",
-    "isApproved": true
+    "isApproved": true,
+    "isSubmitted": true,
+    "fileUpload" : false
   },
   {
     "name": "BIG Chat",
     "dueDate": "Due a week within application",
-    "isApproved": false
+    "isApproved": false,
+    "isSubmitted": false,
+    "fileUpload": false
   },
   {
     "name": "Mentoring 101",
     "dueDate": "To be completed prior to the BIG Fundamental Training",
-    "isApproved": false
+    "isApproved": false,
+    "isSubmitted": false,
+    "fileUpload": false
   },
   {
     "name": "BIG Supporters - Family/Partner",
     "dueDate": "Completed within a month of application",
-    "isApproved": false
+    "isApproved": false,
+    "isSubmitted": false,
+    "fileUpload": false
   },
   {
     "name": "BIG Supporters - Personal",
     "dueDate": "Completed within a month of application",
-    "isApproved": false
+    "isApproved": false,
+    "isSubmitted": false,
+    "fileUpload": false
   },
   {
     "name": "BIG Supporters - Employer",
     "dueDate": "Completed within a month of application",
-    "isApproved": false
+    "isApproved": false,
+    "isSubmitted": false,
+    "fileUpload": false
   },
   {
     "name": "BIG Fundamentals",
     "dueDate": "To be completed 2 months within application",
-    "isApproved": false
+    "isApproved": false,
+    "isSubmitted": false,
+    "fileUpload": false
   },
   {
     "name": "BIG Checks - Police",
     "dueDate": "As soon as possible",
-    "isApproved": false
+    "isApproved": false,
+    "isSubmitted": false,
+    "fileUpload": false
   },
   {
     "name": "BIG Checks - RCMP Check",
     "dueDate": "As soon as possible",
-    "isApproved": false
+    "isApproved": false,
+    "isSubmitted": false,
+    "fileUpload": false
   },
   {
     "name": "BIG Checks - Intervention Record Check",
     "dueDate": "As soon as possible",
-    "isApproved": false
+    "isApproved": false,
+    "isSubmitted": false,
+    "fileUpload": false
   },
   {
     "name": "BIG Bio",
     "dueDate": "Within 2 months of application",
-    "isApproved": false
+    "isApproved": false,
+    "isSubmitted": false,
+    "fileUpload": false
   },
   {
     "name": "BIG Extras - Confidentiality",
     "dueDate": "Prior to interview",
-    "isApproved": false
+    "isApproved": false,
+    "isSubmitted": false,
+    "fileUpload": false
   },
   {
     "name": "BIG Extras - Media Consent",
     "dueDate": "Prior to interview",
-    "isApproved": false
+    "isApproved": false,
+    "isSubmitted": false,
+    "fileUpload": false
   },
   {
     "name": "BIG Extras - Offence Declaration",
     "dueDate": "To be completed anually",
-    "isApproved": false
+    "isApproved": false,
+    "isSubmitted": false,
+    "fileUpload": true
   },
   {
     "name": "BIG Extras - Home Assessment",
     "dueDate": "To be decided",
-    "isApproved": false
+    "isApproved": false,
+    "isSubmitted": false,
+    "fileUpload": false
   },
   {
     "name": "BIG Extras - Car Insurance",
     "dueDate": "Within 2 months of application",
-    "isApproved": false
+    "isApproved": false,
+    "isSubmitted": false,
+    "fileUpload": false
   },
   {
     "name": "You are a BIG Deal!",
     "dueDate": "Prior to interview",
-    "isApproved": false
+    "isApproved": false,
+    "isSubmitted": false,
+    "fileUpload": false
   },
   {
     "name": "You are no BIG Deal :(",
     "dueDate": "No due date",
-    "isApproved": false
+    "isApproved": false,
+    "isSubmitted": false,
+    "fileUpload": false
   }
 ]
