@@ -1,5 +1,14 @@
 <template>
-  <v-card>
+  <v-card class="mx-auto">
+    <!-- <div class="d-flex flex-column justify-space-between align-center">
+      <v-img
+        src="../assets/thumbnail_Calgary_horizontal_primary_CMYK_EN.png"
+        contain
+        :aspect-ratio="16/9"
+        :width="width"
+        :height="height"
+      ></v-img>
+    </div> -->
     <bbbs-header></bbbs-header>
     <v-card-title>
       Applicants
@@ -53,6 +62,8 @@
     },
     data () {
       return {
+        width: window.innerWidth,
+        height: window.innerHeight * 0.5, 
         search: '',
         adminID: '',
         headers: [
@@ -76,8 +87,8 @@
     methods: {
       async getUserList(){
         await getAllUsers().then(response => {
-          console.log(response.data)
-          this.users = response.data;
+          let all_users = response.data;
+          this.users = all_users.filter(all_users => all_users.isAdmin === false);
           this.completionStatus();
         });
       },
@@ -97,7 +108,7 @@
             }
           }
           user.status = completedCount === user["tasks"].length ? "Completed" : (completedCount + "/" + user["tasks"].length + " completed");
-          user.waitingApproval = awaitingApproval ? "mdi-check-circle" : "mdi-alert";
+          user.waitingApproval = awaitingApproval ? "mdi-alert": "mdi-check-circle";
         }
         return this.users;
       },
@@ -105,7 +116,7 @@
       getColor(status) {
         if (status === "Completed") {
           return 'accent'
-        }else if (status <= "5/11") {
+        }else if (status <= "9/18") {
           return 'red'
         }else{
           return 'inprogress'
