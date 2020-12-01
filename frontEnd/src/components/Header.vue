@@ -202,7 +202,7 @@ import {getUserByID} from "../services/apiServices"
             }
           },
           logOut() {
-            this.$router.push('/')
+            this.$router.replace({name: "Signin"});
           }
         },
     }
