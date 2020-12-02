@@ -61,7 +61,7 @@
 
 <script>
   import {getUserByEmail} from "../services/apiServices";
-  import {set,get} from 'vue-cookies'
+  import * as cookies from 'vue-cookies'
 export default {
   
   name: 'Signin',
@@ -78,8 +78,9 @@ export default {
       await getUserByEmail({ email, password })
       .then(response => {
         //build cookie
-        set("AuthCookie",email);
-        console.log(get("AuthCookie"))
+        cookies.set("AuthCookie",email);
+
+        //console.log(get("AuthCookie")) - 
         let user = response.data;
         if(user.isAdmin){
           this.$router.push(`/admin/home/${user.id}`)

@@ -115,6 +115,7 @@
 
 <script>
 import {getUserByID} from "../services/apiServices"
+import * as cookies from 'vue-cookies'
     export default {
         data: () => ({
             menu: false,
@@ -164,6 +165,8 @@ import {getUserByID} from "../services/apiServices"
             }.bind(this), 3000); 
         },
         beforeDestroy() {
+          //destroy cookie
+          cookies.remove("AuthCookie");
           clearInterval(this.interval);
         },
         methods: {
