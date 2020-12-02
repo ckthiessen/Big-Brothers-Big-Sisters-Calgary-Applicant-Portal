@@ -130,10 +130,16 @@ import * as cookies from 'vue-cookies'
             interval: "",
         }),
         created() {
+          
+
           if(this.$route.params.adminID) {
               this.id = this.$route.params.adminID; 
           } else {
               this.id = this.$route.params.applicantID;
+          }
+          //check if the Auth cookie exists, if it doesn't then they did no go through sign in so route to sign in
+          if(!cookies.isKey(this.id)){
+            this.$router.replace({name: "Signin"});
           }
           getUserByID(this.id).then(response => {
               //get user information
@@ -166,7 +172,7 @@ import * as cookies from 'vue-cookies'
         },
         beforeDestroy() {
           //destroy cookie
-          cookies.remove("AuthCookie");
+          cookies.remove(this.user.id);
           clearInterval(this.interval);
         },
         methods: {

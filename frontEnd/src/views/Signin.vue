@@ -78,10 +78,9 @@ export default {
       await getUserByEmail({ email, password })
       .then(response => {
         //build cookie
-        cookies.set("AuthCookie",email);
-
         //console.log(get("AuthCookie")) - 
         let user = response.data;
+        cookies.set(user.id); //cookie includes the ID
         if(user.isAdmin){
           this.$router.push(`/admin/home/${user.id}`)
         }else{
