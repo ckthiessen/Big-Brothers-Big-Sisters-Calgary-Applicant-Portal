@@ -77,8 +77,7 @@ export default {
     async auth(email, password) {
       await getUserByEmail({ email, password })
       .then(response => {
-        //build cookie
-        //console.log(get("AuthCookie")) - 
+        //build cookie - SUPER WEIRD EDGE CASE THING
         let user = response.data;
         cookies.set(user.id); //cookie includes the ID
         if(user.isAdmin){
