@@ -61,7 +61,7 @@
 
 <script>
   import {getUserByEmail} from "../services/apiServices";
-  import * as cookies from 'vue-cookies'
+  
 export default {
   
   name: 'Signin',
@@ -79,7 +79,7 @@ export default {
       .then(response => {
         //build cookie - SUPER WEIRD EDGE CASE THING
         let user = response.data;
-        cookies.set(user.id); //cookie includes the ID
+        this.$cookies.set(user.id); //cookie includes the ID
         if(user.isAdmin){
           this.$router.push(`/admin/home/${user.id}`)
         }else{

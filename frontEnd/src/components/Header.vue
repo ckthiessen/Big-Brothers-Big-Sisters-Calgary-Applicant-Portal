@@ -115,7 +115,7 @@
 
 <script>
 import {getUserByID} from "../services/apiServices"
-import * as cookies from 'vue-cookies'
+
     export default {
         data: () => ({
             menu: false,
@@ -137,7 +137,7 @@ import * as cookies from 'vue-cookies'
               this.id = this.$route.params.applicantID;
           } 
           //check if the Auth cookie exists, if it doesn't then they did no go through sign in so route to sign in
-          if(!cookies.isKey(this.id)){
+          if(!this.$cookies.isKey(this.id)){
             this.$router.replace({name: "Signin"});
           }
           getUserByID(this.id).then(response => {
@@ -209,7 +209,7 @@ import * as cookies from 'vue-cookies'
           },
           logOut() {
             //remove cookies ONLY on logout
-            cookies.remove(this.user.id);
+            this.$cookies.remove(this.user.id);
             this.$router.replace({name: "Signin"});
           }
         },
