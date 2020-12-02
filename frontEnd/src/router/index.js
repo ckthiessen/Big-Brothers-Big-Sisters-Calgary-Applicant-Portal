@@ -18,6 +18,7 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: '/',
+    name: 'Signin',
     component: Signin
   },
   {
