@@ -31,10 +31,10 @@ module.exports = {
             }
             tasks.push({
               name: task.name,
-              fileUpload: null,
+              fileUpload: task.fileUpload,
               dueDate: dueDate,
               isApproved: task.isApproved,
-              isSubmitted: false,
+              isSubmitted: task.isSubmitted,
             })
           });
 

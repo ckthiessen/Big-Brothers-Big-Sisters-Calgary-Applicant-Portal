@@ -16,6 +16,27 @@ app.listen(port, () => {
   console.log(`Server listening on the port::${port}`);
 });
 
+//API helper functions here
+async function isEmailUnqiue(userToCheck,res){
+  let found = await userRepository.getUserbyEmail(userToCheck);
+  //if we found a user with this email already
+  console.log(found.id);
+  console.log(userToCheck.id);
+  if(found !== null){
+    //found yourself already in the system, so it is an update
+    if(found.id === userToCheck.id){
+      return true;
+    }
+    //if the ID's didn't match, then your trying to create a user with a non-unique email
+    console.log("error 409");
+    res.status(409);
+    res.json("error user with email " + found.email + " already exists")
+    return false;
+  }
+  //we didn't find the user
+  return true
+}
+
 // Get all users for searching. Client will filter the array that is returned
 // sends list of users up to the client
 app.get('/api/users', async (req, res) => {
@@ -41,7 +62,7 @@ app.post('/api/users/login', async(req,res) =>{
     userValidator.validateLogin(body);
 
     console.log("get user by email: /api/users/login");
-    let found = await userRepository.getUserbyEmail(body);
+    let found = await userRepository.authenticateUser(body);
     console.log(found);
     res.json(found);
   }
@@ -77,15 +98,19 @@ app.get("/api/users/:id", async (req,res) => {
 //assumes that the json received includes: email, Name, Password and ID
 app.post("/api/users", async (req, res) => {
   let toCreate = req.body;
-
   try {
     userValidator.validateUser(toCreate);
+
+    //if the email already exists then throw 409 and return
+    if( await isEmailUnqiue(toCreate,res) === false ){
+      return;
+    }
 
     toCreate.tasks =  taskFactory.getDefaultTasks();
     // password: newUser.password, // TODO: Salt and hash the password or make this work with firebase authentication
     toCreate.notifications = [
       {
-        message: "Congratulations on making your account!",
+        messzage: "Congratulations on making your account!",
         date: new Date().toLocaleDateString("en-CA", { timeZone: "America/Edmonton" })
       }
     ];
@@ -127,6 +152,12 @@ app.put("/api/users", async (req,res) => {
   console.log(toUpdate);
   try {
     userValidator.validateUser(toUpdate);
+
+    //if the email already exists then throw 409 and return
+    //unless the email that already exists is you
+    if( await isEmailUnqiue(toUpdate,res) === false ){
+      return;
+    }
 
     console.log("Updating user");
     console.log(toUpdate);

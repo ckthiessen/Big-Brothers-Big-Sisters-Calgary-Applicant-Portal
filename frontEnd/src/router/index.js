@@ -18,6 +18,7 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: '/',
+    name: 'Signin',
     component: Signin
   },
   {
@@ -37,7 +38,6 @@ const routes = [
     //   requiresAuth: true,
     // }
   },
-  // Still need to add the dynamic routes
   {
     path: '/applicant/:applicantID',
     component: ApplicantPortal,
@@ -47,15 +47,14 @@ const routes = [
   {
     path: '/admin/:adminID/:applicantID',
     component: AdminApplicant,
-    // props: (route) => ({ 
-    //   adminID: route.params.adminID, 
-    //   applicantID: route.params.applicantID 
-    // }),
+    props: (route) => ({ 
+      adminID: route.params.adminID, 
+      applicantID: route.params.applicantID 
+    }),
     // meta: {
     //   requiresAdminPerm: true,
     //   requiresAuth: true,
     // }
-    
   }
 ]
 
