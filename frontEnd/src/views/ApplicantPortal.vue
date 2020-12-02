@@ -117,18 +117,13 @@ export default {
         "You are no BIG Deal :(",
         "You are a BIG Deal!",
       ],
+      id: this.$route.params.applicantID, 
     };
   },
   components: {
     "bbbs-header": Header,
     "bbbs-footer": Footer,
   },
-  // props: {
-  //   applicant: Object,
-  // },
-  // created() {},
-  // computed: {
-  // },
   methods: {
     changeStatus(status, index) {
       let selectedTask = this.tasks[index];
@@ -144,8 +139,7 @@ export default {
   },
   created() {
     let defaults = require("../assets/defaults.json");
-    //CURRENTLY just gets 123 by default, requires this to be dyanmic using AUTH
-    getUserByID(123).then(res => {
+    getUserByID(this.id).then(res => {
       for (const serverTask of Object.values(res.data.tasks)) {
         let clientTask = {} 
         clientTask.name = serverTask.name;
@@ -166,7 +160,3 @@ export default {
   }
 };
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-</style>
