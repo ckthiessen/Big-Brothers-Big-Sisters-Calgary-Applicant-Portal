@@ -1,4 +1,6 @@
 <template>
+  <v-container fluid style="margin: 0 auto 0 auto; padding: 0px; width: 90%">
+  <bbbs-header fluid style="margin: 0 auto 0 auto; padding: 0px; width: 90%"></bbbs-header>
   <v-card class="mx-auto">
     <!-- <div class="d-flex flex-column justify-space-between align-center">
       <v-img
@@ -9,7 +11,8 @@
         :height="height"
       ></v-img>
     </div> -->
-    <bbbs-header></bbbs-header>
+
+    <v-spacer></v-spacer>
     <v-card-title>
       Applicants
       <v-spacer></v-spacer>
@@ -47,6 +50,7 @@
     </v-data-table>
     <bbbs-footer></bbbs-footer>
   </v-card>
+  </v-container>
 </template>
 
 <script>
