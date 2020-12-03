@@ -22,6 +22,42 @@ module.exports = {
     await db.collection('users').doc(toUpdate.id).update(toUpdate);
     console.log('user: ' + toUpdate.id + ' updated.');
   },
+  
+  updateTask: async function(applicantID, newTasks, selectedTask) {
+    console.log(`updating user: ${applicantID}`);
+    let applicantDocRef = await db.collection('users').doc(applicantID);
+    applicantDocRef.update({
+      "tasks": newTasks
+    });
+    let applicant = await this.getUserById(applicantID);
+    let notifMessage; 
+    if(selectedTask.status === "InProgress") {
+      notifMessage = `${applicant.name} has submitted ${selectedTask.name}`;
+    } else {
+      notifMessage = `${applicant.name} has unsubmitted ${selectedTask.name}`;
+    }
+    let adminIDs = await this.getAllAdmins();
+    adminIDs.forEach(adminID => {
+      db.collection('users').doc(adminID).update({
+          notifications: admin.firestore.FieldValue.arrayUnion({
+            message: notifMessage,
+            date: new Date().toLocaleDateString("en-CA", { timeZone: "America/Edmonton" })
+          })
+        })
+    })
+    console.log('user: ' + applicant.name + ' updated.');
+  },
+
+  getAllAdmins: async function() {
+    let adminIDs = []
+    await db.collection('users').where("isAdmin", "==", true).get()
+    .then(querySnapshot => {
+      querySnapshot.forEach(adminSnapshot => {
+        adminIDs.push(adminSnapshot.data().id);
+      })
+    });
+    return adminIDs; 
+  }, 
 
   deleteUser: async function(idToDelete) {
     console.log('delete User: ' + idToDelete);
@@ -36,7 +72,7 @@ module.exports = {
     var users = [];
     const snapshot = await db.collection('users').get();
     snapshot.forEach((doc) => {
-      console.log(doc.id, '=>', doc.data());
+      // console.log(doc.id, '=>', doc.data());
       users.push(doc.data());
     });
     return users;
@@ -47,7 +83,7 @@ module.exports = {
     const found = db.collection('users').doc(id);
     const doc = await found.get();
     if (doc.exists) {
-      return doc.data();    
+      return doc.data();
     }
     throw "Not Found";
   },
