@@ -61,8 +61,8 @@
 
 <script>
   import {getUserByEmail} from "../services/apiServices";
-export default {
   
+export default {
   
   name: 'Signin',
   data () {
@@ -77,7 +77,9 @@ export default {
     async auth(email, password) {
       await getUserByEmail({ email, password })
       .then(response => {
+        //build cookie - SUPER WEIRD EDGE CASE THING
         let user = response.data;
+        this.$cookies.set(user.id); //cookie includes the ID
         if(user.isAdmin){
           this.$router.push(`/admin/home/${user.id}`)
         }else{
