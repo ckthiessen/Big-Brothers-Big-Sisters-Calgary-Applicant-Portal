@@ -118,6 +118,7 @@
 
 <script>
 import {getUserByID} from "../services/apiServices"
+
     export default {
         data: () => ({
             menu: false,
@@ -132,10 +133,15 @@ import {getUserByID} from "../services/apiServices"
             interval: "",
         }),
         created() {
+          
           if(this.$route.params.adminID) {
               this.id = this.$route.params.adminID; 
           } else {
               this.id = this.$route.params.applicantID;
+          } 
+          //check if the Auth cookie exists, if it doesn't then they did no go through sign in so route to sign in
+          if(!this.$cookies.isKey(this.id)){
+            this.$router.replace({name: "Signin"});
           }
           getUserByID(this.id).then(response => {
               //get user information
@@ -205,6 +211,8 @@ import {getUserByID} from "../services/apiServices"
             }
           },
           logOut() {
+            //remove cookies ONLY on logout
+            this.$cookies.remove(this.user.id);
             this.$router.replace({name: "Signin"});
           }
         },
