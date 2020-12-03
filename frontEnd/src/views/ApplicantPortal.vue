@@ -155,7 +155,14 @@ export default {
         let clientTask = {} 
         clientTask.name = serverTask.name;
         clientTask.dueDate = serverTask.dueDate; 
-        clientTask.status = serverTask.status;
+        if(serverTask.isApproved) {
+            clientTask.status = "Complete"; 
+        }
+        else if(serverTask.isSubmitted) { 
+            clientTask.status = "InProgress"; 
+        } else {
+            clientTask.status = "Incomplete"; 
+        }
         clientTask.description = defaults[serverTask.name].description;
         clientTask.upload = defaults[serverTask.name].upload;
         this.tasks.push(clientTask);
