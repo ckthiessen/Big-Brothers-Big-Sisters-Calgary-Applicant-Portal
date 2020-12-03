@@ -67,7 +67,7 @@
           <v-col>
             <v-btn
               color="accent"
-              @click="$router.push('signin')"
+              @click="$router.push('/')"
             > Already a member? Sign in
             </v-btn>
           </v-col>
