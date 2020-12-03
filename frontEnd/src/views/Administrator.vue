@@ -2,15 +2,17 @@
   <v-container fluid style="margin: 0 auto 0 auto; padding: 0px; width: 90%">
   <bbbs-header fluid style="margin: 0 auto 0 auto; padding: 0px; width: 90%"></bbbs-header>
   <v-card class="mx-auto">
-    <!-- <div class="d-flex flex-column justify-space-between align-center">
+    <div class="d-flex flex-column justify-space-between align-center">
       <v-img
-        src="../assets/thumbnail_Calgary_horizontal_primary_CMYK_EN.png"
+        src="../assets/Banner_revised.png"
         contain
+        margin-top="0px"
+        margin-bottom="0px"
         :aspect-ratio="16/9"
         :width="width"
         :height="height"
       ></v-img>
-    </div> -->
+    </div>
 
     <v-spacer></v-spacer>
     <v-card-title>
@@ -67,7 +69,7 @@
     data () {
       return {
         width: window.innerWidth,
-        height: window.innerHeight * 0.5, 
+        height: window.innerHeight * 0.3, 
         search: '',
         adminID: '',
         headers: [

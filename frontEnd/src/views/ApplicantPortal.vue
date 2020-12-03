@@ -1,15 +1,18 @@
 <template>
-  <v-card width="90%" class="mx-auto">
-    <!-- <div class="d-flex flex-column justify-space-between align-center">
+  <v-container fluid style="margin: 0 auto 0 auto; padding: 0px; width: 90%">
+  <bbbs-header fluid style="margin: 0 auto 0 auto; padding: 0px; width: 90%"></bbbs-header>
+  <v-card class="mx-auto">
+    <div class="d-flex flex-column justify-space-between align-center">
       <v-img
-        src="../assets/thumbnail_Calgary_horizontal_primary_CMYK_EN.png"
+        src="../assets/Banner_revised.png"
         contain
+        margin-top="0px"
+        margin-bottom="0px"
         :aspect-ratio="16/9"
-        :width="this.window.innerWidth * 0.9"
-        :height="this.window.innerHeight * 0.75"
+        :width="width"
+        :height="height"
       ></v-img>
-    </div> -->
-    <bbbs-header></bbbs-header>
+    </div>
     <v-card-title> Activities </v-card-title>
     <v-container>
      <v-row>
@@ -77,6 +80,7 @@
     </v-container>
     <bbbs-footer></bbbs-footer>
   </v-card>
+  </v-container>
 </template>
 
 <script>
