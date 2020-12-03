@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto">
+  <v-card class="mx-auto" width=90%>
     <!-- <div class="d-flex flex-column justify-space-between align-center">
       <v-img
         src="../assets/thumbnail_Calgary_horizontal_primary_CMYK_EN.png"
