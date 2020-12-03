@@ -1,7 +1,18 @@
 <template>
-  
   <v-form>
     <v-container>
+      <v-snackbar v-model="snackbar" color="needsattention">
+        Incorrect login information  
+        <template v-slot:action="{ attrs }">
+          <v-btn
+            text
+            v-bind="attrs"
+            @click="snackbar = false"
+          >
+            Close
+          </v-btn>
+        </template>
+      </v-snackbar>
       <h1>Sign In</h1>
       <v-row
         justify="center">
@@ -63,7 +74,6 @@
   import {getUserByEmail} from "../services/apiServices";
   
 export default {
-  
   name: 'Signin',
   data () {
     return {
@@ -71,6 +81,7 @@ export default {
       email: '',
       password: '',
       passwordVisible: false,
+      snackbar: false,
     }
   }, 
   methods: {
@@ -84,6 +95,11 @@ export default {
           this.$router.push(`/admin/home/${user.id}`)
         }else{
           this.$router.push(`/applicant/${user.id}`)
+        }
+      })
+      .catch(error => {
+        if (error.response.status == 401) {
+          this.snackbar = true;
         }
       });
     }
