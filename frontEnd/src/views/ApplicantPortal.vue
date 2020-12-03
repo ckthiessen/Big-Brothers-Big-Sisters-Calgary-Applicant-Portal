@@ -5,8 +5,8 @@
         src="../assets/thumbnail_Calgary_horizontal_primary_CMYK_EN.png"
         contain
         :aspect-ratio="16/9"
-        :width="width"
-        :height="height"
+        :width="this.window.innerWidth * 0.9"
+        :height="this.window.innerHeight * 0.75"
       ></v-img>
     </div> -->
     <bbbs-header></bbbs-header>
@@ -89,13 +89,11 @@
 import Header from '../components/Header.vue'
 import Footer from '../components/Footer.vue'
 
-import {getUserByID} from "../services/apiServices" //Import any func you need
+import {getUserByID, updateTask} from "../services/apiServices" 
 
 export default {
   data() {
     return {
-      width: window.innerWidth * 0.9,
-      height: window.innerHeight * 0.75, 
       applicant: {},
       tasks: [],
       headers: ["Name", "Status", "Due Date", "Upload"],
@@ -140,9 +138,11 @@ export default {
       let selectedTask = this.tasks[index];
       if (selectedTask.status === "Incomplete") {
         selectedTask.status = "InProgress";
+        selectedTask.isSumbitted = true;
       } else if (selectedTask.status === "InProgress") {
         selectedTask.status = "Incomplete";
       }
+      updateTask(this.id, this.tasks, selectedTask);
     },
     buttonTitle: function (status) {
       return status === "InProgress" ? "Mark Incomplete" : "Request Approval"
@@ -155,14 +155,7 @@ export default {
         let clientTask = {} 
         clientTask.name = serverTask.name;
         clientTask.dueDate = serverTask.dueDate; 
-        if(serverTask.isApproved) {
-            clientTask.status = "Complete"; 
-        }
-        else if(serverTask.isSubmitted) { 
-            clientTask.status = "InProgress"; 
-        } else {
-            clientTask.status = "Incomplete"; 
-        }
+        clientTask.status = serverTask.status;
         clientTask.description = defaults[serverTask.name].description;
         clientTask.upload = defaults[serverTask.name].upload;
         this.tasks.push(clientTask);
