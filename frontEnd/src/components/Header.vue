@@ -6,6 +6,7 @@
         padding-right="1rem"
         flat
         absolute
+        elevation="1"
     >
         <v-menu 
           offset-y
@@ -112,7 +113,6 @@
         >
         Log out
         </v-btn>
-        
     </v-app-bar>
 </template>
 
