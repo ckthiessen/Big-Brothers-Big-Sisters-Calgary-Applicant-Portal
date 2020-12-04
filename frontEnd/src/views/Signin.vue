@@ -66,7 +66,7 @@
             <v-btn
               color="accent"
               margin-bottom="1em"
-              @click="auth('hi.hello@hello.com', 'Abc1234$')"
+              @click="auth('awd.cook@ucalgary.ca', 'password')"
             >
               BYPASS AUTH AS APPLICANT (DEBUG ONLY)
             </v-btn>

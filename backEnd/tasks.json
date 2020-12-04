@@ -117,12 +117,5 @@
     "isApproved": false,
     "isSubmitted": false,
     "fileUpload": false
-  },
-  {
-    "name": "You are no BIG Deal :(",
-    "dueDate": "No due date",
-    "isApproved": false,
-    "isSubmitted": false,
-    "fileUpload": false
   }
 ]
