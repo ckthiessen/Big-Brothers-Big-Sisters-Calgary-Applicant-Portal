@@ -2,6 +2,12 @@
   <v-container fluid style="margin: 0 auto 0 auto; padding: 0px; width: 90%">
   <bbbs-header fluid style="margin: 0 auto 0 auto; padding: 0px; width: 90%"></bbbs-header>
   <v-card class="mx-auto">
+<<<<<<< HEAD
+=======
+
+    <v-spacer></v-spacer>
+  
+>>>>>>> d998e0af7f291808676091ac6821e9c0855d9d7c
     <!-- <v-card-title>
       Applicants
       <v-spacer></v-spacer>
