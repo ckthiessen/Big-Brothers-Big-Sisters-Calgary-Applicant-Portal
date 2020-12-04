@@ -12,7 +12,7 @@
     <bbbs-header></bbbs-header>
     <v-card-title> Activities </v-card-title>
     <v-container>
-     <v-row>
+     <v-row class="titles">
         <v-col  cols="1" > <span> Name </span> </v-col>
         <v-col cols="2" offset="2" class="pl-0"> Status </v-col>
         <v-col cols="1" offset="1" class="pl-0">  Due Date </v-col>
@@ -30,7 +30,7 @@
           <v-expansion-panel>
             <v-expansion-panel-header>
               <v-row>
-                <v-col>
+                <v-col class="titles content">
                   {{ task.name }}
                 </v-col>
                 <v-col>
@@ -45,7 +45,7 @@
                     {{ status[task.status].title }}
                   </v-chip>
                 </v-col>
-                <v-col> {{ task.dueDate }} </v-col>
+                <v-col class="content"> {{ task.dueDate }} </v-col>
                 <v-col>
                   <v-icon color="accent">
                     {{
@@ -180,4 +180,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .titles {
+    font-weight: 600;
+  }
+  .content {
+    padding-top: 28px;
+  }
 </style>
