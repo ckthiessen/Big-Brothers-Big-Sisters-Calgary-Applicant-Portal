@@ -17,16 +17,13 @@ app.listen(port, () => {
 });
 
 //API helper functions here
-async function isEmailUnqiue(userToCheck,res,newUser){
+async function isEmailUnqiue(userToCheck,res){
   //called on a create and therefore he will NOT be in the db
-  if(newUser){
-    return true 
-  }
-  let found = await userRepository.getUserbyEmail(userToCheck);
-  //if we found a user with this email already
-  console.log(found.id);
-  console.log(userToCheck.id);
-  if(found !== null){
+  try{
+    let found = await userRepository.getUserbyEmail(userToCheck);
+    //if we found a user with this email already
+    console.log(found.id);
+    console.log(userToCheck.id);
     //found yourself already in the system, so it is an update
     if(found.id === userToCheck.id){
       return true;
@@ -36,9 +33,12 @@ async function isEmailUnqiue(userToCheck,res,newUser){
     res.status(409);
     res.json("error user with email " + found.email + " already exists")
     return false;
-  }
   //we didn't find the user
-  return true
+  }
+  catch(error){
+    //didn't find the User
+    return true
+  }
 }
 
 // Get all users for searching. Client will filter the array that is returned
@@ -106,7 +106,7 @@ app.post("/api/users", async (req, res) => {
     userValidator.validateUser(toCreate);
 
     //if the email already exists then throw 409 and return
-    if( await isEmailUnqiue(toCreate,res,true) === false ){
+    if( await isEmailUnqiue(toCreate,res) === false ){
       return;
     }
 
@@ -160,7 +160,7 @@ app.put("/api/users", async (req,res) => {
     //if the email already exists then throw 409 and return
     //unless the email that already exists is you
     //add false to an update
-    if( await isEmailUnqiue(toUpdate,res,false) === false ){
+    if( await isEmailUnqiue(toUpdate,res) === false ){
       return;
     }
 
