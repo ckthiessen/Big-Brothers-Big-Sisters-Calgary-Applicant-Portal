@@ -1,5 +1,4 @@
 <template>
-  
   <v-form>
     <v-container>
       <h1>Sign In</h1>
@@ -15,6 +14,7 @@
             label="Email"
             outlined
             required
+            :error-messages="errormessage"
           ></v-text-field>
           <v-text-field
             v-model="password"
@@ -26,6 +26,7 @@
             :type="passwordVisible ? 'text' : 'password'"
             name="input-10-2"
             hint="At least 8 characters"
+            :error-messages="errormessage"
             @click:append="passwordVisible = !passwordVisible"
           ></v-text-field>
           <v-col>
@@ -63,7 +64,6 @@
   import {getUserByEmail} from "../services/apiServices";
   
 export default {
-  
   name: 'Signin',
   data () {
     return {
@@ -71,6 +71,7 @@ export default {
       email: '',
       password: '',
       passwordVisible: false,
+      errormessage: '',
     }
   }, 
   methods: {
@@ -84,6 +85,11 @@ export default {
           this.$router.push(`/admin/home/${user.id}`)
         }else{
           this.$router.push(`/applicant/${user.id}`)
+        }
+      })
+      .catch(error => {
+        if (error.response.status == 401) {
+          this.errormessage = 'Invalid email or password'
         }
       });
     }

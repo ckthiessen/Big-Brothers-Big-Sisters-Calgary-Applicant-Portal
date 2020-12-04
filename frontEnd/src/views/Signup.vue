@@ -29,6 +29,7 @@
             label="Email"
             outlined
             required
+            :error-messages="errormessage"
           ></v-text-field>
           <v-text-field
             v-model="password"
@@ -92,6 +93,7 @@ export default {
         checkpassword: '',
         passwordVisible: false,
         isValid: true,
+        errormessage: '',
 
         emailrules: [ 
         v => 
@@ -123,7 +125,12 @@ export default {
         .then(() => {
             this.$router.push(`/`);
           }
-        );
+        )
+        .catch(error => {
+          if (error.response.status == 409) {
+            this.errormessage = 'This email has already been taken'
+          }
+        });
       },
     }
 }
