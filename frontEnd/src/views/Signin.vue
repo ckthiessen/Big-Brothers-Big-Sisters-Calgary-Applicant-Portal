@@ -1,7 +1,7 @@
 <template>
   <v-form>
     <v-container>
-      <v-snackbar v-model="snackbar" color="needsattention">
+      <!-- <v-snackbar v-model="snackbar" color="needsattention">
         Incorrect login information  
         <template v-slot:action="{ attrs }">
           <v-btn
@@ -12,7 +12,7 @@
             Close
           </v-btn>
         </template>
-      </v-snackbar>
+      </v-snackbar> -->
       <h1>Sign In</h1>
       <v-row
         justify="center">
@@ -26,6 +26,7 @@
             label="Email"
             outlined
             required
+            :error-messages="errormessage"
           ></v-text-field>
           <v-text-field
             v-model="password"
@@ -37,6 +38,7 @@
             :type="passwordVisible ? 'text' : 'password'"
             name="input-10-2"
             hint="At least 8 characters"
+            :error-messages="errormessage"
             @click:append="passwordVisible = !passwordVisible"
           ></v-text-field>
           <v-col>
@@ -81,7 +83,7 @@ export default {
       email: '',
       password: '',
       passwordVisible: false,
-      snackbar: false,
+      errormessage: '',
     }
   }, 
   methods: {
@@ -99,7 +101,7 @@ export default {
       })
       .catch(error => {
         if (error.response.status == 401) {
-          this.snackbar = true;
+          this.errormessage = 'Invalid email or password'
         }
       });
     }
