@@ -1,15 +1,16 @@
 <template>
-  <v-card width="90%" class="mx-auto">
-  <!-- <div class="d-flex flex-column justify-space-between align-center">
-      <v-img
-        src="../assets/thumbnail_Calgary_horizontal_primary_CMYK_EN.png"
-        contain
-        :aspect-ratio="16/9"
-        :width="width"
-        :height="height"
-      ></v-img>
-  </div> -->
-  <bbbs-header></bbbs-header>
+  <v-container fluid style="margin: 0 auto 0 auto; padding: 0px; width: 90%">
+  <bbbs-header fluid style="margin: 0 auto 0 auto; padding: 0px; width: 90%"></bbbs-header>
+  <v-card class="mx-auto">
+
+    <v-spacer></v-spacer>
+  
+    <!-- <v-card-title>
+      Applicants
+      <v-spacer></v-spacer>
+      <v-text-field
+      ></v-text-field>
+    </v-card-title> -->
     <v-data-table
     :headers="Headers"
     :items="tasks"
@@ -18,7 +19,7 @@
   >
     <template v-slot:top>
       <v-toolbar flat>
-        <v-toolbar-title>{{applicant.name}}</v-toolbar-title>
+        <v-card-title>{{applicant.name}}</v-card-title>
         <v-spacer></v-spacer>
       </v-toolbar>
     </template>
@@ -48,6 +49,7 @@
   </v-data-table>
   <bbbs-footer></bbbs-footer>
   </v-card>
+  </v-container>
 </template>
 
 <script>
@@ -88,7 +90,7 @@ export default {
   data(){
     return {
         width: window.innerWidth,
-        height: window.innerHeight, 
+        height: window.innerHeight * 0.3, 
         applicantID: '',
         adminID : '',
         applicant: [],

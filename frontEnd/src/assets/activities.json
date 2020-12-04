@@ -117,12 +117,5 @@
     "dueDate": "Prior to interview",
     "status": "Incomplete",
     "upload": false
-  },
-  {
-    "name": "You are no BIG Deal :(",
-    "description": "Did not get accepted",
-    "dueDate": "No due date",
-    "status": "Incomplete",
-    "upload": false
   }
 ]

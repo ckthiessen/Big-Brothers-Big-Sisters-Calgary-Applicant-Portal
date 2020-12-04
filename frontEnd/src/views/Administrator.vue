@@ -1,15 +1,8 @@
 <template>
-  <v-card class="mx-auto" width=90%>
-    <!-- <div class="d-flex flex-column justify-space-between align-center">
-      <v-img
-        src="../assets/thumbnail_Calgary_horizontal_primary_CMYK_EN.png"
-        contain
-        :aspect-ratio="16/9"
-        :width="width"
-        :height="height"
-      ></v-img>
-    </div> -->
-    <bbbs-header></bbbs-header>
+  <v-container fluid style="margin: 0 auto 0 auto; padding: 0px; width: 90%">
+  <bbbs-header fluid style="margin: 0 auto 0 auto; padding: 0px; width: 90%"></bbbs-header>
+  <v-card class="mx-auto">
+    <v-spacer></v-spacer>
     <v-card-title>
       Applicants
       <v-spacer></v-spacer>
@@ -26,9 +19,10 @@
       :items="users"
       :search="search"
       item-key="id"
+      @click:row="goToApplicantView"
     >
       <template v-slot:item.name="{item}">
-        <td @click="goToApplicantView(item.id)">{{item.name}}</td>
+        <td>{{item.name}}</td>
       </template>
       <template v-slot:item.status="{ item }">
         <v-chip
@@ -47,6 +41,7 @@
     </v-data-table>
     <bbbs-footer></bbbs-footer>
   </v-card>
+  </v-container>
 </template>
 
 <script>
@@ -63,7 +58,7 @@
     data () {
       return {
         width: window.innerWidth,
-        height: window.innerHeight * 0.5, 
+        height: window.innerHeight * 0.3, 
         search: '',
         adminID: '',
         headers: [
@@ -123,8 +118,8 @@
         }
       },
       
-      goToApplicantView(applicantID) {
-        this.$router.push(`/admin/${this.adminID}/${applicantID}`)
+      goToApplicantView(selectedUser) {
+        this.$router.push(`/admin/${this.adminID}/${selectedUser.id}`)
       }
     },
 

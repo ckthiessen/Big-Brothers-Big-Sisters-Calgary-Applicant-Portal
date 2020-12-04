@@ -6,6 +6,7 @@
         padding-right="1rem"
         flat
         absolute
+        elevation="1"
     >
       <v-btn
        icon
@@ -120,7 +121,6 @@
         >
         Log out
         </v-btn>
-        
     </v-app-bar>
 </template>
 

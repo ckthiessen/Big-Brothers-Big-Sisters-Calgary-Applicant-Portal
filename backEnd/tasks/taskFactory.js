@@ -1,6 +1,5 @@
 //this class builds and generates the default tasks when creating a user
 let taskDefaults = require("../tasks.json")
-let dateFormat = require("dateformat");
 
 //these are the tasks that require calculated due dates
 let requiresCalculatedDueDate = new Map([

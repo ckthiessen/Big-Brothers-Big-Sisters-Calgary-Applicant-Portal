@@ -1,8 +1,13 @@
 <template>
-  
-  <v-form>
+  <v-container v-container fluid style="margin: 0 auto 0 auto; padding: 0px; max-width: 800px">
+  <v-card>
+    <v-card-title 
+    align-middle
+    class="center accent white--text">
+      Sign In
+    </v-card-title>
+  <form>
     <v-container>
-      <h1>Sign In</h1>
       <v-row
         justify="center">
         <v-col
@@ -15,6 +20,7 @@
             label="Email"
             outlined
             required
+            :error-messages="errormessage"
           ></v-text-field>
           <v-text-field
             v-model="password"
@@ -26,25 +32,21 @@
             :type="passwordVisible ? 'text' : 'password'"
             name="input-10-2"
             hint="At least 8 characters"
+            :error-messages="errormessage"
             @click:append="passwordVisible = !passwordVisible"
           ></v-text-field>
-          <v-col>
+          <v-row justify="space-around">
+            <v-col>
             <v-btn
               color="accent"
+              width="100%"
               @click="auth(email, password)"
             > Sign in
             </v-btn>
-          </v-col>
-          <v-col>
-            <v-btn
-              color="accent"
-              margin-bottom="1em"
-              @click="$router.push('/signup')"
-            >
-              Dont have an account? Sign Up
-            </v-btn>
-          </v-col>
-          <v-col>
+            </v-col>
+          </v-row>
+          <!-- <v-row> -->
+            <!-- <v-col>
             <v-btn
               color="accent"
               margin-bottom="1em"
@@ -52,18 +54,49 @@
             >
               Forgot Password
             </v-btn>
+            </v-col>
+          <v-spacer></v-spacer> -->
+           <!-- <v-col> -->
+            <v-btn
+              width="100%"
+              color="accent"
+              margin-bottom="1em"
+              @click="$router.push('/signup')"
+            >
+              Dont have an account? Sign Up
+            </v-btn>
+          <!-- </v-col> -->
+          <!-- </v-row> -->
+          <v-col>
+            <v-btn
+              color="accent"
+              margin-bottom="1em"
+              @click="auth('benjamin.cook@ucalgary.ca', 'password')"
+            >
+              BYPASS AUTH AS ADMIN (DEBUG ONLY)
+            </v-btn>
+          </v-col>
+          <v-col>
+            <v-btn
+              color="accent"
+              margin-bottom="1em"
+              @click="auth('r.l@mail.com', 'Abc123!!!')"
+            >
+              BYPASS AUTH AS APPLICANT (DEBUG ONLY)
+            </v-btn>
           </v-col>
         </v-col>
       </v-row>
     </v-container>
-  </v-form>
+  </form>
+  </v-card>
+  </v-container>
 </template>
 
 <script>
   import {getUserByEmail} from "../services/apiServices";
   
 export default {
-  
   name: 'Signin',
   data () {
     return {
@@ -71,6 +104,7 @@ export default {
       email: '',
       password: '',
       passwordVisible: false,
+      errormessage: '',
     }
   }, 
   methods: {
@@ -85,8 +119,20 @@ export default {
         }else{
           this.$router.push(`/applicant/${user.id}`)
         }
+      })
+      .catch(error => {
+        if (error.response.status == 401) {
+          this.errormessage = 'Invalid email or password'
+        }
       });
     }
   }
 }
 </script>
+
+<style scoped>
+ .v-text-field--outlined >>> fieldset {
+    border-color:#2DCCD3 !important;
+    border-width: medium !important
+  }
+</style>
