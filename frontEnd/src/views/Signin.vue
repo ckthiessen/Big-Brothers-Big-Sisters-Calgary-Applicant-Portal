@@ -1,7 +1,19 @@
 <template>
-  <v-form>
+  <v-container v-container fluid style="margin: 0 auto 0 auto; padding: 0px; max-width: 800px">
+  <v-card>
+    <v-img  
+      src="..\assets\thumbnail_Calgary_horizontal_primary_CMYK_EN.png"
+      contain
+      position="left"
+      height="250px"
+    ></v-img>
+    <v-card-title 
+    align-middle
+    class="center accent white--text">
+      Sign In
+    </v-card-title>
+  <form>
     <v-container>
-      <h1>Sign In</h1>
       <v-row
         justify="center">
         <v-col
@@ -29,14 +41,29 @@
             :error-messages="errormessage"
             @click:append="passwordVisible = !passwordVisible"
           ></v-text-field>
-          <v-col>
+          <v-row justify="space-around">
+            <v-col>
             <v-btn
               color="accent"
+              width="100%"
               @click="auth(email, password)"
             > Sign in
             </v-btn>
-          </v-col>
-          <v-col>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+            <v-btn
+              color="accent"
+              margin-bottom="1em"
+              @click="$router.push('/forgot')"
+            >
+              Forgot Password
+            </v-btn>
+            </v-col>
+          <v-spacer></v-spacer>
+           <v-col
+            width="50%">
             <v-btn
               color="accent"
               margin-bottom="1em"
@@ -45,15 +72,7 @@
               Dont have an account? Sign Up
             </v-btn>
           </v-col>
-          <v-col>
-            <v-btn
-              color="accent"
-              margin-bottom="1em"
-              @click="$router.push('/forgot')"
-            >
-              Forgot Password
-            </v-btn>
-          </v-col>
+          </v-row>
           <v-col>
             <v-btn
               color="accent"
@@ -75,7 +94,9 @@
         </v-col>
       </v-row>
     </v-container>
-  </v-form>
+  </form>
+  </v-card>
+  </v-container>
 </template>
 
 <script>
