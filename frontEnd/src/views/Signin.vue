@@ -51,8 +51,8 @@
             </v-btn>
             </v-col>
           </v-row>
-          <v-row>
-            <v-col>
+          <!-- <v-row> -->
+            <!-- <v-col>
             <v-btn
               color="accent"
               margin-bottom="1em"
@@ -61,18 +61,18 @@
               Forgot Password
             </v-btn>
             </v-col>
-          <v-spacer></v-spacer>
-           <v-col
-            width="50%">
+          <v-spacer></v-spacer> -->
+           <!-- <v-col> -->
             <v-btn
+              width="100%"
               color="accent"
               margin-bottom="1em"
               @click="$router.push('/signup')"
             >
               Dont have an account? Sign Up
             </v-btn>
-          </v-col>
-          </v-row>
+          <!-- </v-col> -->
+          <!-- </v-row> -->
           <v-col>
             <v-btn
               color="accent"
@@ -135,3 +135,10 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+ .v-text-field--outlined >>> fieldset {
+    border-color:#2DCCD3 !important;
+    border-width: medium !important
+  }
+</style>
