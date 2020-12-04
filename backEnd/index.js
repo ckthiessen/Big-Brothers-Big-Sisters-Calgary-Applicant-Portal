@@ -17,7 +17,11 @@ app.listen(port, () => {
 });
 
 //API helper functions here
-async function isEmailUnqiue(userToCheck,res){
+async function isEmailUnqiue(userToCheck,res,newUser){
+  //called on a create and therefore he will NOT be in the db
+  if(newUser){
+    return true 
+  }
   let found = await userRepository.getUserbyEmail(userToCheck);
   //if we found a user with this email already
   console.log(found.id);
@@ -102,7 +106,7 @@ app.post("/api/users", async (req, res) => {
     userValidator.validateUser(toCreate);
 
     //if the email already exists then throw 409 and return
-    if( await isEmailUnqiue(toCreate,res) === false ){
+    if( await isEmailUnqiue(toCreate,res,true) === false ){
       return;
     }
 
@@ -155,7 +159,8 @@ app.put("/api/users", async (req,res) => {
 
     //if the email already exists then throw 409 and return
     //unless the email that already exists is you
-    if( await isEmailUnqiue(toUpdate,res) === false ){
+    //add false to an update
+    if( await isEmailUnqiue(toUpdate,res,false) === false ){
       return;
     }
 
