@@ -3,14 +3,19 @@
   <bbbs-header fluid style="margin: 0 auto 0 auto; padding: 0px; width: 90%"></bbbs-header>
   <v-card class="mx-auto">
     <v-card-title> Activities </v-card-title>
-    <v-container>
-     <v-row>
+     <v-data-table
+       :headers="Headers"
+       :items="tasks"
+       item-key="index"
+       class="elevation-1"
+     >
+     <!-- <v-row>
         <v-col  cols="1" > <span> Name </span> </v-col>
         <v-col cols="2" offset="2" class="pl-0"> Status </v-col>
         <v-col cols="1" offset="1" class="pl-0">  Due Date </v-col>
         <v-col > Upload </v-col>
         <v-col cols="1"></v-col>
-      </v-row>
+      </v-row> -->
       <v-divider></v-divider>
       <v-expansion-panels accordion focusable>
         <div
@@ -66,7 +71,7 @@
           <v-divider></v-divider>
         </div>
       </v-expansion-panels>
-    </v-container>
+     </v-data-table>
     <bbbs-footer></bbbs-footer>
   </v-card>
   </v-container>
@@ -90,7 +95,27 @@ export default {
     return {
       applicant: {},
       tasks: [],
-      headers: ["Name", "Status", "Due Date", "Upload"],
+      Headers: [{
+            text: 'Name',
+            align: 'start',
+            sortable: false,
+            value: 'name',
+          },
+          {
+            text: 'Status',
+            align: 'start',
+            value: 'status',
+          },
+          {
+            text: 'Due Date',
+            align: 'start',
+            value: 'dueDate',
+          },
+          {
+            text: 'Upload',
+            align: 'middle',
+            value: 'upload'
+          }],
       status: {
         Complete: {
           color: "complete",

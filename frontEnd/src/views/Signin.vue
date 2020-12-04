@@ -1,15 +1,12 @@
 <template>
   <v-container v-container fluid style="margin: 0 auto 0 auto; padding: 0px; max-width: 800px">
   <v-card>
-<<<<<<< HEAD
     <v-img  
       src="../assets/thumbnail_Calgary_horizontal_primary_CMYK_EN.png"
       contain
       position="left"
       height="250px"
     ></v-img>
-=======
->>>>>>> d998e0af7f291808676091ac6821e9c0855d9d7c
     <v-card-title 
     align-middle
     class="center accent white--text">
