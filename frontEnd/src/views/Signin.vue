@@ -2,7 +2,7 @@
   <v-container v-container fluid style="margin: 0 auto 0 auto; padding: 0px; max-width: 800px">
   <v-card>
     <v-img  
-      src="..\assets\thumbnail_Calgary_horizontal_primary_CMYK_EN.png"
+      src="../assets/thumbnail_Calgary_horizontal_primary_CMYK_EN.png"
       contain
       position="left"
       height="250px"
