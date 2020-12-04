@@ -54,6 +54,24 @@
               Forgot Password
             </v-btn>
           </v-col>
+          <v-col>
+            <v-btn
+              color="accent"
+              margin-bottom="1em"
+              @click="auth('benjamin.cook@ucalgary.ca', 'password')"
+            >
+              BYPASS AUTH AS ADMIN (DEBUG ONLY)
+            </v-btn>
+          </v-col>
+          <v-col>
+            <v-btn
+              color="accent"
+              margin-bottom="1em"
+              @click="auth('hi.hello@hello.com', 'Abc1234$')"
+            >
+              BYPASS AUTH AS APPLICANT (DEBUG ONLY)
+            </v-btn>
+          </v-col>
         </v-col>
       </v-row>
     </v-container>

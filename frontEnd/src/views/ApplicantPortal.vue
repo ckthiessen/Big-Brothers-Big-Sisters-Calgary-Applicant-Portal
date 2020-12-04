@@ -1,15 +1,18 @@
 <template>
-  <v-card width="90%" class="mx-auto">
-    <!-- <div class="d-flex flex-column justify-space-between align-center">
+  <v-container fluid style="margin: 0 auto 0 auto; padding: 0px; width: 90%">
+  <bbbs-header fluid style="margin: 0 auto 0 auto; padding: 0px; width: 90%"></bbbs-header>
+  <v-card class="mx-auto">
+    <div class="d-flex flex-column justify-space-between align-center">
       <v-img
-        src="../assets/thumbnail_Calgary_horizontal_primary_CMYK_EN.png"
+        src="../assets/Banner_revised.png"
         contain
+        margin-top="0px"
+        margin-bottom="0px"
         :aspect-ratio="16/9"
         :width="width"
         :height="height"
       ></v-img>
-    </div> -->
-    <bbbs-header></bbbs-header>
+    </div>
     <v-card-title> Activities </v-card-title>
     <v-container>
      <v-row>
@@ -77,6 +80,7 @@
     </v-container>
     <bbbs-footer></bbbs-footer>
   </v-card>
+  </v-container>
 </template>
 
 <script>
@@ -89,13 +93,11 @@
 import Header from '../components/Header.vue'
 import Footer from '../components/Footer.vue'
 
-import {getUserByID} from "../services/apiServices" //Import any func you need
+import {getUserByID, updateTask} from "../services/apiServices" 
 
 export default {
   data() {
     return {
-      width: window.innerWidth * 0.9,
-      height: window.innerHeight * 0.75, 
       applicant: {},
       tasks: [],
       headers: ["Name", "Status", "Due Date", "Upload"],
@@ -128,26 +130,23 @@ export default {
         "You are no BIG Deal :(",
         "You are a BIG Deal!",
       ],
+      id: this.$route.params.applicantID, 
     };
   },
   components: {
     "bbbs-header": Header,
     "bbbs-footer": Footer,
   },
-  // props: {
-  //   applicant: Object,
-  // },
-  // created() {},
-  // computed: {
-  // },
   methods: {
     changeStatus(status, index) {
       let selectedTask = this.tasks[index];
       if (selectedTask.status === "Incomplete") {
         selectedTask.status = "InProgress";
+        selectedTask.isSumbitted = true;
       } else if (selectedTask.status === "InProgress") {
         selectedTask.status = "Incomplete";
       }
+      updateTask(this.id, this.tasks, selectedTask);
     },
     buttonTitle: function (status) {
       return status === "InProgress" ? "Mark Incomplete" : "Request Approval"
@@ -155,20 +154,12 @@ export default {
   },
   created() {
     let defaults = require("../assets/defaults.json");
-    //CURRENTLY just gets 123 by default, requires this to be dyanmic using AUTH
-    getUserByID(123).then(res => {
+    getUserByID(this.id).then(res => {
       for (const serverTask of Object.values(res.data.tasks)) {
         let clientTask = {} 
         clientTask.name = serverTask.name;
         clientTask.dueDate = serverTask.dueDate; 
-        if(serverTask.isApproved) {
-            clientTask.status = "Complete"; 
-        }
-        else if(serverTask.isSubmitted) { 
-            clientTask.status = "InProgress"; 
-        } else {
-            clientTask.status = "Incomplete"; 
-        }
+        clientTask.status = serverTask.status;
         clientTask.description = defaults[serverTask.name].description;
         clientTask.upload = defaults[serverTask.name].upload;
         this.tasks.push(clientTask);
@@ -177,7 +168,3 @@ export default {
   }
 };
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-</style>

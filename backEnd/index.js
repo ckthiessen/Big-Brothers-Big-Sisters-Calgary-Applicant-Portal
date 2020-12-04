@@ -171,3 +171,21 @@ app.put("/api/users", async (req,res) => {
   }
 });
 
+// Update existing user's task 
+// Triggered when applicant marks an item complete
+app.patch("/api/users", async (req, res) => {
+  let userID = req.body.id;
+
+  try {
+    userValidator.validateId(userID);
+    console.log("ID Valid");
+
+    await userRepository.updateTask(userID, req.body.tasks, req.body.selectedTask);
+    res.json();
+  }
+  catch(error) {
+    console.log('error' + error);
+    res.status(400);
+    res.json(error);
+  }
+});
