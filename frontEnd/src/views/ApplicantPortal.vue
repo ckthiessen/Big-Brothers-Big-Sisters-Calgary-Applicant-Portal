@@ -82,6 +82,7 @@
 import Header from '../components/Header.vue'
 import Footer from '../components/Footer.vue'
 
+/* eslint-disable */
 import {getUserByID, updateTask} from "../services/apiServices" 
 
 export default {
@@ -127,15 +128,33 @@ export default {
     "bbbs-footer": Footer,
   },
   methods: {
-    changeStatus(status, index) {
+    changeStatus: function(status, index) {
       let selectedTask = this.tasks[index];
+      if(selectedTask.status === "Complete") { return; }
       if (selectedTask.status === "Incomplete") {
         selectedTask.status = "InProgress";
-        selectedTask.isSumbitted = true;
+        selectedTask.isSubmitted = true;
       } else if (selectedTask.status === "InProgress") {
         selectedTask.status = "Incomplete";
+        selectedTask.isSubmitted = false;
       }
-      updateTask(this.id, this.tasks, selectedTask);
+      let serverTasks = []
+      this.tasks.forEach(task => {
+        let serverTask = {
+          dueDate: task.dueDate,
+          description: task.description,
+          name: task.name,
+          isApproved: task.isApproved
+        }
+          if(task.name === selectedTask.name) {
+            serverTask.isSubmitted = selectedTask.isSubmitted;
+          }
+          else {
+            serverTask.isSubmitted = task.isSubmitted;
+          }
+        serverTasks.push(serverTask);
+      });
+      updateTask(this.id, serverTasks, selectedTask);
     },
     buttonTitle: function (status) {
       return status === "InProgress" ? "Mark Incomplete" : "Request Approval"
@@ -148,7 +167,16 @@ export default {
         let clientTask = {} 
         clientTask.name = serverTask.name;
         clientTask.dueDate = serverTask.dueDate; 
-        clientTask.status = serverTask.status;
+        clientTask.isSubmitted = serverTask.isSubmitted;
+        clientTask.isApproved = serverTask.isApproved;
+        if(serverTask.isApproved) {
+            clientTask.status = "Complete"; 
+        }
+        else if(serverTask.isSubmitted) { 
+            clientTask.status = "InProgress"; 
+        } else {
+            clientTask.status = "Incomplete"; 
+        }
         clientTask.description = defaults[serverTask.name].description;
         clientTask.upload = defaults[serverTask.name].upload;
         this.tasks.push(clientTask);
