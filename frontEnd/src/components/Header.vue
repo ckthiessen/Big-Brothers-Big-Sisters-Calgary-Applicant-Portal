@@ -23,8 +23,8 @@
             </v-btn>
           </template>
           <v-card>
-            <v-list dense>
-              <v-list-item>
+            <v-list>
+            <v-list-item>
                 <v-list-item-content>
                   <v-list-item-title align="left">Notifications</v-list-item-title>
                 </v-list-item-content>
@@ -39,12 +39,14 @@
               </v-list-item>
             </v-list>
             <v-divider></v-divider>
-            <v-list>
-              <v-list-item align="left"
+            <v-list style="max-height: 200px; overflow-y: scroll">
+              <v-list-item 
                 v-for="(notification, index) in notifications.slice().reverse()"
                 :key="index"
               >
-                <v-list-item-subtitle>{{ notification }}</v-list-item-subtitle>
+                <v-list-item-content>
+                  <v-list-item-subtitle align="left">{{ notification }}</v-list-item-subtitle>
+                </v-list-item-content>
               </v-list-item>
             </v-list>
           </v-card>
@@ -61,6 +63,7 @@
         >
         <template v-slot:activator="{ on, attrs }">
           <v-btn
+            text
             v-bind="attrs"
             v-on="on"
             rounded 
@@ -115,6 +118,7 @@
 
 <script>
 import {getUserByID} from "../services/apiServices"
+
     export default {
         data: () => ({
             menu: false,
@@ -129,10 +133,15 @@ import {getUserByID} from "../services/apiServices"
             interval: "",
         }),
         created() {
+          
           if(this.$route.params.adminID) {
               this.id = this.$route.params.adminID; 
           } else {
               this.id = this.$route.params.applicantID;
+          } 
+          //check if the Auth cookie exists, if it doesn't then they did no go through sign in so route to sign in
+          if(!this.$cookies.isKey(this.id)){
+            this.$router.replace({name: "Signin"});
           }
           getUserByID(this.id).then(response => {
               //get user information
@@ -153,8 +162,8 @@ import {getUserByID} from "../services/apiServices"
               } else {
                 for (let i = 0; i < this.user["notifications"].length; i++) {
                   let notification = this.user["notifications"][i];
-                  this.notifications.push(notification.message + "   " + notification.date);
-                  this.lastNotification = notification.message + "   " + notification.date;
+                  this.notifications.push(notification.message + " (" + notification.date + ")");
+                  this.lastNotification = notification.message + " (" + notification.date + ")";
                 } 
               }
             });
@@ -175,19 +184,19 @@ import {getUserByID} from "../services/apiServices"
                   //check the last notification
                   let notification = this.user["notifications"][length - 1];
                   //if last notification is not new
-                  if (this.lastNotification === notification.message + "   " + notification.date) {
+                  if (this.lastNotification === notification.message + " (" + notification.date + ")") {
                     return;
                   }
 
                   //display new notification
-                  this.notifications.push(notification.message + "   " + notification.date);
+                  this.notifications.push(notification.message + " (" + notification.date + ")");
                   this.seen = false;
                   //remove "No notifications"
                   if (this.notifications[0] === "No notifications") {
                     this.notifications.shift();
                   }
                   //set the last notification again
-                  this.lastNotification = notification.message + "   " + notification.date;
+                  this.lastNotification = notification.message + " (" + notification.date + ")";
                 }
             })
           },
@@ -202,6 +211,8 @@ import {getUserByID} from "../services/apiServices"
             }
           },
           logOut() {
+            //remove cookies ONLY on logout
+            this.$cookies.remove(this.user.id);
             this.$router.replace({name: "Signin"});
           }
         },
