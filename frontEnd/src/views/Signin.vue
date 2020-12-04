@@ -1,12 +1,6 @@
 <template>
   <v-container v-container fluid style="margin: 0 auto 0 auto; padding: 0px; max-width: 800px">
   <v-card>
-    <v-img  
-      src="..\assets\thumbnail_Calgary_horizontal_primary_CMYK_EN.png"
-      contain
-      position="left"
-      height="250px"
-    ></v-img>
     <v-card-title 
     align-middle
     class="center accent white--text">
@@ -86,7 +80,7 @@
             <v-btn
               color="accent"
               margin-bottom="1em"
-              @click="auth('awd.cook@ucalgary.ca', 'password')"
+              @click="auth('r.l@mail.com', 'Abc123!!!')"
             >
               BYPASS AUTH AS APPLICANT (DEBUG ONLY)
             </v-btn>
