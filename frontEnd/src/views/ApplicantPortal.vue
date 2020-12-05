@@ -58,6 +58,7 @@
               >
                 {{ buttonTitle(task.status) }}
               </v-btn>
+              <bbbs-upload v-if="task.upload" class="float-right mt-5 mr-5"></bbbs-upload>
               <v-btn v-if="task.upload" class="float-right mt-5 mr-5">
                 Upload Document
               </v-btn>
@@ -81,6 +82,7 @@
 
 import Header from '../components/Header.vue'
 import Footer from '../components/Footer.vue'
+import Upload from '../components/Upload.vue'
 
 /* eslint-disable */
 import {getUserByID, updateTask} from "../services/apiServices" 
@@ -126,6 +128,7 @@ export default {
   components: {
     "bbbs-header": Header,
     "bbbs-footer": Footer,
+    "bbbs-upload": Upload,
   },
   methods: {
     changeStatus: function(status, index) {
