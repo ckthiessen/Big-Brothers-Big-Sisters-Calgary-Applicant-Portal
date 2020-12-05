@@ -4,7 +4,7 @@
   <v-card class="mx-auto">
      <v-data-table
        :headers="Headers"
-       :items="tasks"
+       :items="rankedTasks"
        :single-expand="singleExpand"
        :expanded.sync="expanded"
        show-expand
@@ -24,7 +24,7 @@
                 {{ item.description }}
               </p>
               <v-btn
-                @click="changeStatus(item.status, index)"
+                @click="changeStatus(item.status, item.rank - 1)"
                 v-if="!noActions.includes(item.name)"
                 class="float-right mt-5"
               >
@@ -146,6 +146,8 @@ export default {
   },
   methods: {
     changeStatus: function(status, index) {
+      console.log(status);
+      console.log(index);
       let selectedTask = this.tasks[index];
       if(selectedTask.status === "Complete") { return; }
       if (selectedTask.status === "Incomplete") {
@@ -199,6 +201,24 @@ export default {
         this.tasks.push(clientTask);
       }
     })
+  },
+  computed: {
+    rankedTasks() {
+        const items = [];
+        if (this.tasks.length > 0) {
+            items[0] = this.tasks[0];
+            items[0].rank = 1;
+            for (let index = 1; index < this.tasks.length; index++) {
+                items[index] = this.tasks[index];
+                if (items[index].name === items[index - 1].name) {
+                    items[index].rank = "";
+                } else {
+                    items[index].rank = index + 1;
+                }
+            }
+        }
+        return items;
+    }
   }
 };
 </script>
