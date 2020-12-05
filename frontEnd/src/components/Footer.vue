@@ -11,8 +11,7 @@
       class="d-flex flex-wrap"
       no-gutters
     >
-    <v-row
-      align="left">
+    <v-row>
       <v-btn
         v-for="(link, index) in links"
         :key=index
