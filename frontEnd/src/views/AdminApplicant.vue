@@ -24,8 +24,8 @@
       </v-chip>
     </template>
     <template v-slot:item.upload="{ item }">
-      <!-- <v-icon v-if="!item.upload && !item.fileUpload" color="accent"> {{item.fileUpload === true ? downloadIcons.upload : downloadIcons.noUpload}}</v-icon> -->
-      <bbbs-download v-if="item.fileUpload" :task="item"></bbbs-download>
+      <v-icon v-if="!item.upload && !item.fileUpload" color="accent"> {{item.fileUpload === true ? downloadIcons.upload : downloadIcons.noUpload}}</v-icon>
+      <bbbs-download v-if="item.fileUpload" :task="item" class="ml-n5"></bbbs-download>
     </template>
     <template v-slot:item.buttonTitle="{item}">
       <td>
@@ -34,6 +34,7 @@
         dark
         v-if="!noActions.includes(item.name)"
         @click="changeStatus(item.status, tasks.indexOf(item))"
+        rounded
         >
         {{item.buttonTitle}}
       </v-btn>
