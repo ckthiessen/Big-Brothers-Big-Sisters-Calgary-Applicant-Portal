@@ -59,7 +59,7 @@
                 {{ buttonTitle(task.status) }}
               </v-btn>
               <!-- currently does NOT look good must fix in Upload.vue -->
-              <bbbs-upload v-if="task.upload" class="float-right mt-5 mr-5" @Uploaded="handleUpload"></bbbs-upload>
+              <bbbs-upload  v-if="task.upload" :task="tasks[index]" class="float-right mt-5 mr-5" @Uploaded="handleUpload"></bbbs-upload>
             </v-expansion-panel-content>
           </v-expansion-panel>
           <v-divider></v-divider>
