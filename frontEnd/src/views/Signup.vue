@@ -1,5 +1,5 @@
 <template>
-  <v-container v-container fluid style="margin: 0 auto 0 auto; padding: 0px; max-width: 800px">
+  <v-container fluid style="margin: 0 auto 0 auto; padding: 0px; max-width: 800px">
     <v-card>
       <v-img  
         src="../assets/thumbnail_Calgary_horizontal_primary_CMYK_EN.png"
@@ -13,6 +13,7 @@
         Sign Up
       </v-card-title>
       <form>
+        <v-container>
           <v-row
             justify="center">
             <v-col
@@ -95,7 +96,8 @@
                 </v-btn>
               </v-col>
             </v-col>
-            </v-row>
+          </v-row>
+        </v-container>
       </form>
     </v-card>
   </v-container>
@@ -160,9 +162,6 @@ export default {
 </script>
 
 <style scoped>
-  .v-text-field {
-    font-size: 1.2em;
-  }
  .v-text-field--outlined >>> fieldset {
     border-color:#2DCCD3 !important;
     border-width: medium !important
