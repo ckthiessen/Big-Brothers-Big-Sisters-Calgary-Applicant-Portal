@@ -85,7 +85,6 @@ import Header from '../components/Header.vue'
 import Footer from '../components/Footer.vue'
 import Upload from '../components/Upload.vue'
 
-/* eslint-disable */
 import {getUserByID, updateTask} from "../services/apiServices" 
 
 export default {
@@ -132,9 +131,30 @@ export default {
     "bbbs-upload": Upload,
   },
   methods: {
+    //function for updating the users filepath in the upload 
     handleUpload(filePath){
       //now update users filepath
-      console.log(filePath)
+      console.log("path: " + filePath)
+      //hard coded for now
+      let selectedTask = this.tasks[13];
+      let serverTasks = []
+      this.tasks.forEach(task =>{
+        let serverTask = {
+          dueDate: task.dueDate,
+          name: task.name,
+          isApproved: task.isApproved,
+          isSubmitted: task.isSubmitted, //don't change the submitted value when updating files
+        }
+        //change the selected tasks filepath
+        if(task.name === selectedTask.name){
+          serverTask.fileUpload = filePath
+        } else{
+          serverTask.fileUpload = task.fileUpload
+        }
+      serverTasks.push(serverTask);
+      });
+      updateTask(this.id, serverTasks, selectedTask);
+
     },
     changeStatus: function(status, index) {
       let selectedTask = this.tasks[index];
@@ -150,9 +170,9 @@ export default {
       this.tasks.forEach(task => {
         let serverTask = {
           dueDate: task.dueDate,
-          description: task.description,
           name: task.name,
-          isApproved: task.isApproved
+          isApproved: task.isApproved,
+          fileUpload: task.fileUpload       //added after to fix
         }
           if(task.name === selectedTask.name) {
             serverTask.isSubmitted = selectedTask.isSubmitted;
@@ -171,12 +191,14 @@ export default {
   created() {
     let defaults = require("../assets/defaults.json");
     getUserByID(this.id).then(res => {
+      // TODO: Refactor this to be more extensible
       for (const serverTask of Object.values(res.data.tasks)) {
         let clientTask = {} 
         clientTask.name = serverTask.name;
         clientTask.dueDate = serverTask.dueDate; 
         clientTask.isSubmitted = serverTask.isSubmitted;
         clientTask.isApproved = serverTask.isApproved;
+        clientTask.fileUpload = serverTask.fileUpload;
         if(serverTask.isApproved) {
             clientTask.status = "Complete"; 
         }
@@ -189,7 +211,7 @@ export default {
         clientTask.upload = defaults[serverTask.name].upload;
         this.tasks.push(clientTask);
       }
-    })
+    });
   }
-};
+}
 </script>
