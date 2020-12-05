@@ -160,11 +160,19 @@ import {getUserByID} from "../services/apiServices"
                 this.notifications.push("No notifications");
                 this.lastNotification = "No notifications";
               } else {
-                for (let i = 0; i < this.user["notifications"].length; i++) {
-                  let notification = this.user["notifications"][i];
-                  this.notifications.push(notification.message + " (" + notification.date + ")");
-                  this.lastNotification = notification.message + " (" + notification.date + ")";
-                } 
+                if (this.user["notifications"].length <= 50) {
+                  for (let i = 0; i < this.user["notifications"].length; i++) {
+                    let notification = this.user["notifications"][i];
+                    this.notifications.push(notification.message + " (" + notification.date + ")");
+                    this.lastNotification = notification.message + " (" + notification.date + ")";
+                  } 
+                } else {
+                  for (let i = this.user["notifications"].length - 50; i < this.user["notifications"].length; i++) {
+                    let notification = this.user["notifications"][i];
+                    this.notifications.push(notification.message + " (" + notification.date + ")");
+                    this.lastNotification = notification.message + " (" + notification.date + ")";
+                  } 
+                }
               }
             });
             //call pullNotifications() every 3 seconds
@@ -192,7 +200,7 @@ import {getUserByID} from "../services/apiServices"
                   this.notifications.push(notification.message + " (" + notification.date + ")");
                   this.seen = false;
                   //remove "No notifications"
-                  if (this.notifications[0] === "No notifications") {
+                  if (this.notifications[0] === "No notifications" || length > 50) {
                     this.notifications.shift();
                   }
                   //set the last notification again
