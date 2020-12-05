@@ -173,7 +173,7 @@ import {getUserByID} from "../services/apiServices"
                 } 
               }
             });
-             call pullNotifications() every 3 seconds
+             //call pullNotifications() every 3 seconds
              this.interval = setInterval(function () {
                this.pullNotifications();
              }.bind(this), 3000); 
