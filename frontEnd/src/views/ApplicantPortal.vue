@@ -59,7 +59,8 @@
                 {{ buttonTitle(task.status) }}
               </v-btn>
               <!-- currently does NOT look good must fix in Upload.vue -->
-              <bbbs-upload  v-if="task.upload" :task="tasks[index]" class="float-right mt-5 mr-5" @Uploaded="handleUpload"></bbbs-upload>
+              <bbbs-upload  v-if="task.upload && !task.fileUpload" class="float-right mt-5 mr-5" @Uploaded="handleUpload"></bbbs-upload>
+              <bbbs-download v-if="task.upload && task.fileUpload" :task="tasks[index]"></bbbs-download>
             </v-expansion-panel-content>
           </v-expansion-panel>
           <v-divider></v-divider>
@@ -72,15 +73,10 @@
 </template>
 
 <script>
-// TODO: Handle due dates -> Will be done on account creation
-// TODO: Fix alignment -> I have given up, someone else can try it. 
-// TODO: Figure out how to upload docs --> Wait until backend is fully functioning
-// TODO: How to handle API get error? --> Ditto
-// TODO: How to update tasks application status in the backend? --> Ditto 
-
 import Header from '../components/Header.vue'
 import Footer from '../components/Footer.vue'
 import Upload from '../components/Upload.vue'
+import Download from '../components/Download.vue'
 
 import {getUserByID, updateTask} from "../services/apiServices" 
 
@@ -126,6 +122,7 @@ export default {
     "bbbs-header": Header,
     "bbbs-footer": Footer,
     "bbbs-upload": Upload,
+    "bbbs-download": Download
   },
   methods: {
     //function for updating the users filepath in the upload 

@@ -6,17 +6,15 @@
       v-model="imageData"
     >
     </v-file-input>
-    <div v-if="!imageData">
-      <div >
-        <p>
-          Progress: {{ uploadValue.toFixed() + "%" }}
-          <progress id="progress" :value="uploadValue" max="100"></progress>
-        </p>
-      </div>
-      <div>
-        <br />
-        <button @click="onUpload">Upload</button>
-      </div>
+    <div>
+      <p>
+        Progress: {{ uploadValue.toFixed() + "%" }}
+        <progress id="progress" :value="uploadValue" max="100"></progress>
+      </p>
+    </div>
+    <div>
+      <br />
+      <v-button @click="onUpload">Upload</v-button>
     </div>
   </div>
 </template>
@@ -31,7 +29,6 @@ export default {
       imageData: null,
       picture: null,
       uploadValue: 0,
-      downloadLink: null
     };
   },
   props: {
@@ -47,10 +44,7 @@ export default {
     onUpload() {
       this.picture = null;
       //adds to a folder based on the users ID
-      const storageRef = firebase
-        .storage()
-        .ref(this.$route.params.applicantID + "/" + `${this.imageData.name}`)
-        .put(this.imageData);
+      const storageRef = firebase.storage().ref(this.$route.params.applicantID + "/" + `${this.imageData.name}`).put(this.imageData);
       storageRef.on(
         `state_changed`,
         (snapshot) => {
@@ -67,6 +61,7 @@ export default {
           });
         }
       );
+      console.log(this.uploadValue)
       this.$emit(
         "Uploaded",
         this.$route.params.applicantID + "/" + `${this.imageData.name}`
