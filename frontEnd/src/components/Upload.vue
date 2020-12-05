@@ -9,7 +9,6 @@
       <progress id="progress" :value="uploadValue" max="100" ></progress>  </p>
     </div>
     <div v-if="imageData!=null">
-        <img class="preview" :src="picture">
         <br>
       <button @click="onUpload">Upload</button>
     </div>
@@ -38,13 +37,13 @@ export default {
 
     onUpload(){
       this.picture=null;
-      const storageRef=firebase.storage().ref(`${this.imageData.name}`).put(this.imageData);
+      const storageRef=firebase.storage().ref(this.$route.params.applicantID +"/" +`${this.imageData.name}`).put(this.imageData);
       storageRef.on(`state_changed`,snapshot=>{
         this.uploadValue = (snapshot.bytesTransferred/snapshot.totalBytes)*100;
       }, error=>{console.log(error.message)},
       ()=>{this.uploadValue=100;
         storageRef.snapshot.ref.getDownloadURL().then((url)=>{
-          this.picture =url;
+          this.picture=url;
         });
       }
       );
