@@ -4,6 +4,7 @@
       label="Upload an image to Firebase"
       accept="application/pdf"
       v-model="imageData"
+      @change="onUpload"
     >
     </v-file-input>
     <div>
@@ -11,10 +12,6 @@
         Progress: {{ uploadValue.toFixed() + "%" }}
         <progress id="progress" :value="uploadValue" max="100"></progress>
       </p>
-    </div>
-    <div>
-      <br />
-      <v-button @click="onUpload">Upload</v-button>
     </div>
   </div>
 </template>
@@ -35,12 +32,6 @@ export default {
     task: Object,
   },
   methods: {
-    previewImage(event) {
-      this.uploadValue = 0;
-      this.picture = null;
-      this.imageData = event.target.files[0];
-    },
-
     onUpload() {
       this.picture = null;
       //adds to a folder based on the users ID

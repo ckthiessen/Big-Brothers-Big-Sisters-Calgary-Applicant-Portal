@@ -1,6 +1,11 @@
 <template>
   <a target="_blank" rel="noreferrer noopener" :href="downloadLink" download="report.pdf">
-    <v-icon> mdi-download </v-icon>
+    <v-btn> 
+      <v-icon left>
+        mdi-download
+      </v-icon>
+      Offence Declaration
+      </v-btn>
   </a>
 </template>
 
@@ -15,9 +20,8 @@ export default {
     };
   },
   props: {
-    task: Object
-  },
-  methods: {
+    task: Object,
+    fileName: String
   },
   created() {
     const storageRef = firebase.storage().ref(this.task.fileUpload);

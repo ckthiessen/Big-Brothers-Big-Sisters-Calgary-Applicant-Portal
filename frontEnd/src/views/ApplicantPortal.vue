@@ -59,8 +59,8 @@
                 {{ buttonTitle(task.status) }}
               </v-btn>
               <!-- currently does NOT look good must fix in Upload.vue -->
-              <bbbs-upload  v-if="task.upload && !task.fileUpload" class="float-right mt-5 mr-5" @Uploaded="handleUpload"></bbbs-upload>
-              <bbbs-download v-if="task.upload && task.fileUpload" :task="tasks[index]"></bbbs-download>
+              <bbbs-upload v-if="task.upload && !task.fileUpload"  class="float-right mt-5 mr-5" @Uploaded="handleUpload"></bbbs-upload>
+              <bbbs-download v-if="task.upload && task.fileUpload" :task="tasks[index]" class="float-right mt-5 mr-5"></bbbs-download>
             </v-expansion-panel-content>
           </v-expansion-panel>
           <v-divider></v-divider>
@@ -115,7 +115,8 @@ export default {
         "You are no BIG Deal :(",
         "You are a BIG Deal!",
       ],
-      id: this.$route.params.applicantID, 
+      id: this.$route.params.applicantID,
+      hasUploaded: false
     };
   },
   components: {
@@ -127,6 +128,7 @@ export default {
   methods: {
     //function for updating the users filepath in the upload 
     handleUpload(filePath){
+      
       //now update users filepath
       console.log("path: " + filePath)
       //hard coded for now
@@ -142,6 +144,7 @@ export default {
         //change the selected tasks filepath
         if(task.name === selectedTask.name){
           serverTask.fileUpload = filePath
+          this.task.fileUpload = filePath;
         } else{
           serverTask.fileUpload = task.fileUpload
         }
