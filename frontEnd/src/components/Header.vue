@@ -215,7 +215,7 @@ import {getUserByID} from "../services/apiServices"
             if (this.seen === true) {
               return;
             } else {
-              return "notificationgreen";
+              return "accent";
             }
           },
           logOut() {
