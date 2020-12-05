@@ -2,75 +2,57 @@
   <v-container fluid style="margin: 0 auto 0 auto; padding: 0px; width: 90%">
   <bbbs-header fluid style="margin: 0 auto 0 auto; padding: 0px; width: 90%"></bbbs-header>
   <v-card class="mx-auto">
-    <v-card-title> Activities </v-card-title>
      <v-data-table
        :headers="Headers"
        :items="tasks"
-       item-key="index"
+       :single-expand="singleExpand"
+       :expanded.sync="expanded"
+       show-expand
+       item-key="name"
        class="elevation-1"
      >
-     <!-- <v-row>
-        <v-col  cols="1" > <span> Name </span> </v-col>
-        <v-col cols="2" offset="2" class="pl-0"> Status </v-col>
-        <v-col cols="1" offset="1" class="pl-0">  Due Date </v-col>
-        <v-col > Upload </v-col>
-        <v-col cols="1"></v-col>
-      </v-row> -->
       <v-divider></v-divider>
-      <v-expansion-panels accordion focusable>
-        <div
-          v-for="(task, index) in tasks"
-          :key="task.name"
-          width="100%"
-          style="width: 1800px"
-        >
-          <v-expansion-panel>
-            <v-expansion-panel-header>
-              <v-row>
-                <v-col>
-                  {{ task.name }}
-                </v-col>
-                <v-col>
-                  <v-chip
-                    text-color="black"
-                    class="ma-2"
-                    :color="status[task.status].color"
-                  >
-                    <v-icon class="pl-1" color="white" left>
-                      {{ status[task.status].icon }}
-                    </v-icon>
-                    {{ status[task.status].title }}
-                  </v-chip>
-                </v-col>
-                <v-col> {{ task.dueDate }} </v-col>
-                <v-col>
-                  <v-icon color="accent">
-                    {{
-                      task.upload ? uploadIcons.upload : uploadIcons.noUpload
-                    }}
-                  </v-icon>
-                </v-col>
-              </v-row>
-            </v-expansion-panel-header>
-            <v-expansion-panel-content>
-              <p class="float-left mt-7" style="width: 40%; text-align: left">
-                {{ task.description }}
+      <template v-slot:top>
+        <v-toolbar flat>
+          <v-toolbar-title>Activities</v-toolbar-title>
+          <v-spacer></v-spacer>
+        </v-toolbar>
+     </template>
+      <template v-slot:expanded-item="{headers, item}">
+        <td :colspan="headers.length">
+         <p class="float-left mt-7" style="width: 40%; text-align: left">
+                {{ item.description }}
               </p>
               <v-btn
-                @click="changeStatus(task.status, index)"
-                v-if="!noActions.includes(task.name)"
+                @click="changeStatus(item.status, index)"
+                v-if="!noActions.includes(item.name)"
                 class="float-right mt-5"
               >
-                {{ buttonTitle(task.status) }}
+                {{ buttonTitle(item.status) }}
               </v-btn>
-              <v-btn v-if="task.upload" class="float-right mt-5 mr-5">
+              <v-btn v-if="item.upload" class="float-right mt-5 mr-5">
                 Upload Document
               </v-btn>
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-          <v-divider></v-divider>
-        </div>
-      </v-expansion-panels>
+        </td>
+      </template>
+      <template v-slot:item.status="{item}">
+        <v-chip
+          :color="status[item.status].color"
+        >
+          <v-icon class="pl-1" color="white" left>
+            {{ status[item.status].icon }}
+          </v-icon>
+          {{ status[item.status].title }}
+        </v-chip>
+      </template>
+      <template v-slot:item.dueDate="{item}">
+        {{ item.dueDate }}
+      </template>
+      <template v-slot:item.upload="{item}"> 
+        <v-icon color="accent">
+          {{ item.upload ? uploadIcons.upload : uploadIcons.noUpload }}
+        </v-icon>
+      </template>
      </v-data-table>
     <bbbs-footer></bbbs-footer>
   </v-card>
@@ -95,6 +77,8 @@ export default {
     return {
       applicant: {},
       tasks: [],
+      expanded: [],
+      singleExpand: false,
       Headers: [{
             text: 'Name',
             align: 'start',
@@ -104,18 +88,26 @@ export default {
           {
             text: 'Status',
             align: 'start',
+            sortable: false,
             value: 'status',
           },
           {
             text: 'Due Date',
             align: 'start',
+            sortable: false,
             value: 'dueDate',
           },
           {
             text: 'Upload',
             align: 'middle',
+            sortable: false,
             value: 'upload'
-          }],
+          },
+          { 
+            text: '', 
+            value: 'data-table-expand' 
+          },
+      ],
       status: {
         Complete: {
           color: "complete",
