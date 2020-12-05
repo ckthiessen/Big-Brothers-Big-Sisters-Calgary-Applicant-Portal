@@ -1,12 +1,12 @@
 <template>
   <div>
     <div >
-      <p>Upload an image to Firebase:</p>
-      <input type="file" @change="previewImage" accept="image/*" >
+      <v-file-input label="Upload an image to Firebase" accept=".png" v-model="imageData">
+      </v-file-input>
     </div>
     <div>
       <p>Progress: {{uploadValue.toFixed()+"%"}}
-      <progress id="progress" :value="uploadValue" max="100" ></progress>  </p>
+      <progress id="progress" :value="uploadValue" max="100" ></progress></p>
     </div>
     <div v-if="imageData!=null">
         <br>
