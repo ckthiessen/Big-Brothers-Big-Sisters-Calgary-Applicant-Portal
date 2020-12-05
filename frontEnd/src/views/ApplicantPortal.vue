@@ -1,6 +1,7 @@
 <template>
   <v-container fluid style="margin: 0 auto 0 auto; padding: 0px; width: 90%">
   <bbbs-header fluid style="margin: 0 auto 0 auto; padding: 0px; width: 90%"></bbbs-header>
+  <carousel></carousel>
   <v-card class="mx-auto">
      <v-data-table
        :headers="Headers"
@@ -71,6 +72,7 @@
 
 import Header from '../components/Header.vue'
 import Footer from '../components/Footer.vue'
+import Carousel from '../components/Carousel.vue'
 
 /* eslint-disable */
 import {getUserByID, updateTask} from "../services/apiServices" 
@@ -146,6 +148,7 @@ export default {
   components: {
     "bbbs-header": Header,
     "bbbs-footer": Footer,
+    "carousel" : Carousel
   },
   methods: {
     changeStatus: function(status, index) {
