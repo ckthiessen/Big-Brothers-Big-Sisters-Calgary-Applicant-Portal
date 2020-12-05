@@ -23,19 +23,19 @@ module.exports = {
     console.log('user: ' + toUpdate.id + ' updated.');
   },
   
-  updateTask: async function(applicantID, newTasks, selectedTask) {
+  updateTask: async function(applicantID, newTasks, notifMessage) {
     console.log(`updating user: ${applicantID}`);
     let applicantDocRef = await db.collection('users').doc(applicantID);
     applicantDocRef.update({
       "tasks": newTasks
     });
     let applicant = await this.getUserById(applicantID);
-    let notifMessage; 
-    if(selectedTask.status === "InProgress") {
-      notifMessage = `${applicant.name} has submitted ${selectedTask.name}`;
-    } else {
-      notifMessage = `${applicant.name} has unsubmitted ${selectedTask.name}`;
-    }
+    // let notifMessage; 
+    // if(selectedTask.status === "InProgress") {
+    //   notifMessage = `${applicant.name} has submitted ${selectedTask.name}`;
+    // } else {
+    //   notifMessage = `${applicant.name} has unsubmitted ${selectedTask.name}`;
+    // }
     let adminIDs = await this.getAllAdmins();
     adminIDs.forEach(adminID => {
       db.collection('users').doc(adminID).update({

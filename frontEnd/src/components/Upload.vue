@@ -50,12 +50,11 @@ export default {
           storageRef.snapshot.ref.getDownloadURL().then((url) => {
             this.picture = url;
           });
+          this.$emit(
+            "Uploaded",
+            this.$route.params.applicantID + "/" + `${this.imageData.name}`
+          );
         }
-      );
-      console.log(this.uploadValue)
-      this.$emit(
-        "Uploaded",
-        this.$route.params.applicantID + "/" + `${this.imageData.name}`
       );
     },
   },
