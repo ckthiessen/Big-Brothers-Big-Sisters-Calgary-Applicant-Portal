@@ -26,7 +26,10 @@
               <v-btn
                 @click="changeStatus(item.status, item.rank - 1)"
                 v-if="!noActions.includes(item.name)"
-                class="float-right mt-5"
+                class="float-right my-5"
+                rounded
+                color="accent"
+                dark
               >
                 {{ buttonTitle(item.status) }}
               </v-btn>
@@ -146,8 +149,6 @@ export default {
   },
   methods: {
     changeStatus: function(status, index) {
-      console.log(status);
-      console.log(index);
       let selectedTask = this.tasks[index];
       if(selectedTask.status === "Complete") { return; }
       if (selectedTask.status === "Incomplete") {
