@@ -114,7 +114,7 @@ app.post("/api/users", async (req, res) => {
     // password: newUser.password, // TODO: Salt and hash the password or make this work with firebase authentication
     toCreate.notifications = [
       {
-        messzage: "Congratulations on making your account!",
+        message: "Congratulations on making your account!",
         date: new Date().toLocaleDateString("en-CA", { timeZone: "America/Edmonton" })
       }
     ];
