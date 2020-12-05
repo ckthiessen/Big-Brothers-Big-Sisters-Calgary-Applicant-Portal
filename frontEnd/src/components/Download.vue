@@ -1,10 +1,15 @@
 <template>
   <a target="_blank" rel="noreferrer noopener" :href="downloadLink" download="report.pdf">
-    <v-btn> 
-      <v-icon left>
+    <v-btn 
+    rounded
+    color="accent"> 
+      <v-icon v-if="buttonText === ''">
         mdi-download
       </v-icon>
-      Offence Declaration
+      <v-icon v-else left>
+        mdi-download
+      </v-icon>
+      {{ buttonText }}
       </v-btn>
   </a>
 </template>
@@ -21,7 +26,10 @@ export default {
   },
   props: {
     task: Object,
-    fileName: String
+    buttonText: {
+      type: String,
+      default: ""
+    }
   },
   created() {
     const storageRef = firebase.storage().ref(this.task.fileUpload);

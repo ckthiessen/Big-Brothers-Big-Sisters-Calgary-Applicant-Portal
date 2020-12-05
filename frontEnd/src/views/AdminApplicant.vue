@@ -24,7 +24,8 @@
       </v-chip>
     </template>
     <template v-slot:item.upload="{ item }">
-      <v-icon color="accent"> {{item.fileUpload === true ? downloadIcons.upload : downloadIcons.noUpload}}</v-icon>
+      <!-- <v-icon v-if="!item.upload && !item.fileUpload" color="accent"> {{item.fileUpload === true ? downloadIcons.upload : downloadIcons.noUpload}}</v-icon> -->
+      <bbbs-download v-if="item.fileUpload" :task="item"></bbbs-download>
     </template>
     <template v-slot:item.buttonTitle="{item}">
       <td>
@@ -50,6 +51,7 @@
   import Carousel from '../components/Carousel.vue';
   import {getUserByID, updateUser} from "../services/apiServices"
   import _ from 'lodash'
+  import Download from '../components/Download.vue'
 
   
 export default {
@@ -59,6 +61,7 @@ export default {
     'bbbs-header': Header,
     'bbbs-footer': Footer,
     'carousel' : Carousel,
+    'bbbs-download': Download
   },
 
   created(){

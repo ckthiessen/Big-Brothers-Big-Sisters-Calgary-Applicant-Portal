@@ -1,9 +1,9 @@
 <template>
   <div>
     <v-file-input
-      label="Upload an image to Firebase"
+      label="Upload a file"
       accept="application/pdf"
-      v-model="imageData"
+      v-model="fileData"
       @change="onUpload"
     >
     </v-file-input>
@@ -23,8 +23,8 @@ export default {
   name: "upload",
   data() {
     return {
-      imageData: null,
-      picture: null,
+      fileData: null,
+      file: null,
       uploadValue: 0,
     };
   },
@@ -33,9 +33,9 @@ export default {
   },
   methods: {
     onUpload() {
-      this.picture = null;
+      this.file = null;
       //adds to a folder based on the users ID
-      const storageRef = firebase.storage().ref(this.$route.params.applicantID + "/" + `${this.imageData.name}`).put(this.imageData);
+      const storageRef = firebase.storage().ref(this.$route.params.applicantID + "/" + `${this.fileData.name}`).put(this.fileData);
       storageRef.on(
         `state_changed`,
         (snapshot) => {
@@ -48,18 +48,15 @@ export default {
         () => {
           this.uploadValue = 100;
           storageRef.snapshot.ref.getDownloadURL().then((url) => {
-            this.picture = url;
+            this.file = url;
           });
           this.$emit(
             "Uploaded",
-            this.$route.params.applicantID + "/" + `${this.imageData.name}`
+            this.$route.params.applicantID + "/" + `${this.fileData.name}`
           );
         }
       );
     },
-  },
-  created() {
-    //const storageRef = firebase.storage().ref(this.task.fileUpload).getDownloadURL();
-  },
+  }
 };
 </script>

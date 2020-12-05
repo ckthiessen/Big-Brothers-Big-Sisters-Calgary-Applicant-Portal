@@ -35,7 +35,7 @@
                 {{ buttonTitle(item.status) }}
               </v-btn>
               <bbbs-upload v-if="item.upload && !item.fileUpload"  class="float-right mt-5 mr-5" @Uploaded="handleUpload"></bbbs-upload>
-              <bbbs-download v-if="item.upload && item.fileUpload" :task="item" class="float-right mt-5 mr-5"></bbbs-download>
+              <bbbs-download v-if="item.upload && item.fileUpload" :task="item" buttonText="Offense Declaration" class="float-right mt-5 mr-5"></bbbs-download>
         </td>
       </template>
       <template v-slot:item.status="{item}">
