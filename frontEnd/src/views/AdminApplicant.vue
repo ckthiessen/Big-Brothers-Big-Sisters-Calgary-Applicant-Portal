@@ -29,9 +29,9 @@
     <template v-slot:item.buttonTitle="{item}">
       <td>
       <v-btn
-        rounded
         color="accent"
         dark
+        v-if="!noActions.includes(item.name)"
         @click="changeStatus(item.status, tasks.indexOf(item))"
         >
         {{item.buttonTitle}}
@@ -111,13 +111,20 @@ export default {
           {
             text: 'Download',
             align: 'start',
+            sortable: false,
             value: 'upload',
           },
           {
-            text: 'Button',
+            text: 'Change Status',
+            sortable: false,
             align: 'middle',
             value: 'buttonTitle'
           }
+        ],
+        noActions: [
+          "BIG Profile",
+          "You are no BIG Deal :(",
+          "You are a BIG Deal!"
         ],
       }
   },

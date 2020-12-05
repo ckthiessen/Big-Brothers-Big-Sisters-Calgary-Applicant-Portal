@@ -71,8 +71,13 @@
             sortable: true,
             value: 'name',
           },
-          { text: 'Status', value: 'status'},
-          { text: 'Needs Approval', value: 'waitingApproval' },
+          { text: 'Status', 
+            sortable: true,
+            value: 'status'
+          },
+          { text: 'Needs Approval', 
+            sortable: true,
+            value: 'waitingApproval' },
         ],
         users: []
       }

@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid style="margin: 0 auto 0 auto; padding: 0px; max-width: 800px">
+  <v-container fluid style="margin: 0 auto 0 auto; padding: 0px; max-width: 800px; width: 90% !important">
     <v-card>
       <v-img  
         src="../assets/thumbnail_Calgary_horizontal_primary_CMYK_EN.png"
@@ -13,7 +13,7 @@
         Sign Up
       </v-card-title>
       <form>
-        <v-container>
+        <v-container fluid style="margin: 0 auto 0 auto; width: 90%">
           <v-row
             justify="center">
             <v-col
