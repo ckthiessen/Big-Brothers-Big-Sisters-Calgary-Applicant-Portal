@@ -84,8 +84,6 @@ export default {
   },
   data(){
     return {
-        width: window.innerWidth,
-        height: window.innerHeight * 0.3, 
         applicantID: '',
         adminID : '',
         applicant: [],
