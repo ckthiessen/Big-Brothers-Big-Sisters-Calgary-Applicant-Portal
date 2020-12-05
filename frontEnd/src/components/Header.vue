@@ -8,6 +8,14 @@
         absolute
         elevation="1"
     >
+      <v-btn
+       icon
+       class="mr-4"
+       v-if="showBackButton === true"
+       @click="goBack()"
+       >
+       <v-icon>mdi-arrow-left</v-icon>
+       </v-btn>
         <v-menu 
           offset-y
           :nudge-width="200"
@@ -131,14 +139,12 @@ import {getUserByID} from "../services/apiServices"
             lastNotification: {},
             seen: true,
             interval: "",
+            showBackButton: false
         }),
         created() {
+          this.id = this.$route.params.adminID || this.$route.params.applicantID; // Short circuit assignment
+          this.showBackButton = this.$route.params.adminID && this.$route.params.applicantID ? true : false;
           
-          if(this.$route.params.adminID) {
-              this.id = this.$route.params.adminID; 
-          } else {
-              this.id = this.$route.params.applicantID;
-          } 
           //check if the Auth cookie exists, if it doesn't then they did no go through sign in so route to sign in
           if(!this.$cookies.isKey(this.id)){
             this.$router.replace({name: "Signin"});
@@ -167,7 +173,7 @@ import {getUserByID} from "../services/apiServices"
                 } 
               }
             });
-            //call pullNotifications() every 3 seconds
+            // call pullNotifications() every 3 seconds
             this.interval = setInterval(function () {
               this.pullNotifications();
             }.bind(this), 3000); 
@@ -209,6 +215,9 @@ import {getUserByID} from "../services/apiServices"
             } else {
               return "notificationgreen";
             }
+          },
+          goBack() {
+            this.$router.go(-1);
           },
           logOut() {
             //remove cookies ONLY on logout
