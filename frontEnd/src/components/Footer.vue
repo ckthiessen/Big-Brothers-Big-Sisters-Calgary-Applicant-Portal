@@ -2,14 +2,16 @@
   <v-footer
     display="flex"
     color="primary"
+    class="d-flex flex-wrap mb-6"
     padding-left="1rem"
     padding-right="1rem"
   >
     <v-row
       justify="center"
+      class="d-flex flex-wrap"
       no-gutters
     >
-    <v-col
+    <v-row
       align="left">
       <v-btn
         v-for="(link, index) in links"
@@ -20,15 +22,15 @@
       >
         {{ link.text }}
       </v-btn>
-    </v-col>
+    </v-row>
     <v-col align="right">
       <v-btn
-        text
+        class="text-wrap"
         disabled
       >
         © 2020 - Big Brothers Big Sisters Calgary
       </v-btn>
-      </v-col>
+    </v-col>
     </v-row>
   </v-footer>
 </template>
@@ -61,3 +63,6 @@
     }),
   }
 </script>
+<style scoped>
+.v-btn__content { width: 100%; white-space: normal; }
+</style>
