@@ -22,8 +22,10 @@
         items: [
           {
             src: require("@/assets/bg-bigger-together2.png"),
-
           },
+          {
+            src: require("@/assets/Banner.png"),
+          }
         ],
       }
     },

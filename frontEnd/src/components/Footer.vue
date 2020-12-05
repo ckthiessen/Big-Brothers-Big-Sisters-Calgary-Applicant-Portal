@@ -23,14 +23,15 @@
         {{ link.text }}
       </v-btn>
     </v-row>
-    <v-col align="right">
+    <!-- <v-col align="left">
       <v-btn
+        text
         class="text-wrap"
         disabled
       >
         © 2020 - Big Brothers Big Sisters Calgary
       </v-btn>
-    </v-col>
+    </v-col> -->
     </v-row>
   </v-footer>
 </template>
