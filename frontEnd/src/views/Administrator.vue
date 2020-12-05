@@ -1,6 +1,7 @@
 <template>
   <v-container fluid style="margin: 0 auto 0 auto; padding: 0px; width: 90%">
   <bbbs-header fluid style="margin: 0 auto 0 auto; padding: 0px; width: 90%"></bbbs-header>
+  <carousel></carousel>
   <v-card class="mx-auto">
     <v-spacer></v-spacer>
     <v-card-title>
@@ -19,10 +20,9 @@
       :items="users"
       :search="search"
       item-key="id"
-      @click:row="goToApplicantView"
     >
       <template v-slot:item.name="{item}">
-        <td>{{item.name}}</td>
+        <td @click="goToApplicantView(item.id)">{{item.name}}</td>
       </template>
       <template v-slot:item.status="{ item }">
         <v-chip
@@ -48,12 +48,14 @@
   import {getAllUsers} from "../services/apiServices";
   import Header from "../components/Header.vue";
   import Footer from "../components/Footer.vue";
+  import Carousel from '../components/Carousel.vue';
 
   export default {
     name: 'Administrator',
     components: {
       'bbbs-header' : Header,
-      'bbbs-footer' : Footer
+      'bbbs-footer' : Footer,
+      'carousel' : Carousel
     },
     data () {
       return {
@@ -118,8 +120,8 @@
         }
       },
       
-      goToApplicantView(selectedUser) {
-        this.$router.push(`/admin/${this.adminID}/${selectedUser.id}`)
+      goToApplicantView(applicantID) {
+        this.$router.push(`/admin/${this.adminID}/${applicantID}`)
       }
     },
 
