@@ -1,19 +1,8 @@
 <template>
   <v-container fluid style="margin: 0 auto 0 auto; padding: 0px; width: 90%">
   <bbbs-header fluid style="margin: 0 auto 0 auto; padding: 0px; width: 90%"></bbbs-header>
+  <carousel></carousel>
   <v-card class="mx-auto">
-<<<<<<< HEAD
-=======
-
-    <v-spacer></v-spacer>
-  
->>>>>>> d998e0af7f291808676091ac6821e9c0855d9d7c
-    <!-- <v-card-title>
-      Applicants
-      <v-spacer></v-spacer>
-      <v-text-field
-      ></v-text-field>
-    </v-card-title> -->
     <v-data-table
     :headers="Headers"
     :items="tasks"
@@ -40,9 +29,9 @@
     <template v-slot:item.buttonTitle="{item}">
       <td>
       <v-btn
-        rounded
         color="accent"
         dark
+        v-if="!noActions.includes(item.name)"
         @click="changeStatus(item.status, tasks.indexOf(item))"
         >
         {{item.buttonTitle}}
@@ -58,15 +47,18 @@
 <script>
   import Header from "../components/Header.vue"
   import Footer from "../components/Footer.vue"
+  import Carousel from '../components/Carousel.vue';
   import {getUserByID, updateUser} from "../services/apiServices"
   import _ from 'lodash'
+
   
 export default {
   name: 'AdminApplicant',
 
   components: {
     'bbbs-header': Header,
-    'bbbs-footer': Footer
+    'bbbs-footer': Footer,
+    'carousel' : Carousel,
   },
 
   created(){
@@ -92,8 +84,6 @@ export default {
   },
   data(){
     return {
-        width: window.innerWidth,
-        height: window.innerHeight * 0.3, 
         applicantID: '',
         adminID : '',
         applicant: [],
@@ -119,13 +109,20 @@ export default {
           {
             text: 'Download',
             align: 'start',
+            sortable: false,
             value: 'upload',
           },
           {
-            text: 'Button',
+            text: 'Change Status',
+            sortable: false,
             align: 'middle',
             value: 'buttonTitle'
           }
+        ],
+        noActions: [
+          "BIG Profile",
+          "You are no BIG Deal :(",
+          "You are a BIG Deal!"
         ],
       }
   },
