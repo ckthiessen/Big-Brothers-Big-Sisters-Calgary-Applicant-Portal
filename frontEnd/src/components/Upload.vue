@@ -37,7 +37,8 @@ export default {
 
     onUpload(){
       this.picture=null;
-      const storageRef=firebase.storage().ref(this.$route.params.applicantID +"/" +`${this.imageData.name}`).put(this.imageData);
+      //adds to a folder based on the users ID
+      const storageRef=firebase.storage().ref(this.$route.params.applicantID + "/" +`${this.imageData.name}`).put(this.imageData);
       storageRef.on(`state_changed`,snapshot=>{
         this.uploadValue = (snapshot.bytesTransferred/snapshot.totalBytes)*100;
       }, error=>{console.log(error.message)},
@@ -47,6 +48,7 @@ export default {
         });
       }
       );
+      this.$emit("Uploaded",this.$route.params.applicantID + "/" +`${this.imageData.name}`)
     }
 
   }

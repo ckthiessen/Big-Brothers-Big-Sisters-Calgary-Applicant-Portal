@@ -58,7 +58,8 @@
               >
                 {{ buttonTitle(task.status) }}
               </v-btn>
-              <bbbs-upload v-if="task.upload" class="float-right mt-5 mr-5"></bbbs-upload>
+              <!-- currently does NOT look good must fix in Upload.vue -->
+              <bbbs-upload v-if="task.upload" class="float-right mt-5 mr-5" @Uploaded="handleUpload"></bbbs-upload>
               <v-btn v-if="task.upload" class="float-right mt-5 mr-5">
                 Upload Document
               </v-btn>
@@ -131,6 +132,10 @@ export default {
     "bbbs-upload": Upload,
   },
   methods: {
+    handleUpload(filePath){
+      //now update users filepath
+      console.log(filePath)
+    },
     changeStatus: function(status, index) {
       let selectedTask = this.tasks[index];
       if(selectedTask.status === "Complete") { return; }
