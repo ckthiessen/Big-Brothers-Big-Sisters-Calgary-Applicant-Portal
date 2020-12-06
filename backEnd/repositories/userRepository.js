@@ -30,12 +30,6 @@ module.exports = {
       "tasks": newTasks
     });
     let applicant = await this.getUserById(applicantID);
-    // let notifMessage; 
-    // if(selectedTask.status === "InProgress") {
-    //   notifMessage = `${applicant.name} has submitted ${selectedTask.name}`;
-    // } else {
-    //   notifMessage = `${applicant.name} has unsubmitted ${selectedTask.name}`;
-    // }
 
     let adminIDs = await this.getAllAdmins();
     adminIDs.forEach(adminID => {

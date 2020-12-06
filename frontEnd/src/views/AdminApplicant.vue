@@ -24,7 +24,8 @@
       </v-chip>
     </template>
     <template v-slot:item.upload="{ item }">
-      <v-icon v-if="!item.upload && !item.fileUpload" color="accent"> {{item.fileUpload === true ? downloadIcons.upload : downloadIcons.noUpload}}</v-icon>
+      <v-icon v-if="!item.fileUpload" color="accent"> {{downloadIcons.noUpload}}</v-icon>
+
       <bbbs-download v-if="item.fileUpload" :task="item" class="ml-n5"></bbbs-download>
     </template>
     <template v-slot:item.buttonTitle="{item}">
@@ -94,7 +95,7 @@ export default {
         tasks: [],
         selectedIndex: '',
         downloadIcons: {
-          noUpload: "mdi-cloud-off-outline",
+          noUpload: "mdi-download-off-outline",
           upload: "mdi-cloud-download",
           uploadComplete: "mdi-cloud-check",
       },
@@ -147,12 +148,12 @@ export default {
         this.applicant.tasks[index].isSubmitted = true;
         this.applicant.tasks[index].isApproved = true;
         this.applicant.notifications.push({"message" : "The administrator has approved " + selectedTask.name,
-                                            "date" : new Date().toLocaleDateString("en-CA", { timeZone: "America/Edmonton" })})
+                                            "date" : new Date().toLocaleString()})
       }else if (selectedTask.status === "Complete") {
         selectedTask.status = "Incomplete";
         selectedTask.buttonTitle = "Mark Complete";
         this.applicant.notifications.push({"message" : "The administrator has rejected your submission for " + selectedTask.name,
-                                            "date" : new Date().toLocaleDateString("en-CA", { timeZone: "America/Edmonton" })})
+                                            "date" : new Date().toLocaleString()})
         this.applicant.tasks[index].isSubmitted = false;
         this.applicant.tasks[index].isApproved = false;
       }

@@ -22,9 +22,7 @@ module.exports = {
             if (requiresCalculatedDueDate.has(task.name)) {
               let daysUntilDue = requiresCalculatedDueDate.get(task.name);
               let calculatedDueDate = new Date().setDate(new Date().getDate() + daysUntilDue);
-              dueDate = new Date(calculatedDueDate).toLocaleDateString("en-CA", {
-                timeZone: "America/Edmonton"
-              });
+              dueDate = new Date(calculatedDueDate).toLocaleString()
             } else {
               dueDate = task.dueDate;
             }
