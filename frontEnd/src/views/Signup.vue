@@ -64,7 +64,7 @@
                 :type="passwordVisible ? 'text' : 'password'"
                 name="input-10-2"
                 hint="At least 8 characters"
-                @click:append="passwordVisible = !passwordVisible"
+                @click:append="passwordVisible = !passwordVisible"  
               ></v-text-field>
             </v-row>
             <v-row>
@@ -79,6 +79,7 @@
                 outlined
                 required
                 color="accent"
+                @keydown.enter="signUp()"
               ></v-text-field>
             </v-row>
             <v-col>
@@ -138,13 +139,14 @@ export default {
           v => /([!@$%])/.test(v) || 'Must have one special character [!@#$%]'
         ],
         matches: [
-          v => (this.password === v || 'Passwords must match')
+          () => (this.password == this.checkpassword || 'Passwords must match')
         ]
       }
     },
 
     methods:{
       signUp(){
+        console.log(this.checkpassword)
         let userInfo = {
           'id' : uuidv4(),
           'name' : this.firstName + ' ' + this.lastName,

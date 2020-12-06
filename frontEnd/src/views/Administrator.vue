@@ -23,9 +23,10 @@
       hide-default-footer
       :items-per-page="10"
       :page.sync="page"
+      @click:row="goToApplicantView"
     >
       <template v-slot:item.name="{item}">
-        <td @click="goToApplicantView(item.id)">{{item.name}}</td>
+        <td>{{item.name}}</td>
       </template>
       <template v-slot:item.status="{ item }">
         <v-chip 
@@ -138,8 +139,8 @@
         }
       },
       
-      goToApplicantView(applicantID) {
-        this.$router.push(`/admin/${this.adminID}/${applicantID}`)
+      goToApplicantView(selectedUser) {
+        this.$router.push(`/admin/${this.adminID}/${selectedUser.id}`)
       }
     },
 

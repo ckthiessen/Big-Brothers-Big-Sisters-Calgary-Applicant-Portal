@@ -42,6 +42,7 @@
             hint="At least 8 characters"
             :error-messages="errormessage"
             @click:append="passwordVisible = !passwordVisible"
+            @keydown.enter="auth(email, password)"
           ></v-text-field>
           <v-row justify="space-around">
             <v-col>
