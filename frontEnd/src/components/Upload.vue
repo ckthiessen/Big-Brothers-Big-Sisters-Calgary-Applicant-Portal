@@ -1,6 +1,7 @@
 <template>
   <div>
     <v-file-input
+      color="accent" 
       label="Upload a file"
       accept="application/pdf"
       v-model="fileData"
