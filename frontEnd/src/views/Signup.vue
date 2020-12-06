@@ -87,6 +87,7 @@
                   width="100%"
                   margin-bottom="1em"
                   :disabled="!isValid"
+                  v-on:keyup.enter="signUp()"
                   @click="signUp()"
                 >
                   Sign Up
