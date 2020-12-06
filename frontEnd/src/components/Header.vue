@@ -168,12 +168,13 @@ import {getUserByID} from "../services/apiServices"
               } else {
                 for (let i = 0; i < this.user["notifications"].length; i++) {
                   let notification = this.user["notifications"][i];
-                  this.notifications.push(notification.message + " (" + notification.date + ")");
-                  this.lastNotification = notification.message + " (" + notification.date + ")";
+                  let notifDate = notification.date.split(",")[0]
+                  this.notifications.push(notification.message + " (" + notifDate + ")");
+                  this.lastNotification = notification.message + " (" + notifDate + ")";
                 } 
               }
             });
-             //call pullNotifications() every 3 seconds
+             //call pullNotifications every 3 seconds
              this.interval = setInterval(function () {
                this.pullNotifications();
              }.bind(this), 3000); 
@@ -189,20 +190,21 @@ import {getUserByID} from "../services/apiServices"
                 if (length > 0) {
                   //check the last notification
                   let notification = this.user["notifications"][length - 1];
+                  let notifDate = notification.date.split(",")[0]
                   //if last notification is not new
-                  if (this.lastNotification === notification.message + " (" + notification.date + ")") {
+                  if (this.lastNotification === notification.message + " (" + notifDate + ")") {
                     return;
                   }
 
                   //display new notification
-                  this.notifications.push(notification.message + " (" + notification.date + ")");
+                  this.notifications.push(notification.message + " (" + notifDate + ")");
                   this.seen = false;
                   //remove "No notifications"
                   if (this.notifications[0] === "No notifications") {
                     this.notifications.shift();
                   }
                   //set the last notification again
-                  this.lastNotification = notification.message + " (" + notification.date + ")";
+                  this.lastNotification = notification.message + " (" + notifDate + ")";
                 }
             })
           },

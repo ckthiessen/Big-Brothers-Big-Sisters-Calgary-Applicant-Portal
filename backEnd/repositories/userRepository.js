@@ -36,12 +36,13 @@ module.exports = {
     // } else {
     //   notifMessage = `${applicant.name} has unsubmitted ${selectedTask.name}`;
     // }
+
     let adminIDs = await this.getAllAdmins();
     adminIDs.forEach(adminID => {
       db.collection('users').doc(adminID).update({
           notifications: admin.firestore.FieldValue.arrayUnion({
             message: notifMessage,
-            date: new Date().toLocaleDateString("en-CA", { timeZone: "America/Edmonton" })
+            date: new Date().toLocaleString()
           })
         })
     })
