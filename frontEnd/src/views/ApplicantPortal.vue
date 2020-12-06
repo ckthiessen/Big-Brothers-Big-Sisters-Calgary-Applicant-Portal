@@ -9,6 +9,8 @@
        :single-expand="singleExpand"
        :expanded.sync="expanded"
        show-expand
+       :hide-default-footer="true"
+       disable-pagination
        item-key="name"
        class="elevation-1"
      >

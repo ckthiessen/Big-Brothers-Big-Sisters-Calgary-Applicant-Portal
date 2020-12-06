@@ -8,6 +8,8 @@
     :items="tasks"
     item-key="index"
     class="elevation-1"
+    :hide-default-footer="true"
+    disable-pagination
   >
     <template v-slot:top>
       <v-toolbar flat>
