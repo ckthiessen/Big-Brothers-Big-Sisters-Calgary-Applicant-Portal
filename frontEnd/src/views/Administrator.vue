@@ -20,6 +20,9 @@
       :items="users"
       :search="search"
       item-key="id"
+      hide-default-footer
+      :items-per-page="10"
+      :page.sync="page"
       @click:row="goToApplicantView"
     >
       <template v-slot:item.name="{item}">
@@ -41,6 +44,14 @@
 
       </template>
     </v-data-table>
+    <v-divider></v-divider>
+    <v-pagination
+      v-model="page"
+      class="my-3"
+      color="accent"
+      :length="Math.ceil(users.length/10)"
+      circle
+    ></v-pagination>
     <bbbs-footer></bbbs-footer>
   </v-card>
   </v-container>
@@ -81,7 +92,8 @@
             sortable: true,
             value: 'waitingApproval' },
         ],
-        users: []
+        users: [],
+        page: 1,
       }
     },
     created(){
