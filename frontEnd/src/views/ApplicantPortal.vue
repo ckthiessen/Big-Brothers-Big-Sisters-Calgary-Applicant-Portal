@@ -41,6 +41,7 @@
       <template v-slot:item.status="{item}">
         <v-chip
           :color="status[item.status].color"
+          text-color="white"
         >
           <v-icon class="pl-1" color="white" left>
             {{ status[item.status].icon }}

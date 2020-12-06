@@ -25,9 +25,10 @@
         <td @click="goToApplicantView(item.id)">{{item.name}}</td>
       </template>
       <template v-slot:item.status="{ item }">
-        <v-chip
+        <v-chip 
           :color="getColor(item.status)"
           dark
+          text-color="white"
         >
           {{ item.status }}
         </v-chip>
