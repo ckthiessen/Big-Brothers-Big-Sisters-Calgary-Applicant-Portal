@@ -33,6 +33,7 @@
                 rounded
                 color="accent"
                 dark
+                :class="{'disable-events': item.isApproved === true}"
               >
                 {{ buttonTitle(item.status) }}
               </v-btn>
@@ -258,3 +259,10 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .disable-events {
+    pointer-events: none;
+    opacity: 0.6;
+  }
+</style>
