@@ -1,6 +1,6 @@
 <template>
   <v-container fluid style="margin: 0 auto 0 auto; padding: 0px; width: 90%">
-  <bbbs-header fluid style="margin: 0 auto 0 auto; padding: 0px; width: 90%"></bbbs-header>
+  <bbbs-header @newNotif="displayNotification" fluid style="margin: 0 auto 0 auto; padding: 0px; width: 90%"></bbbs-header>
   <carousel></carousel>
   <v-card class="mx-auto">
      <v-data-table
@@ -62,6 +62,19 @@
      </v-data-table>
     <bbbs-footer></bbbs-footer>
   </v-card>
+   <v-snackbar v-model="snackbar" color="accent">
+      {{ notif }}
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          align="right"
+          icon
+          v-bind="attrs"
+          @click="snackbar = false"
+        >
+          <v-icon small>mdi-close</v-icon>
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -140,7 +153,9 @@ export default {
         "You are a BIG Deal!",
       ],
       username: "",
-      id: this.$route.params.applicantID
+      notif: "",
+      id: this.$route.params.applicantID,
+      snackbar: false,
     };
   },
   components: {
@@ -211,11 +226,19 @@ export default {
     buttonTitle: function (status) {
       return status === "InProgress" ? "Mark Incomplete" : "Request Approval"
     },
+    displayNotification(message) {
+      this.notif = message;
+      this.snackbar = true;
+      setTimeout(() => { 
+        this.snackbar = false; 
+      }, 5000);
+    }
   },
   created() {
     let defaults = require("../assets/defaults.json");
     getUserByID(this.id).then(res => {
       // TODO: Refactor this to be more extensible
+      this.notifs = res.data["notifications"];
       this.username = res.data.name;
       for (const serverTask of Object.values(res.data.tasks)) {
         let clientTask = {} 

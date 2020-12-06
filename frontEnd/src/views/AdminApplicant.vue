@@ -1,6 +1,6 @@
 <template>
   <v-container fluid style="margin: 0 auto 0 auto; padding: 0px; width: 90%">
-  <bbbs-header fluid style="margin: 0 auto 0 auto; padding: 0px; width: 90%"></bbbs-header>
+  <bbbs-header @newNotif="displayNotification" fluid style="margin: 0 auto 0 auto; padding: 0px; width: 90%"></bbbs-header>
   <carousel></carousel>
   <v-card class="mx-auto">
     <v-data-table
@@ -47,6 +47,19 @@
   </v-data-table>
   <bbbs-footer></bbbs-footer>
   </v-card>
+    <v-snackbar v-model="snackbar" color="accent">
+      {{ notif }}
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          align="right"
+          icon
+          v-bind="attrs"
+          @click="snackbar = false"
+        >
+          <v-icon small>mdi-close</v-icon>
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -97,6 +110,8 @@ export default {
         applicant: [],
         tasks: [],
         selectedIndex: '',
+        notif: "",
+        snackbar: false,
         downloadIcons: {
           noUpload: "mdi-download-off-outline",
           upload: "mdi-cloud-download",
@@ -187,7 +202,15 @@ export default {
       }else if (status === "Incomplete"){
         return 'mdi-alert'
       }
-    }
+    },
+
+    displayNotification(message) {
+        this.notif = message;
+        this.snackbar = true;
+        setTimeout(() => { 
+          this.snackbar = false; 
+        }, 5000);
+      }
   }
 }
 </script>
