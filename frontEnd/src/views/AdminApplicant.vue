@@ -16,7 +16,8 @@
       </v-toolbar>
     </template>
     <template v-slot:item.status="{item}">
-      <v-chip :color=getColor(item.status)> 
+      <v-chip :color=getColor(item.status)
+        text-color="white"> 
         <v-icon class="pl-1" color="white" left>
           {{getIcon(item.status)}}
         </v-icon>
