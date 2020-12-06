@@ -26,6 +26,7 @@
             label="Email"
             outlined
             required
+            color="accent"
             :error-messages="errormessage"
           ></v-text-field>
           <v-text-field
@@ -34,6 +35,7 @@
             label="Password"
             outlined
             required
+            color="accent"
             :append-icon="passwordVisible ? 'mdi-eye' : 'mdi-eye-off'"
             :type="passwordVisible ? 'text' : 'password'"
             name="input-10-2"

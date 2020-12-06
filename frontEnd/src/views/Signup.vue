@@ -27,6 +27,7 @@
                 label="First"
                 outlined
                 required
+                color="accent"
               ></v-text-field>
               <v-spacer></v-spacer>
               <v-text-field
@@ -35,6 +36,7 @@
                 label="Last"
                 outlined
                 required
+                color="accent"
               ></v-text-field>
             </v-row>
             <v-row>
@@ -45,6 +47,7 @@
                 label="Email"
                 outlined
                 required
+                color="accent"
                 :error-messages="errormessage"
               ></v-text-field>
             </v-row>
@@ -56,6 +59,7 @@
                 label="Password"
                 outlined
                 required
+                color="accent"
                 :append-icon="passwordVisible ? 'mdi-eye' : 'mdi-eye-off'"
                 :type="passwordVisible ? 'text' : 'password'"
                 name="input-10-2"
@@ -74,6 +78,7 @@
                 label="Confirm"
                 outlined
                 required
+                color="accent"
               ></v-text-field>
             </v-row>
             <v-col>
