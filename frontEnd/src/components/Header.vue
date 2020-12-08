@@ -205,17 +205,21 @@ import {getUserByID} from "../services/apiServices"
                   }
                   //set the last notification again
                   this.lastNotification = notification.message + " (" + notifDate + ")";
+                  this.emitNotification();
                 }
             })
           },
           clearNotification() {
             this.seen = true;
           }, 
+          emitNotification() {
+            this.$emit("newNotif", this.lastNotification);
+          },
           getColor() {
             if (this.seen === true) {
               return;
             } else {
-              return "notificationgreen";
+              return "accent";
             }
           },
           goBack() {

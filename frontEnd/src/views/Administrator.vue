@@ -1,6 +1,6 @@
 <template>
   <v-container fluid style="margin: 0 auto 0 auto; padding: 0px; width: 90%">
-  <bbbs-header fluid style="margin: 0 auto 0 auto; padding: 0px; width: 90%"></bbbs-header>
+  <bbbs-header @newNotif="displayNotification" fluid style="margin: 0 auto 0 auto; padding: 0px; width: 90%"></bbbs-header>
   <carousel></carousel>
   <v-card class="mx-auto">
     <v-spacer></v-spacer>
@@ -55,6 +55,19 @@
     ></v-pagination>
     <bbbs-footer></bbbs-footer>
   </v-card>
+  <v-snackbar v-model="snackbar" color="accent">
+      {{ notif }}
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          align="right"
+          icon
+          v-bind="attrs"
+          @click="snackbar = false"
+        >
+          <v-icon small>mdi-close</v-icon>
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -95,6 +108,8 @@
         ],
         users: [],
         page: 1,
+        notif: "",
+        snackbar: false
       }
     },
     created(){
@@ -142,6 +157,14 @@
       
       goToApplicantView(selectedUser) {
         this.$router.push(`/admin/${this.adminID}/${selectedUser.id}`)
+      },
+
+      displayNotification(message) {
+        this.notif = message;
+        this.snackbar = true;
+        setTimeout(() => { 
+          this.snackbar = false; 
+        }, 5000);
       }
     },
 
