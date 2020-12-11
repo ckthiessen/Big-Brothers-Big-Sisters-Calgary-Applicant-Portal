@@ -76,7 +76,7 @@
             </v-btn>
           <!-- </v-col> -->
           <!-- </v-row> -->
-          <v-col>
+          <!-- <v-col
             <v-btn
               color="accent"
               margin-bottom="1em"
@@ -93,7 +93,7 @@
             >
               BYPASS AUTH AS APPLICANT (DEBUG ONLY)
             </v-btn>
-          </v-col>
+          </v-col> -->
         </v-col>
       </v-row>
     </v-container>
