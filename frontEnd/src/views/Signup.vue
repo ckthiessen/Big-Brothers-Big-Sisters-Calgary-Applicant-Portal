@@ -110,8 +110,9 @@
 </template>
 
 <script>
-import {v4 as uuidv4} from 'uuid';
+//import {v4 as uuidv4} from 'uuid';
 import {createUser} from "../services/apiServices";
+import firebase from "firebase";
 
 export default {
   name: 'Signup',
@@ -146,23 +147,21 @@ export default {
 
     methods:{
       signUp(){
-        console.log(this.checkpassword)
-        let userInfo = {
-          'id' : uuidv4(),
-          'name' : this.firstName + ' ' + this.lastName,
-          'email' : this.email,
-          'password' : this.password,
-        };
-        createUser(userInfo)
-        .then(() => {
+        firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
+          .then((user) => {
+            let userInfo = {
+              'id' : user.user.uid,
+              'name' : this.firstName + ' ' + this.lastName,
+              'email' : this.email,
+              'password' : this.password,
+            };
+            createUser(userInfo)
+            .then(() => {
             this.$router.push(`/`);
-          }
-        )
-        .catch(error => {
-          if (error.response.status == 409) {
-            this.errormessage = 'This email has already been taken'
-          }
-        });
+          })
+          }).catch(error =>{
+            this.errormessage = error.message;
+          })
       },
     }
 }
