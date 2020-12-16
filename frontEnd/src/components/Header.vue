@@ -126,6 +126,7 @@
 
 <script>
 import {getUserByID} from "../services/apiServices"
+import firebase from "firebase";
 
     export default {
         data: () => ({
@@ -144,11 +145,6 @@ import {getUserByID} from "../services/apiServices"
         created() {
           this.id = this.$route.params.adminID || this.$route.params.applicantID; // Short circuit assignment
           this.showBackButton = this.$route.params.adminID && this.$route.params.applicantID ? true : false;
-          
-          //check if the Auth cookie exists, if it doesn't then they did no go through sign in so route to sign in
-          if(!this.$cookies.isKey(this.id)){
-            this.$router.replace({name: "Signin"});
-          }
           getUserByID(this.id).then(response => {
               //get user information
               this.user = response.data;
@@ -226,9 +222,14 @@ import {getUserByID} from "../services/apiServices"
             this.$router.go(-1);
           },
           logOut() {
-            //remove cookies ONLY on logout
-            this.$cookies.remove(this.user.id);
-            this.$router.replace({name: "Signin"});
+            firebase
+            .auth().signOut()
+            .then(() => {
+              this.$router.push(`/`);
+            }).catch(function(error) {
+              //error block
+              console.log(error)
+            });
           }
         },
     }

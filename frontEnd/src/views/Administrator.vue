@@ -89,7 +89,6 @@
         width: window.innerWidth,
         height: window.innerHeight * 0.3, 
         search: '',
-        adminID: '',
         headers: [
           {
             text: 'Name',
@@ -109,11 +108,12 @@
         users: [],
         page: 1,
         notif: "",
-        snackbar: false
+        snackbar: false,
+        id : this.$route.params.adminID
       }
     },
     created(){
-      this.adminID = this.$route.params.adminID;
+      this.id = this.$route.params.adminID
       this.getUserList(); //call when instance is new
     },
     methods: {
@@ -156,7 +156,7 @@
       },
       
       goToApplicantView(selectedUser) {
-        this.$router.push(`/admin/${this.adminID}/${selectedUser.id}`)
+        this.$router.push(`/admin/${this.id}/${selectedUser.id}`)
       },
 
       displayNotification(message) {

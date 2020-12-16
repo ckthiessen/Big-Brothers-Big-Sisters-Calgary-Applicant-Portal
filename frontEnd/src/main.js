@@ -2,31 +2,23 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import vuetify from './plugins/vuetify'
-import VueCookies from 'vue-cookies'
+// import VueCookies from 'vue-cookies'
 import "./firebase"
-// import { auth } from "./firebase";
+import { auth } from "./firebase";
 
 Vue.config.productionTip = false;
 
-Vue.use(VueCookies);
+// Vue.use(VueCookies);
+//this will prevent user from being logged out on page refresh
+let app;
 
-// let app;
-
-// auth.onAuthStateChanged(async user => {
-//   console.log(user);
-//   if (!app) {
-//     app = new Vue({
-//       vuetify,
-//       router,
-//       VueCookies,
-//       render: h => h(App)
-//     }).$mount('#app')
-//   }
-// })
-
-new Vue({
-  vuetify,
-  router,
-  VueCookies,
-  render: h => h(App)
-}).$mount('#app')
+auth.onAuthStateChanged(() => {
+  if (!app) {
+    app = new Vue({
+      vuetify,
+      router,
+      // VueCookies,
+      render: h => h(App)
+    }).$mount('#app')
+  }
+})

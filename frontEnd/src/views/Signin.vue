@@ -103,13 +103,8 @@
 </template>
 
 <script>
-//import {getUserByEmail} from "../services/apiServices";
 import {getUserByID} from "../services/apiServices";
 import firebase from "firebase";
-// import Administrator from './Administrator.vue';
-//import ApplicantPortal from './ApplicantPortal.vue';
-//import * as router from 'vue-router'
-
 
 export default {
   name: 'Signin',
@@ -127,31 +122,20 @@ export default {
     async auth(email, password) {
       await firebase.auth().signInWithEmailAndPassword(email, password)
       .then((user) => {
-        // console.log(user.user)
-        // console.log("Hitting here")
         this.id = user.user.uid
-        // console.log(currentId)
         getUserByID(this.id)
         .then(response => {
-          console.log(response.data)
           let currentUser = response.data;
-          console.log(this.id);
-          //console.log(currentUser.isAdmin)
-          //alert("Signing in now!")
+          console.log(currentUser)
           if(currentUser.isAdmin) {
-            this.$router.push(`administrator/home/${this.id}`)
-          }else{
-            console.log("trying to push")
+            this.$router.push(`admin/home/${this.id}`)
+          }else if(!currentUser.isAdmin){
             this.$router.push(`applicant/${this.id}`)
-            //this.$router.push({name: ApplicantPortal, params: { applicantID: currentUser.id}})
-            //this.$router.push({name: ApplicantPortal, params: { applicantID: currentUser.id}})
-            //this.$router.push({path: `applicant/${currentUser.id}`})
           }
         }).catch((error) => {
           console.log(error)
         })
       }).catch((error) => {
-        //Error block
         this.errormessage = error.message;
       })
     },
