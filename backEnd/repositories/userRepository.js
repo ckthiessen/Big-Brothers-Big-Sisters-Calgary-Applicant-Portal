@@ -74,6 +74,7 @@ module.exports = {
 
   getUserById: async function(id) {
     console.log('getuserbyID');
+    console.log(id)
     const found = db.collection('users').doc(id);
     const doc = await found.get();
     if (doc.exists) {

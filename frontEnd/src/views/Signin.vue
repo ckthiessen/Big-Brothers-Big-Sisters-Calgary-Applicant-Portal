@@ -103,8 +103,14 @@
 </template>
 
 <script>
-  import {getUserByEmail} from "../services/apiServices";
-  
+//import {getUserByEmail} from "../services/apiServices";
+import {getUserByID} from "../services/apiServices";
+import firebase from "firebase";
+// import Administrator from './Administrator.vue';
+//import ApplicantPortal from './ApplicantPortal.vue';
+//import * as router from 'vue-router'
+
+
 export default {
   name: 'Signin',
   data () {
@@ -115,26 +121,40 @@ export default {
       passwordVisible: false,
       errormessage: '',
     }
-  }, 
-  methods: {
+  },
+
+  methods:  {
     async auth(email, password) {
-      await getUserByEmail({ email, password })
-      .then(response => {
-        //build cookie - SUPER WEIRD EDGE CASE THING
-        let user = response.data;
-        this.$cookies.set(user.id); //cookie includes the ID
-        if(user.isAdmin){
-          this.$router.push(`/admin/home/${user.id}`)
-        }else{
-          this.$router.push(`/applicant/${user.id}`)
-        }
+      await firebase.auth().signInWithEmailAndPassword(email, password)
+      .then((user) => {
+        // console.log(user.user)
+        // console.log("Hitting here")
+        this.id = user.user.uid
+        // console.log(currentId)
+        getUserByID(this.id)
+        .then(response => {
+          console.log(response.data)
+          let currentUser = response.data;
+          console.log(this.id);
+          //console.log(currentUser.isAdmin)
+          //alert("Signing in now!")
+          if(currentUser.isAdmin) {
+            this.$router.push(`administrator/home/${this.id}`)
+          }else{
+            console.log("trying to push")
+            this.$router.push(`applicant/${this.id}`)
+            //this.$router.push({name: ApplicantPortal, params: { applicantID: currentUser.id}})
+            //this.$router.push({name: ApplicantPortal, params: { applicantID: currentUser.id}})
+            //this.$router.push({path: `applicant/${currentUser.id}`})
+          }
+        }).catch((error) => {
+          console.log(error)
+        })
+      }).catch((error) => {
+        //Error block
+        this.errormessage = error.message;
       })
-      .catch(error => {
-        if (error.response.status == 401) {
-          this.errormessage = 'Invalid email or password'
-        }
-      });
-    }
+    },
   }
 }
 </script>

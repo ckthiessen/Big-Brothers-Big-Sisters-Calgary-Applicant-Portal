@@ -237,6 +237,7 @@ export default {
   },
   created() {
     let defaults = require("../assets/defaults.json");
+    console.log(this.id + "Now coming from applicant page");
     getUserByID(this.id).then(res => {
       // TODO: Refactor this to be more extensible
       this.notifs = res.data["notifications"];

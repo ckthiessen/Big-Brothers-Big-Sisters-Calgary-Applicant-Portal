@@ -9,10 +9,8 @@ import ApplicantPortal from '../views/ApplicantPortal.vue'
 import AdminApplicant from '../views/AdminApplicant.vue'
 
 //import firebase
-/*
-import * as firebase from 'firebase';
-import 'firebase/auth'
-*/
+import firebase from "firebase";
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -23,14 +21,17 @@ const routes = [
   },
   {
     path: '/signup',
+    name: 'Signup',
     component: Signup
   },
   {
     path: '/forgot',
+    name: 'Forgot',
     component: Forgot
   },
   {
     path: '/admin/home/:adminID',
+    name: 'Adminhome',
     component: Administrator,
     props: (route) => ({ adminID: route.params.adminID }),
     // meta: {
@@ -40,12 +41,14 @@ const routes = [
   },
   {
     path: '/applicant/:applicantID',
+    name: 'ApplicantPortal',
     component: ApplicantPortal,
     props: (route) => ({ applicantID : route.params.applicantID}),
     // meta: {requiresAuth: true}
   },
   {
     path: '/admin/:adminID/:applicantID',
+    name: 'AdminApplicant',
     component: AdminApplicant,
     props: (route) => ({ 
       adminID: route.params.adminID, 
@@ -60,8 +63,19 @@ const routes = [
 
 const router = new VueRouter({
   mode: 'history',
+  base: process.env.BASE_URL,
   routes
 });
+
+// router.beforeEach((to, from, next) => {
+//   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+//   let isAuthenticated = firebase.auth().currentUser;
+//   if (requiresAuth && !isAuthenticated) {
+//     next("/")
+//   } else {
+//     next()
+//   }
+// });
 
 // router.beforeEach((to, from, next) => {
 //   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
@@ -73,12 +87,11 @@ const router = new VueRouter({
 //   //this guards users from accessing certain routes ex: Admin/ Applicant dashboard etc
 //   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 //   const isAdmin = to.matched.some(record => record.meta.isAdmin);
-  //Add firebase logic here
-  /*
-  const isAuthenticated = firebase.auth().currentUser;
-  const hasAdminPerms = firebase.auth().currentUser.isAdmin === true;
+//   //Add firebase logic here
+//   const isAuthenticated = firebase.auth().currentUser;
+//   const hasAdminPerms = firebase.auth().currentUser.isAdmin === true;
 
-//   if(requiresAuth & !isAutheticated){
+//   if(requiresAuth & !isAuthenticated){
 //     next("/signin");
 //   }else{
 //     next()
@@ -89,6 +102,14 @@ const router = new VueRouter({
 //   }else{
 //     next()
 //   }
-//   */
+
+//   // if authenticated and not an admin
+//   if (isAuthenticated & !hasAdminPerms) {
+//     next(`/applicant/${currentUser.uid}`)
+//   } else {
+//     next()
+//   }
+//   })
+
 
 export default router
