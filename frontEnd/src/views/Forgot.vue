@@ -59,6 +59,8 @@
 </template>
 
 <script>
+import firebase from "firebase";
+// import {getUserByEmail} from "../services/apiServices";
 
 export default {
   name: 'Forgot',
@@ -77,6 +79,18 @@ export default {
       matches: [
           () => (this.email == this.confirmemail || 'Emails must match')
         ]
+    }
+  },
+
+  methods : {
+    sendReset(email){
+      firebase.auth().sendPasswordResetEmail(email).then(function() {
+        // Email sent.
+      }).catch(function(error) {
+        // An error happened.
+        this.errormessage = error.message
+      });
+
     }
   }
 }
