@@ -54,9 +54,10 @@
             </v-btn>
             </v-col>
           </v-row>
-          <!-- <v-row> -->
-            <!-- <v-col>
+          <v-row justify="space-around">
+            <v-col>
             <v-btn
+              width="100%"
               color="accent"
               margin-bottom="1em"
               @click="$router.push('/forgot')"
@@ -64,8 +65,9 @@
               Forgot Password
             </v-btn>
             </v-col>
-          <v-spacer></v-spacer> -->
-           <!-- <v-col> -->
+          </v-row>
+          <v-row justify="space-around">
+            <v-col>
             <v-btn
               width="100%"
               color="accent"
@@ -74,6 +76,8 @@
             >
               Dont have an account? Sign Up
             </v-btn>
+            </v-col>
+          </v-row>
           <!-- </v-col> -->
           <!-- </v-row> -->
           <!-- <v-col
@@ -135,8 +139,8 @@ export default {
         }).catch((error) => {
           console.log(error)
         })
-      }).catch((error) => {
-        this.errormessage = error.message;
+      }).catch(() => {
+        this.errormessage = "The email or password is incorrect";
       })
     },
   }

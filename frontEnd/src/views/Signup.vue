@@ -129,7 +129,7 @@ export default {
 
         emailrules: [ 
         v => 
-        !!v || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) 
+        !v || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) 
         || 'E-mail must be valid'
         || 'E-mail is required'
         ],
