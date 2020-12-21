@@ -1,12 +1,7 @@
 <template>
 <v-container fluid style="margin: 0 auto 0 auto; padding: 0px; max-width: 800px; width: 90% !important">
   <v-card>
-    <v-img  
-      src="../assets/thumbnail_Calgary_horizontal_primary_CMYK_EN.png"
-      contain
-      position="left"
-      height="250px"
-    ></v-img>
+    <bbbs-logo></bbbs-logo>
     <v-card-title 
     align-middle
     class="center accent white--text">
@@ -25,16 +20,6 @@
             placeholder="first.last@email.com"
             :rules="emailrules"
             label="Email"
-            outlined
-            required
-            color="accent"
-            :error-messages="errormessage"
-          ></v-text-field>
-          <v-text-field
-            v-model="confirmemail"
-            :rules="matches"
-            placeholder="first.last@email.com"
-            label=" Verify Email"
             outlined
             required
             color="accent"
@@ -60,7 +45,7 @@
 
 <script>
 import firebase from "firebase";
-// import {getUserByEmail} from "../services/apiServices";
+import Logo from "../components/Logo"
 
 export default {
   name: 'Forgot',
@@ -76,16 +61,16 @@ export default {
         || 'E-mail must be valid'
         || 'E-mail is required'
         ],
-      matches: [
-          () => (this.email == this.confirmemail || 'Emails must match')
-        ]
     }
   },
-
+    components: {
+    "bbbs-logo": Logo,
+  },
   methods : {
     sendReset(email){
       firebase.auth().sendPasswordResetEmail(email).then(function() {
         // Email sent.
+        this.$router.push(`/`)
       }).catch(function(error) {
         // An error happened.
         this.errormessage = error.message

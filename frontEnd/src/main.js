@@ -6,6 +6,7 @@ import vuetify from './plugins/vuetify'
 import "./firebase"
 import { auth } from "./firebase";
 
+//Disable "You are running Vue in development mode" warning
 Vue.config.productionTip = false;
 
 // Vue.use(VueCookies);

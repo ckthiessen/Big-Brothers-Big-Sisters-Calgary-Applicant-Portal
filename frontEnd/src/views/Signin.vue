@@ -1,12 +1,7 @@
 <template>
   <v-container fluid style="margin: 0 auto 0 auto; padding: 0px; max-width: 800px; width: 90% !important">
   <v-card>
-    <v-img  
-      src="../assets/thumbnail_Calgary_horizontal_primary_CMYK_EN.png"
-      contain
-      position="left"
-      height="250px"
-    ></v-img>
+    <bbbs-logo></bbbs-logo>
     <v-card-title 
     align-middle
     class="center accent white--text">
@@ -107,6 +102,7 @@
 </template>
 
 <script>
+import Logo from "../components/Logo";
 import {getUserByID} from "../services/apiServices";
 import firebase from "firebase";
 
@@ -121,7 +117,9 @@ export default {
       errormessage: '',
     }
   },
-
+  components: {
+    "bbbs-logo": Logo,
+  },
   methods:  {
     async auth(email, password) {
       await firebase.auth().signInWithEmailAndPassword(email, password)
@@ -130,14 +128,13 @@ export default {
         getUserByID(this.id)
         .then(response => {
           let currentUser = response.data;
-          console.log(currentUser)
           if(currentUser.isAdmin) {
             this.$router.push(`admin/home/${this.id}`)
           }else if(!currentUser.isAdmin){
             this.$router.push(`applicant/${this.id}`)
           }
         }).catch((error) => {
-          console.log(error)
+          this.errormessage = error
         })
       }).catch(() => {
         this.errormessage = "The email or password is incorrect";
