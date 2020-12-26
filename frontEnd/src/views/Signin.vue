@@ -76,24 +76,24 @@
             </v-btn>
           <!-- </v-col> -->
           <!-- </v-row> -->
-          <!-- <v-col
+          <v-col>
             <v-btn
               color="accent"
               margin-bottom="1em"
-              @click="auth('benjamin.cook@ucalgary.ca', 'password')"
+              @click="auth('abc.123@a.com', 'Abc1234$')"
             >
-              BYPASS AUTH AS ADMIN (DEBUG ONLY)
+              BYPASS AUTH AS APPLICANT (DEBUG ONLY)
             </v-btn>
           </v-col>
           <v-col>
             <v-btn
               color="accent"
               margin-bottom="1em"
-              @click="auth('r.l@mail.com', 'Abc123!!!')"
+              @click="auth('cole.t@abc.com', 'Abc1234$')"
             >
-              BYPASS AUTH AS APPLICANT (DEBUG ONLY)
+              BYPASS AUTH AS ADMIN (DEBUG ONLY)
             </v-btn>
-          </v-col> -->
+          </v-col>
         </v-col>
       </v-row>
     </v-container>
