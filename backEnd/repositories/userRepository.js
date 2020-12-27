@@ -74,6 +74,7 @@ module.exports = {
 
   getUserById: async function(id) {
     console.log('getuserbyID');
+    console.log(id)
     const found = db.collection('users').doc(id);
     const doc = await found.get();
     if (doc.exists) {
@@ -82,33 +83,33 @@ module.exports = {
     throw "Not Found";
   },
 
-  getUserbyEmail: async function(body){
-    console.log('getuserbyEmail');
-    console.log(body);
-    const found = db.collection('users').where('email', '==', body.email);
-    const doc = await found.get();
-    if(doc.empty){
-      console.log("nothing found")
-      throw "Not Found"
-    }
+  // getUserbyEmail: async function(body){
+  //   console.log('getuserbyEmail');
+  //   console.log(body);
+  //   const found = db.collection('users').where('email', '==', body.email);
+  //   const doc = await found.get();
+  //   if(doc.empty){
+  //     console.log("nothing found")
+  //     throw "Not Found"
+  //   }
 
-    let user = undefined;
-    doc.forEach(each => {
-      console.log(each.id, "=>", each.data());
-      user = each.data();
-    })
+  //   let user = undefined;
+  //   doc.forEach(each => {
+  //     console.log(each.id, "=>", each.data());
+  //     user = each.data();
+  //   })
   
-    return user;
-  },
+  //   return user;
+  // },
 
-  authenticateUser: async function(body){
-    let user = await this.getUserbyEmail(body);
-    //checks if the password matches
-    if(user.password !== body.password){
-      throw "Invalid Password"
-    }
-    return user;
+  // authenticateUser: async function(body){
+  //   let user = await this.getUserbyEmail(body);
+  //   //checks if the password matches
+  //   if(user.password !== body.password){
+  //     throw "Invalid Password"
+  //   }
+  //   return user;
 
-  }
+  // }
 
 };
