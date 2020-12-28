@@ -171,6 +171,7 @@ import firebase from "firebase";
               }
             });
              //call pullNotifications every 3 seconds
+             //test
              this.interval = setInterval(function () {
                this.pullNotifications();
              }.bind(this), 3000); 
