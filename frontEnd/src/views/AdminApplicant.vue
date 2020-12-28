@@ -15,6 +15,13 @@
       <v-toolbar flat>
         <v-card-title>{{applicant.name}}</v-card-title>
         <v-spacer></v-spacer>
+        <v-switch 
+        :label="userType"
+        color="accent"
+        :loading="switchLoading"
+        :v-model="applicant.isCommunityMentor"
+        @change="toggleUserType"
+        ></v-switch>
       </v-toolbar>
     </template>
     <template v-slot:item.status="{item}">
@@ -81,28 +88,6 @@ export default {
     'carousel' : Carousel,
     'bbbs-download': Download
   },
-
-  created(){
-    this.adminID = this.$route.params.adminID;
-    this.applicantID = this.$route.params.applicantID;
-    getUserByID(this.applicantID).then(res => {
-        this.applicant = res.data
-        let servertasks = res.data.tasks
-        for (const task in servertasks) {
-          if(servertasks[task].isSubmitted && servertasks[task].isApproved){
-            servertasks[task].status = "Complete";
-            servertasks[task].buttonTitle = "Mark Incomplete"
-          }else if(servertasks[task].isSubmitted && !servertasks[task].isApproved){
-            servertasks[task].status = "Requires Approval"
-            servertasks[task].buttonTitle = "Mark Complete"
-          }else if(!servertasks[task].isSubmitted && !servertasks[task].isApproved){
-            servertasks[task].status = "Incomplete"
-            servertasks[task].buttonTitle = "Mark Complete"
-          }
-          this.tasks.push(servertasks[task])
-        }
-      });
-  },
   data(){
     return {
         applicantID: '',
@@ -110,8 +95,10 @@ export default {
         applicant: [],
         tasks: [],
         selectedIndex: '',
+        switchLoading: false,
         notif: "",
         snackbar: false,
+        switchLabel: "",
         downloadIcons: {
           noUpload: "mdi-download-off-outline",
           upload: "mdi-cloud-download",
@@ -149,15 +136,45 @@ export default {
         ],
       }
   },
-
+  created(){
+    this.adminID = this.$route.params.adminID
+    this.applicantID = this.$route.params.applicantID
+    getUserByID(this.applicantID).then(res => {
+        this.applicant = res.data
+        this.switchLabel = this.applicant.isCommunityMentor ? false : true
+        let servertasks = res.data.tasks
+        for (const task in servertasks) {
+          if(servertasks[task].isSubmitted && servertasks[task].isApproved){
+            servertasks[task].status = "Complete";
+            servertasks[task].buttonTitle = "Mark Incomplete"
+          }else if(servertasks[task].isSubmitted && !servertasks[task].isApproved){
+            servertasks[task].status = "Requires Approval"
+            servertasks[task].buttonTitle = "Mark Complete"
+          }else if(!servertasks[task].isSubmitted && !servertasks[task].isApproved){
+            servertasks[task].status = "Incomplete"
+            servertasks[task].buttonTitle = "Mark Complete"
+          }
+          this.tasks.push(servertasks[task])
+        }
+      });
+  },
+  computed: {
+    userType: function() {
+      return this.switchLabel ? "Community Mentor" : "Education Mentor"
+    }
+  },
   methods: {
-    async updateUser(applicant){
+    async updateUser(applicant) {
       await updateUser(applicant).then(response => {
           this.applicant = response.data;
           this.$emit('emitToApp', response.data);
       });
     },
-    
+    toggleUserType() {
+        this.switchLoading = true;
+        
+        
+    },
     changeStatus: function(status, index) {
       let selectedTask = this.tasks[index];
       if (selectedTask.status === "Requires Approval" || selectedTask.status === "Incomplete") {
