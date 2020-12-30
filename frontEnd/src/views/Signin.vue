@@ -93,6 +93,15 @@
               BYPASS AUTH AS ADMIN (DEBUG ONLY)
             </v-btn>
           </v-col>
+          <v-col>
+            <v-btn
+              color="accent"
+              margin-bottom="1em"
+              @click="testFunc('Firebase Testing')"
+            >
+              Test Func
+            </v-btn>
+          </v-col>
         </v-col>
       </v-row>
     </v-container>
@@ -103,7 +112,7 @@
 
 <script>
 import Logo from "../components/Logo";
-import {getUserByID} from "../services/apiServices";
+import {getUserByID, firebaseTest} from "../services/apiServices";
 import firebase from "firebase";
 
 export default {
@@ -140,6 +149,12 @@ export default {
         this.errormessage = "The email or password is incorrect";
       })
     },
+    /**
+     * Runs a firebase function and will echo whatever message is passed in
+     */
+    async testFunc(message) { 
+      console.log(await firebaseTest(message));
+    }
   }
 }
 </script>
