@@ -1,4 +1,5 @@
 import axios from "axios"
+import firebase from "firebase";
 
 //client side function for getting all users - no params needed
 export async function getAllUsers() {
@@ -14,6 +15,12 @@ export async function getUserByID(id) {
 export async function createUser(user){
   const response = await axios.post('/api/users', user);
   return await response;
+}
+
+export async function firebaseTest(messageText) {
+  let addMessage = firebase.functions().httpsCallable('addMessage');
+  let result = await addMessage({ text: messageText });
+  return result.data.msg;
 }
 
 //client side function for deleting a user by ID - pass in user's ID
