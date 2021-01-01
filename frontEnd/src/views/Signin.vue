@@ -1,12 +1,7 @@
 <template>
   <v-container fluid style="margin: 0 auto 0 auto; padding: 0px; max-width: 800px; width: 90% !important">
   <v-card>
-    <v-img  
-      src="../assets/thumbnail_Calgary_horizontal_primary_CMYK_EN.png"
-      contain
-      position="left"
-      height="250px"
-    ></v-img>
+    <bbbs-logo></bbbs-logo>
     <v-card-title 
     align-middle
     class="center accent white--text">
@@ -54,9 +49,10 @@
             </v-btn>
             </v-col>
           </v-row>
-          <!-- <v-row> -->
-            <!-- <v-col>
+          <v-row justify="space-around">
+            <v-col>
             <v-btn
+              width="100%"
               color="accent"
               margin-bottom="1em"
               @click="$router.push('/forgot')"
@@ -64,8 +60,9 @@
               Forgot Password
             </v-btn>
             </v-col>
-          <v-spacer></v-spacer> -->
-           <!-- <v-col> -->
+          </v-row>
+          <v-row justify="space-around">
+            <v-col>
             <v-btn
               width="100%"
               color="accent"
@@ -74,6 +71,8 @@
             >
               Dont have an account? Sign Up
             </v-btn>
+            </v-col>
+          </v-row>
           <!-- </v-col> -->
           <!-- </v-row> -->
           <v-col>
@@ -94,6 +93,15 @@
               BYPASS AUTH AS ADMIN (DEBUG ONLY)
             </v-btn>
           </v-col>
+          <v-col>
+            <v-btn
+              color="accent"
+              margin-bottom="1em"
+              @click="testFunc('Firebase Testing')"
+            >
+              Test Func
+            </v-btn>
+          </v-col>
         </v-col>
       </v-row>
     </v-container>
@@ -103,8 +111,10 @@
 </template>
 
 <script>
-  import {getUserByEmail} from "../services/apiServices";
-  
+import Logo from "../components/Logo";
+import {getUserByID, firebaseTest} from "../services/apiServices";
+import firebase from "firebase";
+
 export default {
   name: 'Signin',
   data () {
@@ -115,25 +125,35 @@ export default {
       passwordVisible: false,
       errormessage: '',
     }
-  }, 
-  methods: {
+  },
+  components: {
+    "bbbs-logo": Logo,
+  },
+  methods:  {
     async auth(email, password) {
-      await getUserByEmail({ email, password })
-      .then(response => {
-        //build cookie - SUPER WEIRD EDGE CASE THING
-        let user = response.data;
-        this.$cookies.set(user.id); //cookie includes the ID
-        if(user.isAdmin){
-          this.$router.push(`/admin/home/${user.id}`)
-        }else{
-          this.$router.push(`/applicant/${user.id}`)
-        }
+      await firebase.auth().signInWithEmailAndPassword(email, password)
+      .then((user) => {
+        this.id = user.user.uid
+        getUserByID(this.id)
+        .then(response => {
+          let currentUser = response.data;
+          if(currentUser.isAdmin) {
+            this.$router.push(`admin/home/${this.id}`)
+          }else if(!currentUser.isAdmin){
+            this.$router.push(`applicant/${this.id}`)
+          }
+        }).catch((error) => {
+          this.errormessage = error
+        })
+      }).catch(() => {
+        this.errormessage = "The email or password is incorrect";
       })
-      .catch(error => {
-        if (error.response.status == 401) {
-          this.errormessage = 'Invalid email or password'
-        }
-      });
+    },
+    /**
+     * Runs a firebase function and will echo whatever message is passed in
+     */
+    async testFunc(message) { 
+      console.log(await firebaseTest(message));
     }
   }
 }

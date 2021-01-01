@@ -1,12 +1,7 @@
 <template>
   <v-container fluid style="margin: 0 auto 0 auto; padding: 0px; max-width: 800px; width: 90% !important">
     <v-card>
-      <v-img  
-        src="../assets/thumbnail_Calgary_horizontal_primary_CMYK_EN.png"
-        contain
-        position="left"
-        height="250px"
-      ></v-img>
+      <bbbs-logo></bbbs-logo>
       <v-card-title 
       align-middle
       class="center accent white--text">
@@ -110,8 +105,9 @@
 </template>
 
 <script>
-import {v4 as uuidv4} from 'uuid';
 import {createUser} from "../services/apiServices";
+import Logo from "../components/Logo"
+import firebase from "firebase";
 
 export default {
   name: 'Signup',
@@ -128,7 +124,7 @@ export default {
 
         emailrules: [ 
         v => 
-        !!v || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) 
+        !v || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) 
         || 'E-mail must be valid'
         || 'E-mail is required'
         ],
@@ -144,25 +140,26 @@ export default {
       }
     },
 
+    components: {
+      "bbbs-logo": Logo,
+    },
     methods:{
       signUp(){
-        console.log(this.checkpassword)
-        let userInfo = {
-          'id' : uuidv4(),
-          'name' : this.firstName + ' ' + this.lastName,
-          'email' : this.email,
-          'password' : this.password,
-        };
-        createUser(userInfo)
-        .then(() => {
+        firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
+          .then((user) => {
+            let userInfo = {
+              'id' : user.user.uid,
+              'name' : this.firstName + ' ' + this.lastName,
+              'email' : this.email,
+              'password' : this.password,
+            };
+            createUser(userInfo)
+            .then(() => {
             this.$router.push(`/`);
-          }
-        )
-        .catch(error => {
-          if (error.response.status == 409) {
-            this.errormessage = 'This email has already been taken'
-          }
-        });
+          })
+          }).catch(error =>{
+            this.errormessage = error.message;
+          })
       },
     }
 }
