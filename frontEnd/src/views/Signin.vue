@@ -111,6 +111,7 @@
 </template>
 
 <script>
+/*eslint-disable*/
 import Logo from "../components/Logo";
 import {getUserByID, firebaseTest} from "../services/apiServices";
 import firebase from "firebase";
@@ -130,24 +131,40 @@ export default {
     "bbbs-logo": Logo,
   },
   methods:  {
-    async auth(email, password) {
-      await firebase.auth().signInWithEmailAndPassword(email, password)
-      .then((user) => {
-        this.id = user.user.uid
-        getUserByID(this.id)
-        .then(response => {
-          let currentUser = response.data;
-          if(currentUser.isAdmin) {
-            this.$router.push(`admin/home/${this.id}`)
-          }else if(!currentUser.isAdmin){
-            this.$router.push(`applicant/${this.id}`)
-          }
-        }).catch((error) => {
-          this.errormessage = error
-        })
-      }).catch(() => {
-        this.errormessage = "The email or password is incorrect";
+    async getUserByID(id) {
+      getUserByID(id).then(response => {
+        console.log(response);
+        let currentUser = response.data;
+        if(currentUser.isAdmin) {
+          this.$router.push(`admin/home/${this.id}`)
+        }else if(!currentUser.isAdmin){
+          this.$router.push(`applicant/${this.id}`)
+        }
+      }).catch((error) => {
+        this.errormessage = error.message;
       })
+    },
+
+    async auth(email, password) {
+      // await firebase.auth().signInWithEmailAndPassword(email, password)
+      // .then((user) => {
+      //   this.id = user.user.uid
+        // this.getUserByID(this.id)
+        this.getUserByID('123')
+        // .then(response => {
+        //   console.log(response);
+        //   let currentUser = response.data;
+        //   if(currentUser.isAdmin) {
+        //     this.$router.push(`admin/home/${this.id}`)
+        //   }else if(!currentUser.isAdmin){
+        //     this.$router.push(`applicant/${this.id}`)
+        //   }
+        // }).catch((error) => {
+        //   this.errormessage = error.message;
+        // })
+      // }).catch(() => {
+      //   this.errormessage = "The email or password is incorrect";
+      // })
     },
     /**
      * Runs a firebase function and will echo whatever message is passed in
