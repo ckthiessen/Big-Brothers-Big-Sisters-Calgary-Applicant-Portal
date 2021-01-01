@@ -16,3 +16,11 @@ exports.addMessage = functions.https.onCall((data) => {
     msg: text
   };
 });
+
+
+// Sets the boolean "isCommunityMentor" in Cloud Firestore based on data passed in
+exports.updateApplicantType = functions.https.onCall((data, context) => {
+  return db.collection('users').doc(data.id).update({
+    isCommunityMentor: data.isCommunityMentor
+  })
+});
