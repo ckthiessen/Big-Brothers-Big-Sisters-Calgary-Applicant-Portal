@@ -9,7 +9,6 @@ admin.initializeApp({
 const db = admin.firestore();
 
 module.exports = {
-  
   createUser: async function(toCreate) {
     console.log('createUser: ' + toCreate);
     let created = await db.collection('users').doc(toCreate.id).set(toCreate);

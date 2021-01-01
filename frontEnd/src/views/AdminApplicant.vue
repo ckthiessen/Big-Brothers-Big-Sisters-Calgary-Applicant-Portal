@@ -81,6 +81,7 @@ import Carousel from "../components/Carousel.vue";
 import { getUserByID, updateUser } from "../services/apiServices";
 import _ from "lodash";
 import Download from "../components/Download.vue";
+import firebase from "firebase";
 
 export default {
   name: "AdminApplicant",
@@ -101,7 +102,6 @@ export default {
       switchLoading: false,
       notif: "",
       snackbar: false,
-      switchLabel: "",
       downloadIcons: {
         noUpload: "mdi-download-off-outline",
         upload: "mdi-cloud-download",
@@ -144,7 +144,6 @@ export default {
     this.applicantID = this.$route.params.applicantID;
     getUserByID(this.applicantID).then((res) => {
       this.applicant = res.data;
-      this.switchLabel = this.applicant.isCommunityMentor;
       let servertasks = res.data.tasks;
       for (const task in servertasks) {
         if (servertasks[task].isSubmitted && servertasks[task].isApproved) {
@@ -169,7 +168,7 @@ export default {
   },
   computed: {
     userType: function () {
-      return this.switchLabel ? "Community Mentor" : "Education Mentor";
+      return this.applicant.isCommunityMentor ? "Community Mentor" : "Education Mentor";
     },
   },
   methods: {
@@ -179,8 +178,21 @@ export default {
         this.$emit("emitToApp", response.data);
       });
     },
-    toggleUserType() {
+    async toggleUserType() {
       this.switchLoading = true;
+      try {
+        await firebase.functions().httpsCallable('updateApplicantTypes')({ id: this.applicant.id, isCommunityMentor: !this.applicant.isCommunityMentor });
+        this.applicant.isCommunityMentor = !this.applicant.isCommunityMentor;
+        this.switchLoading = false;
+      } catch (err) {
+        console.log(err.message);
+        this.notif = err.message;
+        this.snackbar = true;
+        this.switchLoading = false;
+        setTimeout(() => {
+          this.snackbar = false;
+        }, 5000);
+      }
     },
     changeStatus: function (status, index) {
       let selectedTask = this.tasks[index];
