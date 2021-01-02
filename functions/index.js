@@ -16,3 +16,13 @@ exports.addMessage = functions.https.onCall((data) => {
     msg: text
   };
 });
+
+// Gets user by ID passed into data from firestore 
+exports.getUserByID = functions.https.onCall((data, context) => {
+  if (!context.auth.uid) { throw new functions.https.HttpsError("unauthenticated", "User not authenticated"); }
+  return new Promise((resolve, reject) => {
+    db.collection('users').doc(data.id).get()
+      .then(doc => resolve(doc.data())) // Successful, resolve with user document
+      .catch(() => reject(new functions.https.HttpsError("internal", "Could not get user"))); // Failed, reject promise with HTTP error message
+  });
+}); 
