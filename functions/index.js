@@ -18,23 +18,14 @@ exports.addMessage = functions.https.onCall((data) => {
   };
 });
 
-// exports.updateApplicantType = functions.https.onCall((data, context) => {
-//   // Message text passed from the client.
-//   const text = data.text;
-//   // returning result.
-//   return {
-//     msg: text
-//   };
-// });
-
 // Sets the boolean "isCommunityMentor" in Cloud Firestore based on data passed in
-exports.updateApplicantTypes = functions.https.onCall((data, context) => {
-  if (context.auth.uid) { throw new functions.https.HttpsError("unauthenticated", "User not authenticated"); }
+exports.updateApplicantType = functions.https.onCall((data, context) => {
+  if (!context.auth.uid) { throw new functions.https.HttpsError("unauthenticated", "User not authenticated"); }
   return new Promise((resolve, reject) => {
     db.collection('users').doc(data.id).update({
       isCommunityMentor: data.isCommunityMentor
     })
       .then(() => resolve()) // Successful, resolve with nothing
-      .catch(() => reject(new functions.https.HttpsError("internal", "Could not update user type"))); // Failed, reject promise with HTTP error message  
+      .catch(() => reject(new functions.https.HttpsError("internal", "Could not update user type"))); // Failed, reject promise with HTTP error message
   });
 });

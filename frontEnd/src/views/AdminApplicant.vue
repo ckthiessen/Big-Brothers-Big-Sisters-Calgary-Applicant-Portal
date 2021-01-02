@@ -40,7 +40,6 @@
           <v-icon v-if="!item.fileUpload" color="accent">
             {{ downloadIcons.noUpload }}</v-icon
           >
-
           <bbbs-download
             v-if="item.fileUpload"
             :task="item"
@@ -134,7 +133,6 @@ export default {
       ],
       noActions: [
         "BIG Profile",
-        "You are no BIG Deal :(",
         "You are a BIG Deal!",
       ],
     };
@@ -181,11 +179,10 @@ export default {
     async toggleUserType() {
       this.switchLoading = true;
       try {
-        await firebase.functions().httpsCallable('updateApplicantTypes')({ id: this.applicant.id, isCommunityMentor: !this.applicant.isCommunityMentor });
+        await firebase.functions().httpsCallable('updateApplicantType')({ id: this.applicant.id, isCommunityMentor: !this.applicant.isCommunityMentor });
         this.applicant.isCommunityMentor = !this.applicant.isCommunityMentor;
         this.switchLoading = false;
       } catch (err) {
-        console.log(err.message);
         this.notif = err.message;
         this.snackbar = true;
         this.switchLoading = false;
