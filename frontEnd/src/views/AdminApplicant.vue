@@ -17,13 +17,14 @@
       >
         <template v-slot:top>
           <v-toolbar flat>
-            <v-card-title>{{ applicant.name }}</v-card-title>
+            <v-card-title>{{ applicantName }}</v-card-title>
             <v-spacer></v-spacer>
             <v-switch
+              class="mt-6"
               :label="userType"
               color="accent"
               :loading="switchLoading"
-              :v-model="applicant.isCommunityMentor"
+              :v-model="isCommunityMentor"
               @change="toggleUserType"
             ></v-switch>
           </v-toolbar>
@@ -77,30 +78,29 @@
 import Header from "../components/Header.vue";
 import Footer from "../components/Footer.vue";
 import Carousel from "../components/Carousel.vue";
-import { getUserByID, updateUser } from "../services/apiServices";
-import _ from "lodash";
 import Download from "../components/Download.vue";
+import { updateUser } from "../services/apiServices"
 import firebase from "firebase";
 
 export default {
   name: "AdminApplicant",
-
   components: {
     "bbbs-header": Header,
     "bbbs-footer": Footer,
-    carousel: Carousel,
+    "carousel": Carousel,
     "bbbs-download": Download,
   },
   data() {
     return {
       applicantID: "",
       adminID: "",
-      applicant: [],
+      applicantName: "",
       tasks: [],
       selectedIndex: "",
       switchLoading: false,
       notif: "",
       snackbar: false,
+      isCommunityMentor: false,
       downloadIcons: {
         noUpload: "mdi-download-off-outline",
         upload: "mdi-cloud-download",
@@ -137,37 +137,15 @@ export default {
       ],
     };
   },
+  computed: {
+    userType: function () {
+      return this.isCommunityMentor ? "Community Mentor" : "Education Mentor";
+    }
+  },
   created() {
     this.adminID = this.$route.params.adminID;
     this.applicantID = this.$route.params.applicantID;
-    getUserByID(this.applicantID).then((res) => {
-      this.applicant = res.data;
-      let servertasks = res.data.tasks;
-      for (const task in servertasks) {
-        if (servertasks[task].isSubmitted && servertasks[task].isApproved) {
-          servertasks[task].status = "Complete";
-          servertasks[task].buttonTitle = "Mark Incomplete";
-        } else if (
-          servertasks[task].isSubmitted &&
-          !servertasks[task].isApproved
-        ) {
-          servertasks[task].status = "Requires Approval";
-          servertasks[task].buttonTitle = "Mark Complete";
-        } else if (
-          !servertasks[task].isSubmitted &&
-          !servertasks[task].isApproved
-        ) {
-          servertasks[task].status = "Incomplete";
-          servertasks[task].buttonTitle = "Mark Complete";
-        }
-        this.tasks.push(servertasks[task]);
-      }
-    });
-  },
-  computed: {
-    userType: function () {
-      return this.applicant.isCommunityMentor ? "Community Mentor" : "Education Mentor";
-    },
+    this.renderUser();
   },
   methods: {
     async updateUser(applicant) {
@@ -179,8 +157,8 @@ export default {
     async toggleUserType() {
       this.switchLoading = true;
       try {
-        await firebase.functions().httpsCallable('updateApplicantType')({ id: this.applicant.id, isCommunityMentor: !this.applicant.isCommunityMentor });
-        this.applicant.isCommunityMentor = !this.applicant.isCommunityMentor;
+        await firebase.functions().httpsCallable('updateApplicantType')({ id: this.applicantID, isCommunityMentor: !this.isCommunityMentor });
+        this.isCommunityMentor = !this.isCommunityMentor;
         this.switchLoading = false;
       } catch (err) {
         this.notif = err.message;
@@ -191,39 +169,78 @@ export default {
         }, 5000);
       }
     },
-    changeStatus: function (status, index) {
+  async renderUser() {
+    let doc;
+    try {
+      doc = await firebase.functions().httpsCallable("getUserByID")({
+        id: this.applicantID
+      });
+    } catch (err) {
+      this.displayNotification(err.message);
+    }
+    this.applicantName = doc.data.name;
+    this.isCommunityMentor = doc.data.isCommunityMentor;
+    let servertasks = doc.data.tasks;
+    for (const task in servertasks) {
+      if (servertasks[task].isSubmitted && servertasks[task].isApproved) {
+        servertasks[task].status = "Complete";
+        servertasks[task].buttonTitle = "Mark Incomplete";
+      } else if (servertasks[task].isSubmitted && !servertasks[task].isApproved) {
+        servertasks[task].status = "Requires Approval";
+        servertasks[task].buttonTitle = "Mark Complete";
+      } else if (!servertasks[task].isSubmitted && !servertasks[task].isApproved) {
+        servertasks[task].status = "Incomplete";
+        servertasks[task].buttonTitle = "Mark Complete";
+      }
+      this.tasks.push(servertasks[task]);
+    }
+  },
+    async changeStatus(status, index) {
       let selectedTask = this.tasks[index];
+      let notification;
       if (
         selectedTask.status === "Requires Approval" ||
         selectedTask.status === "Incomplete"
       ) {
         selectedTask.status = "Complete";
         selectedTask.buttonTitle = "Mark Incomplete";
-        this.applicant.tasks[index].isSubmitted = true;
-        this.applicant.tasks[index].isApproved = true;
-        this.applicant.notifications.push({
-          message: "The administrator has approved " + selectedTask.name,
-          date: new Date().toLocaleString(),
-        });
+        notification = `An administrator has approved ${selectedTask.name}`
+        selectedTask.isSubmitted = true;
+        selectedTask.isApproved = true;
       } else if (selectedTask.status === "Complete") {
         selectedTask.status = "Incomplete";
         selectedTask.buttonTitle = "Mark Complete";
-        this.applicant.notifications.push({
-          message:
-            "The administrator has rejected your submission for " +
-            selectedTask.name,
-          date: new Date().toLocaleString(),
-        });
-        this.applicant.tasks[index].isSubmitted = false;
-        this.applicant.tasks[index].isApproved = false;
+        selectedTask.isSubmitted = false;
+        selectedTask.isApproved = false;
+        notification = `An administrator has rejected your submission for ${selectedTask.name}`
       }
 
-      let applicantCopy = _.cloneDeep(this.applicant);
-      for (let i = 0; i < applicantCopy.tasks.length; i++) {
-        delete applicantCopy.tasks[i].status;
-        delete applicantCopy.tasks[i].buttonTitle;
+      let serverTasks = [];
+      this.tasks.forEach((task) => {
+        let serverTask = {
+          dueDate: task.dueDate,
+          name: task.name,
+          fileUpload: task.fileUpload, 
+        };
+        if (task.name === selectedTask.name) {
+          serverTask.isSubmitted = selectedTask.isSubmitted;
+          serverTask.isApproved = selectedTask.isApproved;
+        } else {
+          serverTask.isSubmitted = task.isSubmitted;
+          serverTask.isApproved = task.isApproved;
+        }
+        serverTasks.push(serverTask);
+      });
+
+      try {
+        await firebase.functions().httpsCallable("adminUpdateTasks")({
+          id: this.applicantID,
+          serverTasks,
+          notification
+        });
+      } catch (err) {
+        this.displayNotification(err.message);
       }
-      this.updateUser(applicantCopy);
     },
 
     getColor(status) {
