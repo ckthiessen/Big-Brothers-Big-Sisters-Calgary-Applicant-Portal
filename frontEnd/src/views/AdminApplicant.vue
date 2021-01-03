@@ -73,7 +73,6 @@ import Footer from "../components/Footer.vue";
 import Carousel from "../components/Carousel.vue";
 import firebase from "firebase";
 import { updateUser } from "../services/apiServices";
-import _ from "lodash";
 import Download from "../components/Download.vue";
 
 export default {
@@ -174,40 +173,52 @@ export default {
         this.$emit("emitToApp", response.data);
       });
     },
-
-    changeStatus: function (status, index) {
+    async changeStatus(status, index) {
       let selectedTask = this.tasks[index];
+      let notification;
       if (
         selectedTask.status === "Requires Approval" ||
         selectedTask.status === "Incomplete"
       ) {
         selectedTask.status = "Complete";
         selectedTask.buttonTitle = "Mark Incomplete";
-        this.applicant.tasks[index].isSubmitted = true;
-        this.applicant.tasks[index].isApproved = true;
-        this.applicant.notifications.push({
-          message: "The administrator has approved " + selectedTask.name,
-          date: new Date().toLocaleString(),
-        });
+        notification = `An administrator has approved ${selectedTask.name}`
+        selectedTask.isSubmitted = true;
+        selectedTask.isApproved = true;
       } else if (selectedTask.status === "Complete") {
         selectedTask.status = "Incomplete";
         selectedTask.buttonTitle = "Mark Complete";
-        this.applicant.notifications.push({
-          message:
-            "The administrator has rejected your submission for " +
-            selectedTask.name,
-          date: new Date().toLocaleString(),
-        });
-        this.applicant.tasks[index].isSubmitted = false;
-        this.applicant.tasks[index].isApproved = false;
+        selectedTask.isSubmitted = false;
+        selectedTask.isApproved = false;
+        notification = `An administrator has rejected your submission for ${selectedTask.name}`
       }
 
-      let applicantCopy = _.cloneDeep(this.applicant);
-      for (let i = 0; i < applicantCopy.tasks.length; i++) {
-        delete applicantCopy.tasks[i].status;
-        delete applicantCopy.tasks[i].buttonTitle;
+      let serverTasks = [];
+      this.tasks.forEach((task) => {
+        let serverTask = {
+          dueDate: task.dueDate,
+          name: task.name,
+          fileUpload: task.fileUpload, 
+        };
+        if (task.name === selectedTask.name) {
+          serverTask.isSubmitted = selectedTask.isSubmitted;
+          serverTask.isApproved = selectedTask.isApproved;
+        } else {
+          serverTask.isSubmitted = task.isSubmitted;
+          serverTask.isApproved = task.isApproved;
+        }
+        serverTasks.push(serverTask);
+      });
+
+      try {
+        await firebase.functions().httpsCallable("adminUpdateTasks")({
+          id: this.applicantID,
+          serverTasks,
+          notification
+        });
+      } catch (err) {
+        this.displayNotification(err.message);
       }
-      this.updateUser(applicantCopy);
     },
 
     getColor(status) {
