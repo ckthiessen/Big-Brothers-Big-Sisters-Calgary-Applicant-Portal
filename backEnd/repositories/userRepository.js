@@ -9,12 +9,12 @@ admin.initializeApp({
 const db = admin.firestore();
 
 module.exports = {
-  
-  createUser: async function(toCreate) {
-    console.log('createUser: ' + toCreate);
-    let created = await db.collection('users').doc(toCreate.id).set(toCreate);
-    console.log('created user: ' + created);
-  },
+  // has been ported over to functions
+  // createUser: async function(toCreate) {
+  //   console.log('createUser: ' + toCreate);
+  //   let created = await db.collection('users').doc(toCreate.id).set(toCreate);
+  //   console.log('created user: ' + created);
+  // },
 
   updateUser: async function(toUpdate) {
     console.log('updating user: ');
@@ -43,16 +43,17 @@ module.exports = {
     console.log('user: ' + applicant.name + ' updated.');
   },
 
-  getAllAdmins: async function() {
-    let adminIDs = []
-    await db.collection('users').where("isAdmin", "==", true).get()
-    .then(querySnapshot => {
-      querySnapshot.forEach(adminSnapshot => {
-        adminIDs.push(adminSnapshot.data().id);
-      })
-    });
-    return adminIDs; 
-  }, 
+  // ported over to firebase functions
+  // getAllAdmins: async function() {
+  //   let adminIDs = []
+  //   await db.collection('users').where("isAdmin", "==", true).get()
+  //   .then(querySnapshot => {
+  //     querySnapshot.forEach(adminSnapshot => {
+  //       adminIDs.push(adminSnapshot.data().id);
+  //     })
+  //   });
+  //   return adminIDs; 
+  // }, 
 
   deleteUser: async function(idToDelete) {
     console.log('delete User: ' + idToDelete);
@@ -62,15 +63,16 @@ module.exports = {
   },
 
   //search functions
-  getAllUsers: async function () {
-    console.log('getAllUsers');
-    var users = [];
-    const snapshot = await db.collection('users').get();
-    snapshot.forEach((doc) => {
-      users.push(doc.data());
-    });
-    return users;
-  },
+  //has been ported over to functions
+  // getAllUsers: async function () {
+  //   console.log('getAllUsers');
+  //   var users = [];
+  //   const snapshot = await db.collection('users').get();
+  //   snapshot.forEach((doc) => {
+  //     users.push(doc.data());
+  //   });
+  //   return users;
+  // },
 
   getUserById: async function(id) {
     console.log('getuserbyID');

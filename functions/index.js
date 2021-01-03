@@ -25,4 +25,23 @@ exports.getUserByID = functions.https.onCall((data, context) => {
       .then(doc => resolve(doc.data())) // Successful, resolve with user document
       .catch(() => reject(new functions.https.HttpsError("internal", "Could not get user"))); // Failed, reject promise with HTTP error message
   });
-}); 
+});
+
+/**
+ * Get all users from the database including applicants and administrators
+ * @return {Promise} containing a list of user objects if it resolves or an error upon rejection
+ * @param { Object } data - unused
+ * @param { Object } context - Object containing metadata about the request 
+ */
+exports.getAllUsers = functions.https.onCall((data, context) => {
+  if (!context.auth.uid) { throw new functions.https.HttpsError("unauthenticated", "User not authenticated"); }
+  return new Promise(async (resolve, reject) => {
+    try {
+      let usersSnapshot = await db.collection('users').get();
+      let users = usersSnapshot.docs.map(usersSnapshot => usersSnapshot.data());
+      resolve(users);
+    } catch (err) {
+      reject(new functions.https.HttpsError("internal", "Could not get all users"))
+    }
+  })
+});

@@ -72,10 +72,10 @@
 </template>
 
 <script>
-  import {getAllUsers} from "../services/apiServices";
   import Header from "../components/Header.vue";
   import Footer from "../components/Footer.vue";
   import Carousel from '../components/Carousel.vue';
+  import firebase from 'firebase';
 
   export default {
     name: 'Administrator',
@@ -118,11 +118,15 @@
     },
     methods: {
       async getUserList(){
-        await getAllUsers().then(response => {
-          let all_users = response.data;
+        let doc;
+        try {
+          doc = await firebase.functions().httpsCallable("getAllUsers")({});
+          let all_users = doc.data;
           this.users = all_users.filter(all_users => all_users.isAdmin === false);
           this.completionStatus();
-        });
+        } catch (err) {
+          this.displayNotification(err.message);
+        }
       },
       completionStatus() {
         for (let i = 0; i < this.users.length; i++) {
