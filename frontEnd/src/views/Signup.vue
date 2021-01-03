@@ -105,7 +105,7 @@
 </template>
 
 <script>
-import {createUser} from "../services/apiServices";
+// import {createUser} from "../services/apiServices";
 import Logo from "../components/Logo"
 import firebase from "firebase";
 
@@ -144,6 +144,14 @@ export default {
       "bbbs-logo": Logo,
     },
     methods:{
+      async createNewUser(userInfo){
+        try {
+          await firebase.functions().httpsCallable('createUser')(userInfo);
+        } catch (err) {
+          this.errormessage = err.message;
+        }
+      },
+
       signUp(){
         firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
           .then((user) => {
@@ -151,17 +159,18 @@ export default {
               'id' : user.user.uid,
               'name' : this.firstName + ' ' + this.lastName,
               'email' : this.email,
-              'password' : this.password,
             };
-            createUser(userInfo)
+            this.createNewUser(userInfo)
             .then(() => {
             this.$router.push(`/`);
-          })
           }).catch(error =>{
             this.errormessage = error.message;
           })
+        }).catch((error) => {
+          this.errormessage = error.message;
+        })
       },
-    }
+  }
 }
 </script>
 
