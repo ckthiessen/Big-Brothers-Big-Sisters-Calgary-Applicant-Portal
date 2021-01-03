@@ -7,7 +7,6 @@ import Administrator from '../views/Administrator.vue'
 import ApplicantPortal from '../views/ApplicantPortal.vue'
 import AdminApplicant from '../views/AdminApplicant.vue'
 
-//import firebase
 import firebase from "firebase";
 
 Vue.use(VueRouter);
