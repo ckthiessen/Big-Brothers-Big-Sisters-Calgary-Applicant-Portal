@@ -17,7 +17,7 @@
       >
         <template v-slot:top>
           <v-toolbar flat>
-            <v-card-title>{{ applicant.name }}</v-card-title>
+            <v-card-title>{{ applicantName }}</v-card-title>
             <v-spacer></v-spacer>
           </v-toolbar>
         </template>
@@ -72,7 +72,6 @@ import Header from "../components/Header.vue";
 import Footer from "../components/Footer.vue";
 import Carousel from "../components/Carousel.vue";
 import firebase from "firebase";
-import { updateUser } from "../services/apiServices";
 import Download from "../components/Download.vue";
 
 export default {
@@ -92,7 +91,7 @@ export default {
     return {
       applicantID: "",
       adminID: "",
-      applicant: [],
+      applicantName: "",
       tasks: [],
       selectedIndex: "",
       notif: "",
@@ -145,34 +144,22 @@ export default {
     } catch (err) {
       this.displayNotification(err.message);
     }
-    this.applicant = doc.data;
+    this.applicantName = doc.data.name;
     let servertasks = doc.data.tasks;
     for (const task in servertasks) {
       if (servertasks[task].isSubmitted && servertasks[task].isApproved) {
         servertasks[task].status = "Complete";
         servertasks[task].buttonTitle = "Mark Incomplete";
-      } else if (
-        servertasks[task].isSubmitted &&
-        !servertasks[task].isApproved
-      ) {
+      } else if (servertasks[task].isSubmitted && !servertasks[task].isApproved) {
         servertasks[task].status = "Requires Approval";
         servertasks[task].buttonTitle = "Mark Complete";
-      } else if (
-        !servertasks[task].isSubmitted &&
-        !servertasks[task].isApproved
-      ) {
+      } else if (!servertasks[task].isSubmitted && !servertasks[task].isApproved) {
         servertasks[task].status = "Incomplete";
         servertasks[task].buttonTitle = "Mark Complete";
       }
       this.tasks.push(servertasks[task]);
     }
   },
-    async updateUser(applicant) {
-      await updateUser(applicant).then((response) => {
-        this.applicant = response.data;
-        this.$emit("emitToApp", response.data);
-      });
-    },
     async changeStatus(status, index) {
       let selectedTask = this.tasks[index];
       let notification;

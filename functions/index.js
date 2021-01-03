@@ -137,7 +137,7 @@ function sendNotificationByID(id, notification) {
   db.collection('users').doc(id).update({
     notifications: admin.firestore.FieldValue.arrayUnion({
       message: notification,
-      date: new Date().toLocaleString()
+      date: new Date().toLocaleDateString("en-CA", { timeZone: "America/Edmonton" })
     })
   });
 }
