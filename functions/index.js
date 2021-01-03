@@ -20,7 +20,12 @@ exports.addMessage = functions.https.onCall((data) => {
 });
 
 
-// Gets user by ID passed into data from firestore 
+/**
+ * Gets a user from cloud firestore by their ID 
+ * @param { Object } data - The body of the firebase function request
+ * @param { String } data.id - The ID of the user being requested
+ * @param { Object } context - Object containing metadata about the request 
+ */
 exports.getUserByID = functions.https.onCall((data, context) => {
   if (!context.auth.uid) { throw new functions.https.HttpsError("unauthenticated", "User not authenticated"); }
   return new Promise((resolve, reject) => {
@@ -30,7 +35,11 @@ exports.getUserByID = functions.https.onCall((data, context) => {
   });
 });
 
-exports.createUser = functions.https.onCall((data, context) => {
+/**
+ * Creates a user in cloud firestore
+ * @param { Object } data - The body of the firebase function request containing the new user's data
+ */
+exports.createUser = functions.https.onCall((data) => {
   let userInfo = data;
   userInfo.tasks = taskFactory.getDefaultTasks();
   userInfo.notifications = [
@@ -49,14 +58,56 @@ exports.createUser = functions.https.onCall((data, context) => {
   });
 });
 
-exports.updateTask = functions.https.onCall((data, context) => {
+/**
+ * Update the tasks array of a user in cloud firestore
+ * @param { Object } data - The body of the firebase function request
+ * @param { String } data.id - The ID of the applicant whose task's are being updated
+ * @param { String } data.newTasks - The new tasks to replace the existing tasks in firestore
+ * @param { Object } context - Object containing metadata about the request 
+ */
+exports.updateTasks = functions.https.onCall((data, context) => {
   if (!context.auth.uid) { throw new functions.https.HttpsError("unauthenticated", "User not authenticated"); }
   let id = data.id;
   return new Promise((resolve, reject) => {
     db.collection('users').doc(id).update({
-      "tasks": data.newTasks
+      "tasks": data.serverTasks
     })
-      .then(() => resolve()) // Successful, resolve with nothing
-      .catch(() => reject(new functions.https.HttpsError("internal", "Could not update task"))); // Failed, reject promise with HTTP error message
+      .then(async () => {
+        try {
+          await sendNotificationToAdmins(data.notification);
+          resolve();
+        }
+        catch (err) {
+          console.log(err)
+          reject(new functions.https.HttpsError("internal", "Updated status but could not send notification"));
+        }
+      })
+      .catch(() => reject(new functions.https.HttpsError("internal", "Could not update status")));
   });
 });
+
+/**
+ * Produces a list of document snapshots containing admins
+ */
+function getAllAdmins() {
+  return db.collection('users').where("isAdmin", "==", true).get();
+}
+
+/**
+ * Sends a notification to all admins
+ * @param { String } notification - The notification message to all admins
+ */
+async function sendNotificationToAdmins(notification) {
+  let adminsSnapshot = await getAllAdmins();
+  let adminIDs = adminsSnapshot.docs.map(doc => doc.data().id);
+  console.log(adminIDs)
+
+  adminIDs.forEach(adminID => {
+    db.collection('users').doc(adminID).update({
+      notifications: admin.firestore.FieldValue.arrayUnion({
+        message: notification,
+        date: new Date().toLocaleString()
+      })
+    });
+  });
+}
