@@ -19,6 +19,14 @@
           <v-toolbar flat>
             <v-card-title>{{ applicantName }}</v-card-title>
             <v-spacer></v-spacer>
+            <v-switch
+              class="mt-6"
+              :label="userType"
+              color="accent"
+              :loading="switchLoading"
+              :v-model="isCommunityMentor"
+              @change="toggleUserType"
+            ></v-switch>
           </v-toolbar>
         </template>
         <template v-slot:item.status="{ item }">
@@ -33,7 +41,6 @@
           <v-icon v-if="!item.fileUpload" color="accent">
             {{ downloadIcons.noUpload }}</v-icon
           >
-
           <bbbs-download
             v-if="item.fileUpload"
             :task="item"
@@ -71,21 +78,17 @@
 import Header from "../components/Header.vue";
 import Footer from "../components/Footer.vue";
 import Carousel from "../components/Carousel.vue";
-import firebase from "firebase";
 import Download from "../components/Download.vue";
+import { updateUser } from "../services/apiServices"
+import firebase from "firebase";
 
 export default {
   name: "AdminApplicant",
   components: {
     "bbbs-header": Header,
     "bbbs-footer": Footer,
-    carousel: Carousel,
+    "carousel": Carousel,
     "bbbs-download": Download,
-  },
-  created() {
-    this.adminID = this.$route.params.adminID;
-    this.applicantID = this.$route.params.applicantID;
-    this.renderUser();
   },
   data() {
     return {
@@ -94,8 +97,10 @@ export default {
       applicantName: "",
       tasks: [],
       selectedIndex: "",
+      switchLoading: false,
       notif: "",
       snackbar: false,
+      isCommunityMentor: false,
       downloadIcons: {
         noUpload: "mdi-download-off-outline",
         upload: "mdi-cloud-download",
@@ -128,13 +133,42 @@ export default {
       ],
       noActions: [
         "BIG Profile",
-        "You are no BIG Deal :(",
         "You are a BIG Deal!",
       ],
     };
   },
-
+  computed: {
+    userType: function () {
+      return this.isCommunityMentor ? "Community Mentor" : "Education Mentor";
+    }
+  },
+  created() {
+    this.adminID = this.$route.params.adminID;
+    this.applicantID = this.$route.params.applicantID;
+    this.renderUser();
+  },
   methods: {
+    async updateUser(applicant) {
+      await updateUser(applicant).then((response) => {
+        this.applicant = response.data;
+        this.$emit("emitToApp", response.data);
+      });
+    },
+    async toggleUserType() {
+      this.switchLoading = true;
+      try {
+        await firebase.functions().httpsCallable('updateApplicantType')({ id: this.applicantID, isCommunityMentor: !this.isCommunityMentor });
+        this.isCommunityMentor = !this.isCommunityMentor;
+        this.switchLoading = false;
+      } catch (err) {
+        this.notif = err.message;
+        this.snackbar = true;
+        this.switchLoading = false;
+        setTimeout(() => {
+          this.snackbar = false;
+        }, 5000);
+      }
+    },
   async renderUser() {
     let doc;
     try {
@@ -145,6 +179,7 @@ export default {
       this.displayNotification(err.message);
     }
     this.applicantName = doc.data.name;
+    this.isCommunityMentor = doc.data.isCommunityMentor;
     let servertasks = doc.data.tasks;
     for (const task in servertasks) {
       if (servertasks[task].isSubmitted && servertasks[task].isApproved) {

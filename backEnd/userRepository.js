@@ -11,7 +11,12 @@ const db = admin.firestore();
 //This file should be obscure after everything is ported over
 
 module.exports = {
-  
+  createUser: async function(toCreate) {
+    console.log('createUser: ' + toCreate);
+    let created = await db.collection('users').doc(toCreate.id).set(toCreate);
+    console.log('created user: ' + created);
+  },
+
   updateUser: async function(toUpdate) {
     console.log('updating user: ');
     console.log(toUpdate);
