@@ -200,7 +200,7 @@ export default {
       let notification = `${this.username} has uploaded a file to ${selectedTask.name}`;
       updateTask(this.id, serverTasks, notification);
     },
-    changeStatus: function (status, index) {
+    async changeStatus(status, index) {
       let selectedTask = this.tasks[index];
       let notification;
       if (selectedTask.status === "Complete") {
@@ -221,7 +221,7 @@ export default {
           dueDate: task.dueDate,
           name: task.name,
           isApproved: task.isApproved,
-          fileUpload: task.fileUpload, //added after to fix
+          fileUpload: task.fileUpload, 
         };
         if (task.name === selectedTask.name) {
           serverTask.isSubmitted = selectedTask.isSubmitted;
@@ -230,7 +230,15 @@ export default {
         }
         serverTasks.push(serverTask);
       });
-      updateTask(this.id, serverTasks, notification);
+      try {
+        await firebase.functions().httpsCallable("applicantUpdateTasks")({
+          id: this.id,
+          serverTasks,
+          notification
+        });
+      } catch (err) {
+        this.displayNotification(err.message);
+      }
     },
     buttonTitle: function (status) {
       return status === "InProgress" ? "Mark Incomplete" : "Request Approval";
