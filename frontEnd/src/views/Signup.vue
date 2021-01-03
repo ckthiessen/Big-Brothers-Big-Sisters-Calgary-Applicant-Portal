@@ -105,7 +105,6 @@
 </template>
 
 <script>
-// import {createUser} from "../services/apiServices";
 import Logo from "../components/Logo"
 import firebase from "firebase";
 
