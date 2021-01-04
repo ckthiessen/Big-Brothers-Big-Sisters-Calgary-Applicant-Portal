@@ -114,6 +114,12 @@ export default {
           value: "name",
         },
         {
+          text: "Due date",
+          align: "start",
+          sortable: true,
+          value: "dueDate",
+        },
+        {
           text: "Completion Status",
           align: "start",
           value: "status",
