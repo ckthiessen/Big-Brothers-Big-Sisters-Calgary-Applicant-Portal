@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Signup from '../views/Signup.vue'
 import Signin from '../views/Signin.vue'
 import Forgot from '../views/Forgot.vue'
+import ForgotWaiting from '../views/ForgotWaiting.vue'
 import Administrator from '../views/Administrator.vue'
 import ApplicantPortal from '../views/ApplicantPortal.vue'
 import AdminApplicant from '../views/AdminApplicant.vue'
@@ -26,6 +27,11 @@ const routes = [
     path: '/forgot',
     name: 'Forgot',
     component: Forgot
+  },
+  {
+    path: '/forgot/waiting',
+    name: 'ForgotWaiting',
+    component: ForgotWaiting
   },
   {
     path: '/admin/home/:adminID',

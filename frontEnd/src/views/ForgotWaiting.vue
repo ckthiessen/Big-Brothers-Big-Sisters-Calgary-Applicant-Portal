@@ -15,23 +15,14 @@
           cols="12"
           sm="10"
         >
-          <v-text-field
-            v-model="email"
-            placeholder="first.last@email.com"
-            :rules="emailrules"
-            label="Email"
-            outlined
-            required
-            color="accent"
-            :error-messages="errormessage"
-          ></v-text-field>
+        If an account belonging to that email exists, then you will receive an email requesting a password reset.
           <v-row justify="space-around">
             <v-col>
             <v-btn
               color="accent"
               width="100%"
-              @click="sendReset(email)"
-            > Send Password Reset Email
+              @click="$router.push('/')"
+            > Return to Sign in Page
             </v-btn>
             </v-col>
           </v-row>
@@ -44,23 +35,14 @@
 </template>
 
 <script>
-import firebase from "firebase";
+
 import Logo from "../components/Logo"
 
 export default {
-  name: 'Forgot',
+  name: 'ForgotWaiting',
   data () {
     return {
-      email : '',
-      confirmemail : '',
-      errormessage: '',
 
-      emailrules: [ 
-        v => 
-        !v || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) 
-        || 'E-mail must be valid'
-        || 'E-mail is required'
-        ],
     };
   },
     components: {
@@ -68,15 +50,6 @@ export default {
   },
   methods : {
 
-    sendReset(email){
-      console.log(this.errormessage);
-      firebase.auth().sendPasswordResetEmail(email).then(function() {
-        // Email sent.
-      }).catch(function() {
-        // An error happened and no email was sent
-      });
-      this.$router.push(`/forgot/waiting`)
-    }
   }
 }
 </script>
