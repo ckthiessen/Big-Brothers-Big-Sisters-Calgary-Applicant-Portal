@@ -1,12 +1,12 @@
 import axios from "axios"
 import firebase from "firebase";
 
-// ported over to firebase functions
+// ported over to firebase functions -- leaving this uncommented as the header is still referencing this
 // //client side function for getting single user by ID - pass in user's ID
-// export async function getUserByID(id) {
-//   const response = await axios.get('/api/users/' + id);
-//   return await response;
-// }
+export async function getUserByID(id) {
+  const response = await axios.get('/api/users/' + id);
+  return await response;
+}
 
 //ported over to firebase functions
 // export async function createUser(user){

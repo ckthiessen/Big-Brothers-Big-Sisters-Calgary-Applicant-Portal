@@ -1,6 +1,6 @@
 //firebase initialization
 const admin = require('firebase-admin');
-const serviceAccount = require('../credentials/firebaseCredentials.json');
+const serviceAccount = require('../backEnd/credentials/firebaseCredentials.json');
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
@@ -8,13 +8,23 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
+//This file should be obscure after everything is ported over
+
 module.exports = {
+<<<<<<< HEAD:backEnd/repositories/userRepository.js
   // has been ported over to functions
   // createUser: async function(toCreate) {
   //   console.log('createUser: ' + toCreate);
   //   let created = await db.collection('users').doc(toCreate.id).set(toCreate);
   //   console.log('created user: ' + created);
   // },
+=======
+  createUser: async function(toCreate) {
+    console.log('createUser: ' + toCreate);
+    let created = await db.collection('users').doc(toCreate.id).set(toCreate);
+    console.log('created user: ' + created);
+  },
+>>>>>>> 3c5bb5a32f76733b74c984e10b1f45b7eee518ab:backEnd/userRepository.js
 
   updateUser: async function(toUpdate) {
     console.log('updating user: ');
@@ -43,6 +53,7 @@ module.exports = {
     console.log('user: ' + applicant.name + ' updated.');
   },
 
+<<<<<<< HEAD:backEnd/repositories/userRepository.js
   // ported over to firebase functions
   // getAllAdmins: async function() {
   //   let adminIDs = []
@@ -54,6 +65,19 @@ module.exports = {
   //   });
   //   return adminIDs; 
   // }, 
+=======
+  getAllAdmins: async function() {
+    let adminIDs = []
+    await db.collection('users').where("isAdmin", "==", true).get()
+    .then(querySnapshot => {
+      querySnapshot.forEach(adminSnapshot => {
+        adminIDs.push(adminSnapshot.data().id);
+      })
+      return;
+    });
+    return adminIDs; 
+  }, 
+>>>>>>> 3c5bb5a32f76733b74c984e10b1f45b7eee518ab:backEnd/userRepository.js
 
   deleteUser: async function(idToDelete) {
     console.log('delete User: ' + idToDelete);
@@ -63,6 +87,7 @@ module.exports = {
   },
 
   //search functions
+<<<<<<< HEAD:backEnd/repositories/userRepository.js
   //has been ported over to functions
   // getAllUsers: async function () {
   //   console.log('getAllUsers');
@@ -114,4 +139,15 @@ module.exports = {
 
   // }
 
+=======
+  getAllUsers: async function () {
+    console.log('getAllUsers');
+    var users = [];
+    const snapshot = await db.collection('users').get();
+    snapshot.forEach((doc) => {
+      users.push(doc.data());
+    });
+    return users;
+  },
+>>>>>>> 3c5bb5a32f76733b74c984e10b1f45b7eee518ab:backEnd/userRepository.js
 };
