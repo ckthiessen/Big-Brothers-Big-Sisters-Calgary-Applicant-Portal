@@ -4,14 +4,16 @@ const path = require('path');
 const app = express();
 const bodyParser = require("body-parser");
 const port = 3080;
-const userRepository = require('./repositories/userRepository');
-const taskFactory = require('./tasks/taskFactory');
+const userRepository = require('./userRepository');
+const taskFactory = require('./taskFactory');
 const userValidator = require('./validations/userValidator');
 
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../my-app/build')));
 app.use(cors());
 
+
+//This file should also be deleted once functions is ported over
 app.listen(port, () => {
   console.log(`Server listening on the port::${port}`);
 });
@@ -93,41 +95,6 @@ app.get("/api/users/:id", async (req,res) => {
   catch(error) {
     console.log('error' + error);
     res.status(404); //user not found
-    res.json(error);
-  }
-});
-
-// Create a user by id
-// receives a json from the client
-//assumes that the json received includes: email, Name, Password and ID
-app.post("/api/users", async (req, res) => {
-  let toCreate = req.body;
-  try {
-    userValidator.validateUser(toCreate);
-
-    //if the email already exists then throw 409 and return
-    if( await isEmailUnqiue(toCreate,res) === false ){
-      return;
-    }
-
-    toCreate.tasks =  taskFactory.getDefaultTasks();
-    // password: newUser.password, // TODO: Salt and hash the password or make this work with firebase authentication
-    toCreate.notifications = [
-      {
-        message: "Congratulations on making your account!",
-        date: new Date().toLocaleDateString("en-CA", { timeZone: "America/Edmonton" })
-      }
-    ];
-    toCreate.isAdmin = false;
-    toCreate.isCommunityMentor = false;
-    toCreate.requiresHomeAssessment =  false;
-      
-    await userRepository.createUser(toCreate); 
-    res.json(toCreate.id)
-  }
-  catch(error) {
-    console.log('error' + error);
-    res.status(400);
     res.json(error);
   }
 });

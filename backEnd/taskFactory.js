@@ -1,5 +1,5 @@
 //this class builds and generates the default tasks when creating a user
-let taskDefaults = require("../tasks.json")
+let taskDefaults = require("./tasks.json")
 
 //these are the tasks that require calculated due dates
 let requiresCalculatedDueDate = new Map([
@@ -22,7 +22,7 @@ module.exports = {
             if (requiresCalculatedDueDate.has(task.name)) {
               let daysUntilDue = requiresCalculatedDueDate.get(task.name);
               let calculatedDueDate = new Date().setDate(new Date().getDate() + daysUntilDue);
-              dueDate = new Date(calculatedDueDate).toLocaleString()
+              dueDate = new Date(calculatedDueDate).toDateString() //changed so it does not keep track of time
             } else {
               dueDate = task.dueDate;
             }
