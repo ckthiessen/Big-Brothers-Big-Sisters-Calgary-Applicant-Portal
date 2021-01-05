@@ -6,9 +6,24 @@ admin.initializeApp();
 
 const db = admin.firestore();
 
-
 // Create and Deploy Your First Cloud Functions
 // https://firebase.google.com/docs/functions/write-firebase-functions
+
+exports.updateNotifications = functions.firestore.document('users/{userID}').onUpdate((change, context) => {
+  const before = change.before.data();
+  const after = change.after.data();
+
+  let length = after.notification.length;
+  //capping notification length?
+  if (before.notification !== after.notification) {
+    console.log("notifications has been updated");
+    //return a boolean? or a promise?
+    //best option may be to update an attribute with when notifications were last updated/when someone sends you a notification?
+    // return change.after.ref.update({'lastUpdated' : Date.now()}, {merge: true});
+  } else {
+    return null;
+  }
+}); 
 
 // Saves a message to the Firebase Realtime Database but sanitizes the text by removing swearwords.
 exports.addMessage = functions.https.onCall((data) => {
@@ -71,19 +86,23 @@ exports.getAllUsers = functions.https.onCall((data, context) => {
  */
 exports.createUser = functions.https.onCall((data) => {
   let userInfo = data;
+  console.log(userInfo)
   userInfo.tasks = taskFactory.getDefaultTasks();
-  userInfo.notifications = [
-    {
-      message: "Congratulations on making your account!",
-      date: new Date().toLocaleDateString("en-CA", { timeZone: "America/Edmonton" })
-    }
-  ];
   userInfo.isAdmin = false;
   userInfo.isCommunityMentor = false;
   userInfo.requiresHomeAssessment = false;
   return new Promise((resolve, reject) => {
     db.collection('users').doc(data.id).set(userInfo)
-      .then(() => resolve()) // Successful, resolve with nothing
+    .then(() => resolve())
+      // .then(() => {
+      //   db.collection('users').doc(data.id).collection("notifications").doc().add(
+      //     {
+      //       timeStamp: new Date().toLocaleString("en-CA", { timeZone: "America/Edmonton" }),
+      //       message: "Congratulations on making your account!"
+      //     })
+      //     .then(() => resolve())
+      //     .catch(() => reject(new functions.https.HttpsError("internal", "Created user but could not create notifications"))); // Failed, reject promise with HTTP error message
+      // })
       .catch(() => reject(new functions.https.HttpsError("internal", "Could not create user"))); // Failed, reject promise with HTTP error message
   });
 });
