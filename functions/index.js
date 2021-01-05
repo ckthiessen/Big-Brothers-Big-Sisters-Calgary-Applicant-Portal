@@ -23,7 +23,7 @@ exports.updateNotifications = functions.firestore.document('users/{userID}').onU
   } else {
     return null;
   }
-}); 
+});
 
 // Saves a message to the Firebase Realtime Database but sanitizes the text by removing swearwords.
 exports.addMessage = functions.https.onCall((data) => {
@@ -76,33 +76,28 @@ exports.getAllUsers = functions.https.onCall((data, context) => {
       let users = usersSnapshot.docs.map(usersSnapshot => usersSnapshot.data());
       resolve(users);
     } catch (err) {
-      reject(new functions.https.HttpsError("internal", "Could not get all users"))
+      reject(new functions.https.HttpsError("internal", "Could not get all users"));
     }
-  })
+  });
 });
 /**
  * Creates a user in cloud firestore
  * @param { Object } data - The body of the firebase function request containing the new user's data
  */
-exports.createUser = functions.https.onCall((data) => {
+exports.createUser = functions.https.onCall(async (data) => {
   let userInfo = data;
-  console.log(userInfo)
   userInfo.tasks = taskFactory.getDefaultTasks();
   userInfo.isAdmin = false;
   userInfo.isCommunityMentor = false;
   userInfo.requiresHomeAssessment = false;
+  try {
+    await sendNotificationByID(userInfo.id, "Congratulations on making your account!");
+  } catch (err) {
+    throw new functions.https.HttpsError("internal", "Could not create user (failed to create notifications)"); // Failed, reject promise with HTTP error message
+  }
   return new Promise((resolve, reject) => {
-    db.collection('users').doc(data.id).set(userInfo)
-    .then(() => resolve())
-      // .then(() => {
-      //   db.collection('users').doc(data.id).collection("notifications").doc().add(
-      //     {
-      //       timeStamp: new Date().toLocaleString("en-CA", { timeZone: "America/Edmonton" }),
-      //       message: "Congratulations on making your account!"
-      //     })
-      //     .then(() => resolve())
-      //     .catch(() => reject(new functions.https.HttpsError("internal", "Created user but could not create notifications"))); // Failed, reject promise with HTTP error message
-      // })
+    db.collection('users').doc(userInfo.id).set(userInfo)
+      .then(() => resolve())
       .catch(() => reject(new functions.https.HttpsError("internal", "Could not create user"))); // Failed, reject promise with HTTP error message
   });
 });
@@ -181,12 +176,12 @@ async function sendNotificationToAdmins(notification) {
 /**
  * Sends a notification to a user by ID
  * @param { String } notification - The notification message to the user
+ * @param { String } id - The ID of the user receiving the notification
  */
 function sendNotificationByID(id, notification) {
-  db.collection('users').doc(id).update({
-    notifications: admin.firestore.FieldValue.arrayUnion({
+  return db.collection('users').doc(id).collection("notifications").add(
+    {
       message: notification,
       date: new Date().toLocaleDateString("en-CA", { timeZone: "America/Edmonton" })
-    })
-  });
-}
+    });
+};
