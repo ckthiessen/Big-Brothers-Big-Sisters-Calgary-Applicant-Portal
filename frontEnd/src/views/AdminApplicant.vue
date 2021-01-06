@@ -27,6 +27,17 @@
               :v-model="isCommunityMentor"
               @change="toggleUserType"
             ></v-switch>
+            <v-btn
+              class="mx-2"
+              fab
+              dark
+              color="needsattention"
+              @click="deleteUser"
+            >
+              <v-icon dark>
+                mdi-delete
+              </v-icon>
+            </v-btn>
           </v-toolbar>
         </template>
         <template v-slot:item.status="{ item }">
@@ -160,6 +171,7 @@ export default {
         this.$emit("emitToApp", response.data);
       });
     },
+
     async toggleUserType() {
       this.switchLoading = true;
       try {
@@ -175,32 +187,41 @@ export default {
         }, 5000);
       }
     },
-  async renderUser() {
-    let doc;
-    try {
-      doc = await firebase.functions().httpsCallable("getUserByID")({
-        id: this.applicantID
-      });
-    } catch (err) {
-      this.displayNotification(err.message);
-    }
-    this.applicantName = doc.data.name;
-    this.isCommunityMentor = doc.data.isCommunityMentor;
-    let servertasks = doc.data.tasks;
-    for (const task in servertasks) {
-      if (servertasks[task].isSubmitted && servertasks[task].isApproved) {
-        servertasks[task].status = "Complete";
-        servertasks[task].buttonTitle = "Mark Incomplete";
-      } else if (servertasks[task].isSubmitted && !servertasks[task].isApproved) {
-        servertasks[task].status = "Requires Approval";
-        servertasks[task].buttonTitle = "Mark Complete";
-      } else if (!servertasks[task].isSubmitted && !servertasks[task].isApproved) {
-        servertasks[task].status = "Incomplete";
-        servertasks[task].buttonTitle = "Mark Complete";
+    async deleteUser() {
+      try {
+        await firebase.functions().httpsCallable("deleteUserByID")({id: this.applicantID});
+        this.$router.back();
+      }catch (err) {
+        this.displayNotification(err.message)
       }
-      this.tasks.push(servertasks[task]);
-    }
-  },
+    },
+
+    async renderUser() {
+      let doc;
+      try {
+        doc = await firebase.functions().httpsCallable("getUserByID")({
+          id: this.applicantID
+        });
+      } catch (err) {
+        this.displayNotification(err.message);
+      }
+      this.applicantName = doc.data.name;
+      this.isCommunityMentor = doc.data.isCommunityMentor;
+      let servertasks = doc.data.tasks;
+      for (const task in servertasks) {
+        if (servertasks[task].isSubmitted && servertasks[task].isApproved) {
+          servertasks[task].status = "Complete";
+          servertasks[task].buttonTitle = "Mark Incomplete";
+        } else if (servertasks[task].isSubmitted && !servertasks[task].isApproved) {
+          servertasks[task].status = "Requires Approval";
+          servertasks[task].buttonTitle = "Mark Complete";
+        } else if (!servertasks[task].isSubmitted && !servertasks[task].isApproved) {
+          servertasks[task].status = "Incomplete";
+          servertasks[task].buttonTitle = "Mark Complete";
+        }
+        this.tasks.push(servertasks[task]);
+      }
+    },
     async changeStatus(status, index) {
       let selectedTask = this.tasks[index];
       let notification;
