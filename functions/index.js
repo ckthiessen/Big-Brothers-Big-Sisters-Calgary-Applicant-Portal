@@ -153,12 +153,12 @@ async function sendNotificationToAdmins(notification) {
  * @param { String } id - The ID of the user receiving the notification
  */
 function sendNotificationByID(id, notification) {
-  trimNotifications();
-  return db.collection('users').doc(id).collection("notifications").add(
-    {
-      message: notification,
-      date: new Date().toLocaleDateString("en-CA", { timeZone: "America/Edmonton" })
-    });
+  trimNotifications(id);
+  let notifIDDate = new Date().toISOString("en-CA", { timeZone: "America/Edmonton" }) //sets notification's ID to a specific time (down to the second for easier sorting)
+  return db.collection('users').doc(id).collection("notifications").doc(notifIDDate).set({
+    message: notification,
+    date: new Date().toGMTString("en-CA", { timeZone: "America/Edmonton" })
+  });
 };
 
 /**
@@ -167,9 +167,14 @@ function sendNotificationByID(id, notification) {
  */
 async function trimNotifications(id) {
   let notifsSnapshot = await db.collection('users').doc(id).collection("notifications").get();
-  let notifs = notifsSnapshot.docs.map(doc => doc.data());
+  let notifs = notifsSnapshot.docs.map(doc => doc.id);
+  //if too many notifications, then delete the 0th in the collection (earliest)
   if (notifs.length > 49) {
-    notifs.shift();
+    db.collection('users').doc(id).collection("notifications").doc(notifs[0]).delete().then(function(){
+      console.log("excess notification deleted successfully");
+    }).catch(function(error){
+      console.log("error removing excess notification");
+    });
   }
   return notifs;
 }
