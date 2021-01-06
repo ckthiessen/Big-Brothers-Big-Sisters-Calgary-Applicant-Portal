@@ -125,9 +125,7 @@
 </template>
 
 <script>
-import {getUserByID} from "../services/apiServices"
 import firebase from "firebase";
-
     export default {
         data: () => ({
             menu: false,
@@ -145,31 +143,7 @@ import firebase from "firebase";
         created() {
           this.id = this.$route.params.adminID || this.$route.params.applicantID; // Short circuit assignment
           this.showBackButton = this.$route.params.adminID && this.$route.params.applicantID ? true : false;
-          getUserByID(this.id).then(response => {
-              //get user information
-              this.user = response.data;
-              this.name = this.user.name;
-              if (this.user.isAdmin === true) {
-                this.type = "Administrator";
-              } else if (this.user.isCommunityMentor === true) {
-                this.type = "Community Mentor";
-              } else {
-                this.type = "Education Mentor";
-              }
-              this.email = this.user.email;
-              //get notifications for user
-              if (this.user["notifications"].length === 0) {
-                this.notifications.push("No notifications");
-                this.lastNotification = "No notifications";
-              } else {
-                for (let i = 0; i < this.user["notifications"].length; i++) {
-                  let notification = this.user["notifications"][i];
-                  let notifDate = notification.date.split(",")[0]
-                  this.notifications.push(notification.message + " (" + notifDate + ")");
-                  this.lastNotification = notification.message + " (" + notifDate + ")";
-                } 
-              }
-            });
+          this.getUserInformation();
              //call pullNotifications every 3 seconds
              //test
             //  this.interval = setInterval(function () {
@@ -180,32 +154,65 @@ import firebase from "firebase";
           clearInterval(this.interval);
         },
         methods: {
-          pullNotifications() {
-            getUserByID(this.id).then(response => {
-                this.user = response.data;
-                let length = this.user["notifications"].length;
-                if (length > 0) {
-                  //check the last notification
-                  let notification = this.user["notifications"][length - 1];
-                  let notifDate = notification.date.split(",")[0]
-                  //if last notification is not new
-                  if (this.lastNotification === notification.message + " (" + notifDate + ")") {
-                    return;
-                  }
-
-                  //display new notification
-                  this.notifications.push(notification.message + " (" + notifDate + ")");
-                  this.seen = false;
-                  //remove "No notifications"
-                  if (this.notifications[0] === "No notifications") {
-                    this.notifications.shift();
-                  }
-                  //set the last notification again
-                  this.lastNotification = notification.message + " (" + notifDate + ")";
-                  this.emitNotification();
-                }
-            })
+          async getUserInformation() {
+            let doc;
+            try {
+              doc = await firebase.functions().httpsCallable("getUserByID")({
+                id: this.id,
+              });
+            } catch (err) {
+              console.log(err.message);
+            }
+            //get user information
+            this.user = doc.data;
+            this.name = this.user.name;
+            if (this.user.isAdmin === true) {
+              this.type = "Administrator";
+            } else if (this.user.isCommunityMentor === true) {
+              this.type = "Community Mentor";
+            } else {
+              this.type = "Education Mentor";
+            }
+            this.email = this.user.email;
+            //get notifications for user
+            if (this.user["notifications"].length === 0) {
+              this.notifications.push("No notifications");
+              this.lastNotification = "No notifications";
+            } else {
+              for (let i = 0; i < this.user["notifications"].length; i++) {
+                let notification = this.user["notifications"][i];
+                let notifDate = notification.date.split(",")[0]
+                this.notifications.push(notification.message + " (" + notifDate + ")");
+                this.lastNotification = notification.message + " (" + notifDate + ")";
+              } 
+            }
           },
+          // pullNotifications() {
+          //   getUserByID(this.id).then(response => {
+          //       this.user = response.data;
+          //       let length = this.user["notifications"].length;
+          //       if (length > 0) {
+          //         //check the last notification
+          //         let notification = this.user["notifications"][length - 1];
+          //         let notifDate = notification.date.split(",")[0]
+          //         //if last notification is not new
+          //         if (this.lastNotification === notification.message + " (" + notifDate + ")") {
+          //           return;
+          //         }
+
+          //         //display new notification
+          //         this.notifications.push(notification.message + " (" + notifDate + ")");
+          //         this.seen = false;
+          //         //remove "No notifications"
+          //         if (this.notifications[0] === "No notifications") {
+          //           this.notifications.shift();
+          //         }
+          //         //set the last notification again
+          //         this.lastNotification = notification.message + " (" + notifDate + ")";
+          //         this.emitNotification();
+          //       }
+          //   })
+          // },
           clearNotification() {
             this.seen = true;
           }, 
