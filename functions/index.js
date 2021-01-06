@@ -171,7 +171,6 @@ async function trimNotifications(id) {
   //if too many notifications, then delete the 0th in the collection (earliest)
   //the while loop fixes the issue that it "misses" when traffic is high
   while (notifs.length > 49) {
-    console.log(notifs.length);
     db.collection('users').doc(id).collection("notifications").doc(notifs[0]).delete().then(function(){
       console.log("excess notification deleted successfully");
     }).catch(function(error){
