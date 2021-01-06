@@ -169,12 +169,15 @@ async function trimNotifications(id) {
   let notifsSnapshot = await db.collection('users').doc(id).collection("notifications").get();
   let notifs = notifsSnapshot.docs.map(doc => doc.id);
   //if too many notifications, then delete the 0th in the collection (earliest)
-  if (notifs.length > 49) {
+  //the while loop fixes the issue that it "misses" when traffic is high
+  while (notifs.length > 10) {
+    console.log(notifs.length);
     db.collection('users').doc(id).collection("notifications").doc(notifs[0]).delete().then(function(){
       console.log("excess notification deleted successfully");
     }).catch(function(error){
       console.log("error removing excess notification");
     });
+    notifs.shift();
   }
   return notifs;
 }
