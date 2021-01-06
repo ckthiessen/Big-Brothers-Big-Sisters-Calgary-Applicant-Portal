@@ -179,9 +179,23 @@ async function sendNotificationToAdmins(notification) {
  * @param { String } id - The ID of the user receiving the notification
  */
 function sendNotificationByID(id, notification) {
+  trimNotifications();
   return db.collection('users').doc(id).collection("notifications").add(
     {
       message: notification,
       date: new Date().toLocaleDateString("en-CA", { timeZone: "America/Edmonton" })
     });
 };
+
+/**
+ * Trims notifications to be less than 50 notifications
+ * @param { String } id - The ID of the user receiving the notification
+ */
+async function trimNotifications(id) {
+  let notifsSnapshot = await db.collection('users').doc(id).collection("notifications").get();
+  let notifs = notifsSnapshot.docs.map(doc => doc.data());
+  if (notifs.length > 49) {
+    notifs.shift();
+  }
+  return notifs;
+}
