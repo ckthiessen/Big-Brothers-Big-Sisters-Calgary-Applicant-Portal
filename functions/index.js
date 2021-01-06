@@ -109,42 +109,16 @@ exports.createUser = functions.https.onCall(async (data) => {
  * @param { String } data.serverTasks - The new tasks to replace the existing tasks in firestore
  * @param { Object } context - Object containing metadata about the request 
  */
-exports.applicantUpdateTasks = functions.https.onCall((data, context) => {
+exports.updateTasks = functions.https.onCall((data, context) => {
   if (!context.auth.uid) { throw new functions.https.HttpsError("unauthenticated", "User not authenticated"); }
-  let id = data.id;
-  return new Promise((resolve, reject) => {
-    db.collection('users').doc(id).update({
-      "tasks": data.serverTasks
-    })
-      .then(async () => {
-        try {
-          await sendNotificationToAdmins(data.notification);
-          resolve();
-        }
-        catch (err) {
-          reject(new functions.https.HttpsError("internal", "Updated status but could not send notification"));
-        }
-      })
-      .catch(() => reject(new functions.https.HttpsError("internal", "Could not update status")));
-  });
-});
-
-/**
- * Update the tasks array of an applicant when an admin approves a task
- * @param { Object } data - The body of the firebase function request
- * @param { String } data.id - The ID of the applicant whose tasks are being updated
- * @param { String } data.serverTasks - The new tasks to replace the existing tasks in firestore
- * @param { Object } context - Object containing metadata about the request 
- */
-exports.adminUpdateTasks = functions.https.onCall((data, context) => {
-  if (!context.auth.uid) { throw new functions.https.HttpsError("unauthenticated", "User not authenticated"); }
+  let sendNotification = data.isAdmin ? sendNotificationByID.bind(null, data.id) : sendNotificationToAdmins
   return new Promise((resolve, reject) => {
     db.collection('users').doc(data.id).update({
       "tasks": data.serverTasks
     })
       .then(async () => {
         try {
-          sendNotificationByID(data.id, data.notification);
+          await sendNotification(data.notification);
           resolve();
         }
         catch (err) {

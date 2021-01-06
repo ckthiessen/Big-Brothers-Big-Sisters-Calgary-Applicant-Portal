@@ -239,7 +239,8 @@ export default {
       });
 
       try {
-        await firebase.functions().httpsCallable("adminUpdateTasks")({
+        await firebase.functions().httpsCallable("updateTasks")({
+          isAdmin: true,
           id: this.applicantID,
           serverTasks,
           notification
