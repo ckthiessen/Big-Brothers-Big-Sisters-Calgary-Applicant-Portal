@@ -129,6 +129,7 @@ import firebase from "firebase";
     export default {
         data: () => ({
             menu: false,
+            userNotifications: [],
             notifications:[],
             id: "",
             name: "",
@@ -175,12 +176,23 @@ import firebase from "firebase";
             }
             this.email = this.user.email;
             //get notifications for user
-            if (this.user["notifications"].length === 0) {
+            this.getNotifications();
+          },
+          async getNotifications() {
+            let doc;
+            try {
+              doc = await firebase.functions().httpsCallable("getUserNotifications")({});
+              this.userNotifications = doc.data;
+              console.log(this.userNotifications);
+            } catch (err) {
+              console.log(err.message);
+            }
+            if (this.userNotifications.length === 0) {
               this.notifications.push("No notifications");
               this.lastNotification = "No notifications";
             } else {
-              for (let i = 0; i < this.user["notifications"].length; i++) {
-                let notification = this.user["notifications"][i];
+              for (let i = 0; i < this.userNotifications.length; i++) {
+                let notification = this.userNotifications[i];
                 let notifDate = notification.date.split(",")[0]
                 this.notifications.push(notification.message + " (" + notifDate + ")");
                 this.lastNotification = notification.message + " (" + notifDate + ")";

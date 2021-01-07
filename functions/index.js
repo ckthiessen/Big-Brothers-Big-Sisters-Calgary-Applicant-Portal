@@ -9,22 +9,6 @@ const db = admin.firestore();
 // Create and Deploy Your First Cloud Functions
 // https://firebase.google.com/docs/functions/write-firebase-functions
 
-// exports.updateNotifications = functions.firestore.document('users/{userID}').onUpdate((change, context) => {
-//   const before = change.before.data();
-//   const after = change.after.data();
-
-//   let length = after.notification.length;
-//   //capping notification length?
-//   if (before.notification !== after.notification) {
-//     console.log("notifications has been updated");
-//     //return a boolean? or a promise?
-//     //best option may be to update an attribute with when notifications were last updated/when someone sends you a notification?
-//     // return change.after.ref.update({'lastUpdated' : Date.now()}, {merge: true});
-//   } else {
-//     return null;
-//   }
-// });
-
 // Saves a message to the Firebase Realtime Database but sanitizes the text by removing swearwords.
 exports.addMessage = functions.https.onCall((data) => {
   // Message text passed from the client.
@@ -126,6 +110,28 @@ exports.updateTasks = functions.https.onCall((data, context) => {
         }
       })
       .catch(() => reject(new functions.https.HttpsError("internal", "Could not update status")));
+  });
+});
+
+/**
+ * Gets all notifications for a specific user
+ * @param { String } id - The ID of the user we are trying to get the notifications for
+ * @param { Object } data - The body of the firebase function request
+ * @param { String } data.id - The ID of the user being requested
+ * @param { Object } context - Object containing metadata about the request 
+ */
+exports.getUserNotifications = functions.https.onCall((data, context) => {
+  if (!context.auth.uid) { throw new functions.https.HttpsError("unauthenticated", "User not authenticated"); }
+  return new Promise((resolve, reject) => {
+    try {
+      //not working right now, don't know why?
+      console.log(db.collection('users').doc(data.id).collection("notifications").get());
+      let notifsSnapshot = await db.collection('users').doc(data.id).collection('notifications').get();
+      let notifs = notifsSnapshot.docs.map(notifsSnapshot => notifsSnapshot.data());
+      resolve(notifs);
+    } catch (err) {
+      reject(new functions.https.HttpsError("internal", "Could not get all notifications for user"));
+    }
   });
 });
 
