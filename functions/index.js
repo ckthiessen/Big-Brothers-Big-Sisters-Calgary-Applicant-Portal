@@ -47,6 +47,27 @@ exports.getUserByID = functions.https.onCall((data, context) => {
 });
 
 /**
+ * Gets a user's notifications from cloud firestore by their ID 
+ * @param { Object } data - The body of the firebase function request
+ * @param { String } data.id - The ID of the user whose notifications being requested
+ * @param { Object } context - Object containing metadata about the request 
+ */
+exports.getAllNotifications = functions.https.onCall((data, context) => {
+  if (!context.auth.uid) { throw new functions.https.HttpsError("unauthenticated", "User not authenticated"); }
+  return new Promise((resolve, reject) => {
+    db.collection(`users/${data.id}/notifications`).get()
+      .then(snapshot => {
+        let notifs = snapshot.docs.map(doc => doc.data());
+        resolve(notifs); // Successful, resolve with user document
+      })
+      .catch((err) => {
+        console.log(err);
+        reject(new functions.https.HttpsError("internal", "Could not get user")); // Failed, reject promise with HTTP error message
+  })
+  });
+});
+
+/**
  * Get all users from the database including applicants and administrators
  * @return {Promise} containing a list of user objects if it resolves or an error upon rejection
  * @param { Object } data - unused
@@ -95,7 +116,7 @@ exports.createUser = functions.https.onCall(async (data) => {
  */
 exports.updateTasks = functions.https.onCall((data, context) => {
   if (!context.auth.uid) { throw new functions.https.HttpsError("unauthenticated", "User not authenticated"); }
-  let sendNotification = data.isAdmin ? sendNotificationByID.bind(null, data.id) : sendNotificationToAdmins
+  let sendNotification = data.isAdmin ? sendNotificationByID.bind(null, data.id) : sendNotificationToAdmins;
   return new Promise((resolve, reject) => {
     db.collection('users').doc(data.id).update({
       "tasks": data.serverTasks
