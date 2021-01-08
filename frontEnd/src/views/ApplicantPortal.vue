@@ -45,11 +45,13 @@
               v-if="item.upload && !item.fileUpload"
               class="float-right mt-1 mr-5"
               @Uploaded="handleUpload"
+              @upload-error="displayNotification"
+              :task="item"
             ></bbbs-upload>
             <bbbs-download
               v-if="item.upload && item.fileUpload"
               :task="item"
-              buttonText="Offense Declaration"
+              :downloadLink="item.fileUpload"
               class="float-right mt-5 mr-5"
             ></bbbs-download>
           </td>
@@ -64,11 +66,6 @@
         </template>
         <template v-slot:item.dueDate="{ item }">
           {{ item.dueDate }}
-        </template>
-        <template v-slot:item.upload="{ item }">
-          <v-icon color="accent">
-            {{ item.upload ? uploadIcons.upload : uploadIcons.noUpload }}
-          </v-icon>
         </template>
       </v-data-table>
       <bbbs-footer></bbbs-footer>
@@ -91,8 +88,6 @@ import Upload from "../components/Upload.vue";
 import Download from "../components/Download.vue";
 import Carousel from "../components/Carousel.vue";
 import firebase from "firebase";
-
-import { updateTask } from "../services/apiServices";
 
 export default {
   data() {
@@ -121,12 +116,6 @@ export default {
           value: "dueDate",
         },
         {
-          text: "Upload",
-          align: "middle",
-          sortable: false,
-          value: "upload",
-        },
-        {
           text: "",
           value: "data-table-expand",
         },
@@ -147,11 +136,6 @@ export default {
           title: "Incomplete",
           icon: "mdi-alert",
         },
-      },
-      uploadIcons: {
-        noUpload: "mdi-cloud-off-outline",
-        upload: "mdi-cloud-upload",
-        uploadComplete: "mdi-cloud-check",
       },
       requiresHomeAssessment: false,
       isCommunityMentor: false,
@@ -175,30 +159,36 @@ export default {
   },
   methods: {
     //function for updating the users filepath in the upload
-    handleUpload(filePath) {
+    async handleUpload(selectedTask) {
       //now update users filepath
-      console.log("path: " + filePath);
-      //hard coded for now
-      let selectedTask = this.tasks[13];
       let serverTasks = [];
       this.tasks.forEach((task) => {
         let serverTask = {
           dueDate: task.dueDate,
           name: task.name,
           isApproved: task.isApproved,
-          isSubmitted: task.isSubmitted, //don't change the submitted value when updating files
+          isSubmitted: task.isSubmitted
         };
         //change the selected tasks filepath
         if (task.name === selectedTask.name) {
-          serverTask.fileUpload = filePath;
-          task.fileUpload = filePath;
+          serverTask.fileUpload = selectedTask.fileUpload;
+          task.fileUpload = selectedTask.fileUpload;
         } else {
           serverTask.fileUpload = task.fileUpload;
         }
         serverTasks.push(serverTask);
       });
       let notification = `${this.username} has uploaded a file to ${selectedTask.name}`;
-      updateTask(this.id, serverTasks, notification);
+      try {
+        this.displayNotification("File successfully uploaded")
+        await firebase.functions().httpsCallable("applicantUpdateTasks")({
+          id: this.id,
+          serverTasks,
+          notification
+        });
+      } catch (err) {
+        this.displayNotification(err.message);
+      }
     },
     async changeStatus(status, index) {
       let selectedTask = this.tasks[index];
