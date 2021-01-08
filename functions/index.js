@@ -135,28 +135,6 @@ exports.updateTasks = functions.https.onCall((data, context) => {
 });
 
 /**
- * Gets all notifications for a specific user
- * @param { String } id - The ID of the user we are trying to get the notifications for
- * @param { Object } data - The body of the firebase function request
- * @param { String } data.id - The ID of the user being requested
- * @param { Object } context - Object containing metadata about the request 
- */
-exports.getUserNotifications = functions.https.onCall((data, context) => {
-  if (!context.auth.uid) { throw new functions.https.HttpsError("unauthenticated", "User not authenticated"); }
-  return new Promise((resolve, reject) => {
-    try {
-      //not working right now, don't know why?
-      console.log(db.collection('users').doc(data.id).collection("notifications").get());
-      let notifsSnapshot = await db.collection('users').doc(data.id).collection('notifications').get();
-      let notifs = notifsSnapshot.docs.map(notifsSnapshot => notifsSnapshot.data());
-      resolve(notifs);
-    } catch (err) {
-      reject(new functions.https.HttpsError("internal", "Could not get all notifications for user"));
-    }
-  });
-});
-
-/**
  * Produces a list of document snapshots containing admins
  */
 function getAllAdmins() {

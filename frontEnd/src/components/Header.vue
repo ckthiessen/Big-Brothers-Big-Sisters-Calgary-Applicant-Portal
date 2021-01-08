@@ -181,7 +181,7 @@ import firebase from "firebase";
           async getNotifications() {
             let doc;
             try {
-              doc = await firebase.functions().httpsCallable("getUserNotifications")({});
+              doc = await firebase.functions().httpsCallable("getAllNotifications")({ id: this.id });
               this.userNotifications = doc.data;
               console.log(this.userNotifications);
             } catch (err) {
@@ -193,7 +193,7 @@ import firebase from "firebase";
             } else {
               for (let i = 0; i < this.userNotifications.length; i++) {
                 let notification = this.userNotifications[i];
-                let notifDate = notification.date.split(",")[0]
+                let notifDate = notification.date;
                 this.notifications.push(notification.message + " (" + notifDate + ")");
                 this.lastNotification = notification.message + " (" + notifDate + ")";
               } 
