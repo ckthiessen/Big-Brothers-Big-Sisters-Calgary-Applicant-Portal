@@ -81,6 +81,30 @@
         </v-btn>
       </template>
     </v-snackbar>
+      <v-dialog
+              v-model="accepted"
+              persistent
+              max-width="290"
+              >
+                
+                <v-card>
+                  <v-card-title class="justify-center"
+                  >
+                    Congratulations {{this.username}}!
+                  </v-card-title>
+                  <v-card-text> You are now ready to be matched!</v-card-text>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                      color="accent"
+                      text
+                      @click="accepted = false"
+                      >
+                      Close
+                    </v-btn>
+                  </v-card-actions>
+                </v-card>
+        </v-dialog>
   </v-container>
 </template>
 
@@ -91,16 +115,17 @@ import Upload from "../components/Upload.vue";
 import Download from "../components/Download.vue";
 import Carousel from "../components/Carousel.vue";
 import firebase from "firebase";
-
 import { updateTask } from "../services/apiServices";
 
 export default {
   data() {
     return {
+      accepted: false,
       applicant: {},
       tasks: [],
       expanded: [],
       singleExpand: false,
+      educationExcludeTaskNameList:["BIG Extras - Car Insurance", "BIG Extras - Home Assessment"],
       Headers: [
         {
           text: "Name",
@@ -262,6 +287,7 @@ export default {
       }
       let applicant = doc.data;
       this.username = applicant.name;
+      this.isCommunityMentor = applicant.isCommunityMentor;
       for (const serverTask of Object.values(applicant.tasks)) {
         let clientTask = {};
         clientTask.name = serverTask.name;
@@ -280,6 +306,27 @@ export default {
         clientTask.upload = defaults[serverTask.name].upload;
         this.tasks.push(clientTask);
       }
+      this.isComplete()
+    },
+    isComplete(){
+      let iscomplete = true;
+      this.tasks.forEach((task) => {
+        //if the task is one of the one's excluded from education mentors then don't check
+        if(this.educationExcludeTaskNameList.includes(task.name)){
+          //if your a community mentor then check, otherwise don't
+          if(this.isCommunityMentor){
+            iscomplete = iscomplete && task.isApproved
+            console.log("hi")
+          }
+        } else {
+            iscomplete = iscomplete && task.isApproved
+        }
+        console.log(iscomplete);
+      });
+      this.accepted = iscomplete;
+      console.log(this.accepted);
+
+      return;
     },
   },
   created() {

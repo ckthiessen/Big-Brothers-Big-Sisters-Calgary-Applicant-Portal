@@ -139,7 +139,6 @@ export default {
       ],
       noActions: [
         "BIG Profile",
-        "You are a BIG Deal!",
       ],
     };
   },
