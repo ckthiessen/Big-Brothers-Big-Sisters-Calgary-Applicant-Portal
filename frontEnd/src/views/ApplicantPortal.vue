@@ -306,24 +306,23 @@ export default {
         }
         clientTask.description = defaults[serverTask.name].description;
         clientTask.upload = defaults[serverTask.name].upload;
-        this.tasks.push(clientTask);
+        //checks the user type and only pushes tasks applicable to that user
+        if(this.educationExcludeTaskNameList.includes(clientTask.name)){
+          if(this.isCommunityMentor){
+            this.tasks.push(clientTask);
+          }
+        } else {
+            this.tasks.push(clientTask);
+        }
       }
       this.isComplete();
     },
+    //checks if all tasks are complete for that user
     isComplete(){
       let iscomplete = true;
-      this.tasks.forEach((task) => {
-        //if the task is one of the one's excluded from education mentors then don't check
-        if(this.educationExcludeTaskNameList.includes(task.name)){
-          //if your a community mentor then check, otherwise don't
-          if(this.isCommunityMentor){
-            iscomplete = iscomplete && task.isApproved
-          }
-        } else {
-            iscomplete = iscomplete && task.isApproved
-        }
-        console.log(iscomplete);
-      });
+      this.tasks.forEach((task) =>{
+        iscomplete = iscomplete && task.isApproved;
+      })
       this.accepted = iscomplete;
       if(this.accepted){
         this.$confetti.start()
