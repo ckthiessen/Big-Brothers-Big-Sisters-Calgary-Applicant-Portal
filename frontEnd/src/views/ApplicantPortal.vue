@@ -86,7 +86,6 @@
               persistent
               max-width="290"
               >
-                
                 <v-card>
                   <v-card-title class="justify-center"
                   >
@@ -109,6 +108,7 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import Header from "../components/Header.vue";
 import Footer from "../components/Footer.vue";
 import Upload from "../components/Upload.vue";
@@ -116,6 +116,8 @@ import Download from "../components/Download.vue";
 import Carousel from "../components/Carousel.vue";
 import firebase from "firebase";
 import { updateTask } from "../services/apiServices";
+import VueConfetti from 'vue-confetti'
+Vue.use(VueConfetti)
 
 export default {
   data() {
@@ -306,7 +308,7 @@ export default {
         clientTask.upload = defaults[serverTask.name].upload;
         this.tasks.push(clientTask);
       }
-      this.isComplete()
+      this.isComplete();
     },
     isComplete(){
       let iscomplete = true;
@@ -316,7 +318,6 @@ export default {
           //if your a community mentor then check, otherwise don't
           if(this.isCommunityMentor){
             iscomplete = iscomplete && task.isApproved
-            console.log("hi")
           }
         } else {
             iscomplete = iscomplete && task.isApproved
@@ -324,7 +325,9 @@ export default {
         console.log(iscomplete);
       });
       this.accepted = iscomplete;
-      console.log(this.accepted);
+      if(this.accepted){
+        this.$confetti.start()
+      }
 
       return;
     },
