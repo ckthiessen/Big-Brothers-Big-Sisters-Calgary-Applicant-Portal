@@ -334,6 +334,9 @@ export default {
   created() {
     this.renderUser();
   },
+  destroyed(){
+    this.$confetti.stop()
+  },
   computed: {
     rankedTasks() {
       const items = [];
