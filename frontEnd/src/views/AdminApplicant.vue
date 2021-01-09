@@ -101,6 +101,7 @@ export default {
       notif: "",
       snackbar: false,
       isCommunityMentor: false,
+      educationExcludeTaskNameList:["BIG Extras - Car Insurance", "BIG Extras - Home Assessment"],
       downloadIcons: {
         noUpload: "mdi-download-off-outline",
         upload: "mdi-cloud-download",
@@ -197,7 +198,15 @@ export default {
         servertasks[task].status = "Incomplete";
         servertasks[task].buttonTitle = "Mark Complete";
       }
-      this.tasks.push(servertasks[task]);
+      //if this task is in the list of excluded education tasks
+      if(this.educationExcludeTaskNameList.includes(servertasks[task].name)){
+        //only push these tasks if your a community mentor
+        if(this.isCommunityMentor){
+          this.tasks.push(servertasks[task]);
+        }
+      } else {
+        this.tasks.push(servertasks[task]);
+      }
     }
   },
     async changeStatus(status, index) {
