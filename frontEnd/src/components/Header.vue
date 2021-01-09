@@ -126,6 +126,7 @@
 
 <script>
 import firebase from "firebase";
+
     export default {
         data: () => ({
             menu: false,
@@ -145,6 +146,16 @@ import firebase from "firebase";
           this.id = this.$route.params.adminID || this.$route.params.applicantID; // Short circuit assignment
           this.showBackButton = this.$route.params.adminID && this.$route.params.applicantID ? true : false;
           this.getUserInformation();
+
+          let ref = firebase.firestore().collection('users').doc(this.id).collection('notifications');
+
+            ref.onSnapshot(snapshot => {
+                snapshot.docChanges().forEach(change => {
+                    console.log("new notifications");
+                    let doc = change.doc;
+                    console.log(doc.data());
+                });
+            });
              //call pullNotifications every 3 seconds
              //test
             //  this.interval = setInterval(function () {
