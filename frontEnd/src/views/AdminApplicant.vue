@@ -89,9 +89,6 @@
           </v-chip>
         </template>
         <template v-slot:item.upload="{ item }">
-          <v-icon v-if="!item.fileUpload" color="accent">
-            {{ downloadIcons.noUpload }}</v-icon
-          >
           <bbbs-download
             v-if="item.fileUpload"
             :task="item"
