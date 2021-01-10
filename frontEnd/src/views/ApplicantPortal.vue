@@ -10,8 +10,7 @@
     <v-card class="mx-auto">
       <v-data-table
         :headers="Headers"
-        :items="rankedTasks"
-        :single-expand="singleExpand"
+        :items="tasksToRender"
         :expanded.sync="expanded"
         show-expand
         :hide-default-footer="true"
@@ -26,13 +25,15 @@
             <v-spacer></v-spacer>
           </v-toolbar>
         </template>
-        <template v-slot:expanded-item="{ headers, item }">
+        <template 
+        v-slot:expanded-item="{ headers, item }"
+        >
           <td :colspan="headers.length">
             <p class="float-left mt-7" style="width: 40%; text-align: left">
               {{ item.description }}
             </p>
             <v-btn
-              @click="changeStatus(item.status, item.rank - 1)"
+              @click="changeStatus(item)"
               v-if="!noActions.includes(item.name)"
               class="float-right my-5"
               rounded
@@ -82,26 +83,55 @@
         </v-btn>
       </template>
     </v-snackbar>
+      <v-dialog
+              v-model="accepted"
+              persistent
+              max-width="290"
+              >
+                <v-card>
+                  <v-card-title class="justify-center"
+                  >
+                    Congratulations {{this.username}}!
+                  </v-card-title>
+                  <v-card-text> You are now ready to be matched!</v-card-text>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                      color="accent"
+                      text
+                      @click="accepted = false"
+                      >
+                      Close
+                    </v-btn>
+                  </v-card-actions>
+                </v-card>
+        </v-dialog>
   </v-container>
 </template>
 
 <script>
+import Vue from 'vue'
 import Header from "../components/Header.vue";
 import Footer from "../components/Footer.vue";
 import Upload from "../components/Upload.vue";
 import Download from "../components/Download.vue";
 import Carousel from "../components/Carousel.vue";
 import firebase from "firebase";
-
 import { updateTask } from "../services/apiServices";
+import VueConfetti from 'vue-confetti'
+
+Vue.use(VueConfetti)
 
 export default {
   data() {
     return {
+      accepted: false,
       applicant: {},
       tasks: [],
+      tasksToRender: [],
       expanded: [],
       singleExpand: false,
+      educationExcludeTaskNameList:["BIG Extras - Car Insurance", "BIG Extras - Home Assessment"],
       Headers: [
         {
           text: "Name",
@@ -201,8 +231,8 @@ export default {
       let notification = `${this.username} has uploaded a file to ${selectedTask.name}`;
       updateTask(this.id, serverTasks, notification);
     },
-    async changeStatus(status, index) {
-      let selectedTask = this.tasks[index];
+    async changeStatus(task) {
+      let selectedTask = task;
       let notification;
       if (selectedTask.status === "Complete") {
         return;
@@ -239,9 +269,7 @@ export default {
           notification
         });
       } catch (err) {
-        this.displayNotification(err.message);
-      }
-    },
+        this.displayNotification(err.message);      }    },
     buttonTitle: function (status) {
       return status === "InProgress" ? "Mark Incomplete" : "Request Approval";
     },
@@ -264,6 +292,8 @@ export default {
       }
       let applicant = doc.data;
       this.username = applicant.name;
+
+      this.isCommunityMentor = applicant.isCommunityMentor;
       this.tasks = [];
       for (const serverTask of Object.values(applicant.tasks)) {
         let clientTask = {};
@@ -281,30 +311,50 @@ export default {
         }
         clientTask.description = defaults[serverTask.name].description;
         clientTask.upload = defaults[serverTask.name].upload;
+        //checks the user type and only pushes tasks applicable to that user
+
+        if(this.educationExcludeTaskNameList.includes(clientTask.name)){
+          if(this.isCommunityMentor){
+            this.tasksToRender.push(clientTask);
+          }
+        } else {
+            this.tasksToRender.push(clientTask);
+        }
         this.tasks.push(clientTask);
       }
+      this.isComplete();
+    },
+    //checks if all tasks are complete for that user
+    isComplete(){
+      let iscomplete = true;
+      this.tasksToRender.forEach((task) =>{
+        iscomplete = iscomplete && task.isApproved;
+      })
+      this.accepted = iscomplete;
+      if(this.accepted){
+        this.$confetti.start({
+          particles: [
+            {
+              type: 'circle',
+              colors: [
+                'gold',
+                'lightBlue'
+              ]
+            }
+            ],
+            particlesPerFrame: 0.5,
+            defaultDropRate: 10,
+            defaultSize: 7
+        })
+      }
+      return;
     },
   },
   created() {
-    this.renderUser();
+    this.renderUser(); 
   },
-  computed: {
-    rankedTasks() {
-      const items = [];
-      if (this.tasks.length > 0) {
-        items[0] = this.tasks[0];
-        items[0].rank = 1;
-        for (let index = 1; index < this.tasks.length; index++) {
-          items[index] = this.tasks[index];
-          if (items[index].name === items[index - 1].name) {
-            items[index].rank = "";
-          } else {
-            items[index].rank = index + 1;
-          }
-        }
-      }
-      return items;
-    },
+  destroyed(){
+    this.$confetti.stop()
   },
 };
 </script>

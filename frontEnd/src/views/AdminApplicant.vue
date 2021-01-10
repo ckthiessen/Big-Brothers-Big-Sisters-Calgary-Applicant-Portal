@@ -10,7 +10,7 @@
     <v-card class="mx-auto">
       <v-data-table
         :headers="Headers"
-        :items="tasks"
+        :items="tasksToRender"
         item-key="index"
         class="elevation-1"
         :hide-default-footer="true"
@@ -146,11 +146,13 @@ export default {
       adminID: "",
       applicantName: "",
       tasks: [],
+      tasksToRender: [],
       selectedIndex: "",
       switchLoading: false,
       notif: "",
       snackbar: false,
       isCommunityMentor: false,
+      educationExcludeTaskNameList:["BIG Extras - Car Insurance", "BIG Extras - Home Assessment"],
       downloadIcons: {
         noUpload: "mdi-download-off-outline",
         upload: "mdi-cloud-download",
@@ -189,13 +191,12 @@ export default {
       ],
       noActions: [
         "BIG Profile",
-        "You are a BIG Deal!",
       ],
     };
   },
   computed: {
     userType: function () {
-      return this.isCommunityMentor ? "Community Mentor" : "Education Mentor";
+      return this.isCommunityMentor ? "Community Mentor" : "In-School Mentor";
     }
   },
   created() {
@@ -250,6 +251,15 @@ export default {
         servertasks[task].status = "Incomplete";
         servertasks[task].buttonTitle = "Mark Complete";
       }
+      //if this task is in the list of excluded education tasks
+      if(this.educationExcludeTaskNameList.includes(servertasks[task].name)){
+        //only push these tasks if your a community mentor
+        if(this.isCommunityMentor){
+          this.tasksToRender.push(servertasks[task]);
+        }
+      } else {
+        this.tasksToRender.push(servertasks[task]);
+      }
       this.tasks.push(servertasks[task]);
       }
     },
@@ -297,7 +307,6 @@ export default {
         }
         serverTasks.push(serverTask);
       });
-
       try {
         await firebase.functions().httpsCallable("updateTasks")({
           isAdmin: true,
