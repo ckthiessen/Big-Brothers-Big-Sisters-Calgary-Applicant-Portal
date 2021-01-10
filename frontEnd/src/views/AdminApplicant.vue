@@ -2,6 +2,7 @@
   <v-container fluid style="margin: 0 auto 0 auto; padding: 0px; width: 90%">
     <bbbs-header
       @newNotif="displayNotification"
+      @update="renderUser"
       fluid
       style="margin: 0 auto 0 auto; padding: 0px; width: 90%"
     ></bbbs-header>
@@ -225,39 +226,39 @@ export default {
         }, 5000);
       }
     },
+  async renderUser() {
+    let doc;
+    try {
+      doc = await firebase.functions().httpsCallable("getUserByID")({
+        id: this.applicantID
+      });
+    } catch (err) {
+      this.displayNotification(err.message);
+    }
+    this.applicantName = doc.data.name;
+    this.isCommunityMentor = doc.data.isCommunityMentor;
+    let servertasks = doc.data.tasks;
+    this.tasks = [];
+    for (const task in servertasks) {
+      if (servertasks[task].isSubmitted && servertasks[task].isApproved) {
+        servertasks[task].status = "Complete";
+        servertasks[task].buttonTitle = "Mark Incomplete";
+      } else if (servertasks[task].isSubmitted && !servertasks[task].isApproved) {
+        servertasks[task].status = "Requires Approval";
+        servertasks[task].buttonTitle = "Mark Complete";
+      } else if (!servertasks[task].isSubmitted && !servertasks[task].isApproved) {
+        servertasks[task].status = "Incomplete";
+        servertasks[task].buttonTitle = "Mark Complete";
+      }
+      this.tasks.push(servertasks[task]);
+      }
+    },
     async deleteUser() {
       try {
         await firebase.functions().httpsCallable("deleteUserByID")({id: this.applicantID});
         this.$router.back();
       }catch (err) {
         this.displayNotification(err.message)
-      }
-    },
-
-    async renderUser() {
-      let doc;
-      try {
-        doc = await firebase.functions().httpsCallable("getUserByID")({
-          id: this.applicantID
-        });
-      } catch (err) {
-        this.displayNotification(err.message);
-      }
-      this.applicantName = doc.data.name;
-      this.isCommunityMentor = doc.data.isCommunityMentor;
-      let servertasks = doc.data.tasks;
-      for (const task in servertasks) {
-        if (servertasks[task].isSubmitted && servertasks[task].isApproved) {
-          servertasks[task].status = "Complete";
-          servertasks[task].buttonTitle = "Mark Incomplete";
-        } else if (servertasks[task].isSubmitted && !servertasks[task].isApproved) {
-          servertasks[task].status = "Requires Approval";
-          servertasks[task].buttonTitle = "Mark Complete";
-        } else if (!servertasks[task].isSubmitted && !servertasks[task].isApproved) {
-          servertasks[task].status = "Incomplete";
-          servertasks[task].buttonTitle = "Mark Complete";
-        }
-        this.tasks.push(servertasks[task]);
       }
     },
     async changeStatus(status, index) {
@@ -298,7 +299,8 @@ export default {
       });
 
       try {
-        await firebase.functions().httpsCallable("adminUpdateTasks")({
+        await firebase.functions().httpsCallable("updateTasks")({
+          isAdmin: true,
           id: this.applicantID,
           serverTasks,
           notification
