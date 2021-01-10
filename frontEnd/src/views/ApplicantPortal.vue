@@ -332,6 +332,7 @@ export default {
         iscomplete = iscomplete && task.isApproved;
       })
       this.accepted = iscomplete;
+      this.$confetti.stop()
       if(this.accepted){
         this.$confetti.start({
           particles: [
