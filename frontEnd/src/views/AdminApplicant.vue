@@ -199,14 +199,14 @@ export default {
         servertasks[task].buttonTitle = "Mark Complete";
       }
       //if this task is in the list of excluded education tasks
-      if(this.educationExcludeTaskNameList.includes(servertasks[task].name)){
+     // if(this.educationExcludeTaskNameList.includes(servertasks[task].name)){
         //only push these tasks if your a community mentor
-        if(this.isCommunityMentor){
+     //   if(this.isCommunityMentor){
           this.tasks.push(servertasks[task]);
-        }
-      } else {
-        this.tasks.push(servertasks[task]);
-      }
+      //  }
+      //} else {
+      //  this.tasks.push(servertasks[task]);
+      //}
     }
   },
     async changeStatus(status, index) {
