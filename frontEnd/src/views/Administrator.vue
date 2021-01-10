@@ -42,8 +42,15 @@
         <v-icon :color="item.waitingApproval === 'mdi-check-circle' ? 'green': 'inprogress'">
           {{item.waitingApproval}}
         </v-icon>
-
       </template>
+      <!-- <template v-slot:item.actions="{ item }">
+      <v-icon
+        medium
+        @click="deleteUser(item)"
+      >
+        mdi-delete
+      </v-icon>
+    </template> -->
     </v-data-table>
     <v-divider></v-divider>
     <v-pagination
@@ -103,7 +110,13 @@
           },
           { text: 'Needs Approval', 
             sortable: true,
-            value: 'waitingApproval' },
+            value: 'waitingApproval' 
+          },
+          {
+            text: 'Delete User',
+            sortable: false,
+            value: 'actions',
+          }
         ],
         users: [],
         page: 1,

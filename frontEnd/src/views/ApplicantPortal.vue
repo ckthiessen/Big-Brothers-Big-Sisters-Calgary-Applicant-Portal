@@ -2,6 +2,7 @@
   <v-container fluid style="margin: 0 auto 0 auto; padding: 0px; width: 90%">
     <bbbs-header
       @newNotif="displayNotification"
+      @update="renderUser"
       fluid
       style="margin: 0 auto 0 auto; padding: 0px; width: 90%"
     ></bbbs-header>
@@ -261,7 +262,8 @@ export default {
         serverTasks.push(serverTask);
       });
       try {
-        await firebase.functions().httpsCallable("applicantUpdateTasks")({
+        await firebase.functions().httpsCallable("updateTasks")({
+          isAdmin: false,
           id: this.id,
           serverTasks,
           notification
@@ -290,7 +292,9 @@ export default {
       }
       let applicant = doc.data;
       this.username = applicant.name;
+
       this.isCommunityMentor = applicant.isCommunityMentor;
+      this.tasks = [];
       for (const serverTask of Object.values(applicant.tasks)) {
         let clientTask = {};
         clientTask.name = serverTask.name;
