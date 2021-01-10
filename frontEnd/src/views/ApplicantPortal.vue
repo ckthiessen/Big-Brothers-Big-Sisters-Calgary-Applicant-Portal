@@ -295,6 +295,7 @@ export default {
 
       this.isCommunityMentor = applicant.isCommunityMentor;
       this.tasks = [];
+      this.tasksToRender = [];
       for (const serverTask of Object.values(applicant.tasks)) {
         let clientTask = {};
         clientTask.name = serverTask.name;
