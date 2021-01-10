@@ -240,6 +240,7 @@ export default {
     this.isCommunityMentor = doc.data.isCommunityMentor;
     let servertasks = doc.data.tasks;
     this.tasks = [];
+    this.tasksToRender = [];
     for (const task in servertasks) {
       if (servertasks[task].isSubmitted && servertasks[task].isApproved) {
         servertasks[task].status = "Complete";
