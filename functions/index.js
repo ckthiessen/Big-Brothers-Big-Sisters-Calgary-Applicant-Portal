@@ -63,7 +63,7 @@ exports.getAllNotifications = functions.https.onCall((data, context) => {
       .catch((err) => {
         console.log(err);
         reject(new functions.https.HttpsError("internal", "Could not get user")); // Failed, reject promise with HTTP error message
-  })
+      });
   });
 });
 
@@ -117,20 +117,16 @@ exports.createUser = functions.https.onCall(async (data) => {
 exports.updateTasks = functions.https.onCall((data, context) => {
   if (!context.auth.uid) { throw new functions.https.HttpsError("unauthenticated", "User not authenticated"); }
   let sendNotification = data.isAdmin ? sendNotificationByID.bind(null, data.id) : sendNotificationToAdmins;
-  return new Promise((resolve, reject) => {
-    db.collection('users').doc(data.id).update({
-      "tasks": data.serverTasks
-    })
-      .then(async () => {
-        try {
-          await sendNotification(data.notification);
-          resolve();
-        }
-        catch (err) {
-          reject(new functions.https.HttpsError("internal", "Updated status but could not send notification"));
-        }
-      })
-      .catch(() => reject(new functions.https.HttpsError("internal", "Could not update status")));
+  return new Promise(async (resolve, reject) => {
+    try {
+      await db.collection('users').doc(data.id).update({
+        "tasks": data.serverTasks
+      });
+      await sendNotification(data.notification);
+      resolve();
+    } catch (err) {
+      reject(new functions.https.HttpsError("internal", "Could not update status"));
+    }
   });
 });
 
@@ -159,7 +155,7 @@ async function sendNotificationToAdmins(notification) {
  */
 function sendNotificationByID(id, notification) {
   trimNotifications(id);
-  let notifIDDate = new Date().toISOString("en-CA", { timeZone: "America/Edmonton" }) //sets notification's ID to a specific time (down to the second for easier sorting)
+  let notifIDDate = new Date().toISOString("en-CA", { timeZone: "America/Edmonton" }); //sets notification's ID to a specific time (down to the second for easier sorting)
   return db.collection('users').doc(id).collection("notifications").doc(notifIDDate).set({
     message: notification,
     date: new Date().toLocaleDateString("en-CA", { timeZone: "America/Edmonton" })
@@ -176,9 +172,9 @@ async function trimNotifications(id) {
   //if too many notifications, then delete the 0th in the collection (earliest)
   //the while loop fixes the issue that it "misses" when traffic is high
   while (notifs.length > 49) {
-    db.collection('users').doc(id).collection("notifications").doc(notifs[0]).delete().then(function(){
+    db.collection('users').doc(id).collection("notifications").doc(notifs[0]).delete().then(function () {
       console.log("excess notification deleted successfully");
-    }).catch(function(error){
+    }).catch(function (error) {
       console.log("error removing excess notification");
     });
     notifs.shift();
