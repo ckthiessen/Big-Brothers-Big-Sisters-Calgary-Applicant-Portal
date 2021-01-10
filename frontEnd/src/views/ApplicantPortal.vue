@@ -109,7 +109,6 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import Header from "../components/Header.vue";
 import Footer from "../components/Footer.vue";
 import Upload from "../components/Upload.vue";
@@ -117,8 +116,7 @@ import Download from "../components/Download.vue";
 import Carousel from "../components/Carousel.vue";
 import firebase from "firebase";
 import { updateTask } from "../services/apiServices";
-import VueConfetti from 'vue-confetti'
-Vue.use(VueConfetti)
+
 
 export default {
   data() {
