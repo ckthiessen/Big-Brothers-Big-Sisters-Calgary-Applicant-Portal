@@ -175,3 +175,25 @@ async function trimNotifications(id) {
   }
   return notifs;
 }
+
+ * Deletes a user by their ID
+ * @param { Object } data - The body of the firebase function request
+ * @param { String } data.id - The ID of the applicant who is being deleted
+ * @param { Object } context - Object containing metadata about the request 
+ */
+exports.deleteUserByID = functions.https.onCall((data, context) => {
+  if (!context.auth.uid) { throw new functions.https.HttpsError("unauthenticated", "User not authenticated"); }
+  return new Promise((resolve, reject) => {
+    let id = data.id;
+    db.collection('users').doc(id).delete()
+      .then((id) => {
+
+        try {
+          admin.auth().deleteUser(id);
+          resolve();
+        } catch (err) {
+          reject(new functions.https.HttpsError("internal", "Unable to delete user auth"));
+        }
+      }).catch(() => reject(new functions.https.HttpsError("internal", "Could not delete document")));
+  });
+});

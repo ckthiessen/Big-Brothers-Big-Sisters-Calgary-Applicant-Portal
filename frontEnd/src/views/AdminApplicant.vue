@@ -28,6 +28,54 @@
               :v-model="isCommunityMentor"
               @change="toggleUserType"
             ></v-switch>
+            <v-dialog
+              v-model="dialog"
+              persistent
+              max-width="290"
+              >
+                <template v-slot:activator="{on, attrs}">
+                  <v-btn
+                    class="mx-2"
+                    fab
+                    dark
+                    v-bind="attrs"
+                    v-on="on"
+                    color="needsattention"
+                  >
+                    <v-icon dark>
+                      mdi-delete
+                    </v-icon>
+                  </v-btn>
+                  </template>
+                <v-card>
+                  <v-card-title class="justify-center"
+                  >
+                    Are you sure?
+                  </v-card-title>
+                  <v-card-text>Deleting {{applicantName}} will permanently remove their account from the system. 
+                    This cannot be reversed.</v-card-text>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                      color="accent"
+                      text
+                      @click="dialog = false"
+                      >
+                      Cancel
+                    </v-btn>
+                    <v-btn
+                      color="needsattention"
+                      text
+                      @click="deleteUser()"
+                      >
+                      Delete
+                    </v-btn>
+                  </v-card-actions>
+                  
+                </v-card>
+              </v-dialog>
+
+
           </v-toolbar>
         </template>
         <template v-slot:item.status="{ item }">
@@ -93,6 +141,7 @@ export default {
   },
   data() {
     return {
+      dialog: false,
       applicantID: "",
       adminID: "",
       applicantName: "",
@@ -161,6 +210,7 @@ export default {
         this.$emit("emitToApp", response.data);
       });
     },
+
     async toggleUserType() {
       this.switchLoading = true;
       try {
@@ -201,8 +251,16 @@ export default {
         servertasks[task].buttonTitle = "Mark Complete";
       }
       this.tasks.push(servertasks[task]);
-    }
-  },
+      }
+    },
+    async deleteUser() {
+      try {
+        await firebase.functions().httpsCallable("deleteUserByID")({id: this.applicantID});
+        this.$router.back();
+      }catch (err) {
+        this.displayNotification(err.message)
+      }
+    },
     async changeStatus(status, index) {
       let selectedTask = this.tasks[index];
       let notification;

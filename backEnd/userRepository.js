@@ -11,28 +11,12 @@ const db = admin.firestore();
 //This file should be obscure after everything is ported over
 
 module.exports = {
-<<<<<<< HEAD:backEnd/repositories/userRepository.js
-  // has been ported over to functions
   // createUser: async function(toCreate) {
   //   console.log('createUser: ' + toCreate);
   //   let created = await db.collection('users').doc(toCreate.id).set(toCreate);
   //   console.log('created user: ' + created);
   // },
-=======
-  createUser: async function(toCreate) {
-    console.log('createUser: ' + toCreate);
-    let created = await db.collection('users').doc(toCreate.id).set(toCreate);
-    console.log('created user: ' + created);
-  },
->>>>>>> 3c5bb5a32f76733b74c984e10b1f45b7eee518ab:backEnd/userRepository.js
 
-  updateUser: async function(toUpdate) {
-    console.log('updating user: ');
-    console.log(toUpdate);
-    await db.collection('users').doc(toUpdate.id).update(toUpdate);
-    console.log('user: ' + toUpdate.id + ' updated.');
-  },
-  
   updateTask: async function(applicantID, newTasks, notifMessage) {
     console.log(`updating user: ${applicantID}`);
     let applicantDocRef = await db.collection('users').doc(applicantID);
@@ -53,7 +37,6 @@ module.exports = {
     console.log('user: ' + applicant.name + ' updated.');
   },
 
-<<<<<<< HEAD:backEnd/repositories/userRepository.js
   // ported over to firebase functions
   // getAllAdmins: async function() {
   //   let adminIDs = []
@@ -65,29 +48,16 @@ module.exports = {
   //   });
   //   return adminIDs; 
   // }, 
-=======
-  getAllAdmins: async function() {
-    let adminIDs = []
-    await db.collection('users').where("isAdmin", "==", true).get()
-    .then(querySnapshot => {
-      querySnapshot.forEach(adminSnapshot => {
-        adminIDs.push(adminSnapshot.data().id);
-      })
-      return;
-    });
-    return adminIDs; 
-  }, 
->>>>>>> 3c5bb5a32f76733b74c984e10b1f45b7eee518ab:backEnd/userRepository.js
 
-  deleteUser: async function(idToDelete) {
-    console.log('delete User: ' + idToDelete);
-    let success = await db.collection('users').doc(idToDelete).delete();
+  //ported over to functions
+  // deleteUser: async function(idToDelete) {
+  //   console.log('delete User: ' + idToDelete);
+  //   let success = await db.collection('users').doc(idToDelete).delete();
 
-    console.log('Deleted user: ' + success);
-  },
+  //   console.log('Deleted user: ' + success);
+  // },
 
   //search functions
-<<<<<<< HEAD:backEnd/repositories/userRepository.js
   //has been ported over to functions
   // getAllUsers: async function () {
   //   console.log('getAllUsers');
@@ -99,6 +69,7 @@ module.exports = {
   //   return users;
   // },
 
+  //PORTED OVER TO functions already
   getUserById: async function(id) {
     console.log('getuserbyID');
     console.log(id)
@@ -139,15 +110,4 @@ module.exports = {
 
   // }
 
-=======
-  getAllUsers: async function () {
-    console.log('getAllUsers');
-    var users = [];
-    const snapshot = await db.collection('users').get();
-    snapshot.forEach((doc) => {
-      users.push(doc.data());
-    });
-    return users;
-  },
->>>>>>> 3c5bb5a32f76733b74c984e10b1f45b7eee518ab:backEnd/userRepository.js
 };
