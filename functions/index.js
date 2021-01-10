@@ -176,7 +176,7 @@ async function trimNotifications(id) {
   return notifs;
 }
 
- * Deletes a user by their ID
+ /* Deletes a user by their ID
  * @param { Object } data - The body of the firebase function request
  * @param { String } data.id - The ID of the applicant who is being deleted
  * @param { Object } context - Object containing metadata about the request 
