@@ -44,15 +44,17 @@
             <bbbs-upload
               v-if="item.upload && !item.fileUpload"
               class="float-right mt-1 mr-5"
-              @Uploaded="handleUpload"
+              @uploaded="handleUpload"
               @upload-error="displayNotification"
               :task="item"
             ></bbbs-upload>
             <bbbs-download
               v-if="item.upload && item.fileUpload"
-              :task="item"
-              :downloadLink="item.fileUpload"
               class="float-right mt-5 mr-5"
+              :applicantID="id"
+              :task="item"
+              @deleted="handleDelete"
+              @delete-error="displayNotification"
             ></bbbs-download>
           </td>
         </template>
@@ -190,6 +192,10 @@ export default {
         this.displayNotification(err.message);
       }
     },
+    handleDelete(taskWithDeletedFile) {
+      let taskToChange = this.tasks.filter(task => task.name === taskWithDeletedFile.name)
+      taskToChange.fileUpload = null; 
+    }, 
     async changeStatus(status, index) {
       let selectedTask = this.tasks[index];
       let notification;

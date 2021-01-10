@@ -16,27 +16,38 @@
 
 <script>
 import firebase from "firebase";
+import 'firebase/firestore';
 
 export default {
   name: "download",
   props: {
-    task: Object
+    task: Object,
+    applicantID: String,
   },
   methods: {
-    async delete() {
-        // If the resource was a file, have to delete from firebase storage as well
-        // TODO: Handle delete. Make delete button read only when already approved and show tool tip
-        await firebase.storage().ref(resource.name).delete();
-        await db.collection('resources').doc(resource.name).delete();
+    async deleteFile() {
+      // If the resource was a file, have to delete from firebase storage as well
+      // TODO: Handle delete. Make delete button read only when already approved and show tool tip
+      try {
+        // await firebase
+        //   .storage()
+        //   .ref(`${this.applicantID}/${this.task.name}`)
+        //   .delete();
+
+        await firebase.firestore()
+          .collection("users")
+          .doc(this.applicantID)
+          .update({
+            fileUpload: firebase.firestore.FieldValue.delete()
+          });
+          console.log("done")
+
+        this.$emit("deleted", this.task);
+      } catch (error) {
+        console.log(error)
+        this.$emit("delete-error", error.message);
       }
-  }
+    },
+  },
 };
 </script>
-<style>
-a {
-  text-decoration: none;
-}
-</style>
-
-
-

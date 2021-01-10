@@ -34,7 +34,7 @@ export default {
           .ref(this.$route.params.applicantID + "/" + `${this.task.name}`)
           .put(this.fileData);
         this.task.fileUpload = await snapshot.ref.getDownloadURL();
-        this.$emit("Uploaded", this.task);
+        this.$emit("uploaded", this.task);
       } catch (error) {
         this.$emit("upload-error", error.message);
       }
