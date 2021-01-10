@@ -143,7 +143,11 @@
               awaitingApproval = true;
             }
           }
-          user.status = completedCount === user["tasks"].length ? "Completed" : (completedCount + "/" + (user["tasks"].length - taskReduction) + " completed");
+          //if the user is an in school mentor
+          if(!user.isCommunityMentor){
+            taskReduction = 2;
+          }
+          user.status = completedCount >= (user["tasks"].length - taskReduction) ? "Completed" : (completedCount + "/" + (user["tasks"].length - taskReduction) + " completed");
           user.waitingApproval = awaitingApproval ? "mdi-alert": "mdi-check-circle";
         }
         return this.users;
