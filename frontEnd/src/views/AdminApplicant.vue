@@ -146,7 +146,7 @@ export default {
   },
   computed: {
     userType: function () {
-      return this.isCommunityMentor ? "Community Mentor" : "Education Mentor";
+      return this.isCommunityMentor ? "Community Mentor" : "In-School Mentor";
     }
   },
   created() {
