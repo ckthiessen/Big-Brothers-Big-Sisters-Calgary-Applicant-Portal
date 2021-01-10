@@ -327,7 +327,20 @@ export default {
       })
       this.accepted = iscomplete;
       if(this.accepted){
-        this.$confetti.start()
+        this.$confetti.start({
+          particles: [
+            {
+              type: 'circle',
+              colors: [
+                'gold',
+                'lightBlue'
+              ]
+            }
+            ],
+            particlesPerFrame: 0.5,
+            defaultDropRate: 10,
+            defaultSize: 7
+        })
       }
       return;
     },
