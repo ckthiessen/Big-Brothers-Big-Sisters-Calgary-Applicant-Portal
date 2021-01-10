@@ -54,16 +54,14 @@ exports.getUserByID = functions.https.onCall((data, context) => {
  */
 exports.getAllNotifications = functions.https.onCall((data, context) => {
   if (!context.auth.uid) { throw new functions.https.HttpsError("unauthenticated", "User not authenticated"); }
-  return new Promise((resolve, reject) => {
-    db.collection(`users/${data.id}/notifications`).get()
-      .then(snapshot => {
-        let notifs = snapshot.docs.map(doc => doc.data());
-        resolve(notifs); // Successful, resolve with user document
-      })
-      .catch((err) => {
-        console.log(err);
-        reject(new functions.https.HttpsError("internal", "Could not get user")); // Failed, reject promise with HTTP error message
-      });
+  return new Promise(async (resolve, reject) => {
+    try {
+      let snapshot = await db.collection(`users/${data.id}/notifications`).get();
+      let notifs = snapshot.docs.map(doc => doc.data());
+      resolve(notifs); // Successful, resolve with user document
+    } catch (err) {
+      reject(new functions.https.HttpsError("internal", "Could not get notifications")); // Failed, reject promise with HTTP error message
+    }
   });
 });
 
@@ -160,7 +158,7 @@ function sendNotificationByID(id, notification) {
     message: notification,
     date: new Date().toLocaleDateString("en-CA", { timeZone: "America/Edmonton" })
   });
-};
+}
 
 /**
  * Trims notifications to be less than 50 notifications
@@ -171,12 +169,8 @@ async function trimNotifications(id) {
   let notifs = notifsSnapshot.docs.map(doc => doc.id);
   //if too many notifications, then delete the 0th in the collection (earliest)
   //the while loop fixes the issue that it "misses" when traffic is high
-  while (notifs.length > 49) {
-    db.collection('users').doc(id).collection("notifications").doc(notifs[0]).delete().then(function () {
-      console.log("excess notification deleted successfully");
-    }).catch(function (error) {
-      console.log("error removing excess notification");
-    });
+  while(notifs.length > 49) {
+    db.collection('users').doc(id).collection("notifications").doc(notifs[0]).delete();
     notifs.shift();
   }
   return notifs;

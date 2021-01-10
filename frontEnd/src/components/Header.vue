@@ -157,6 +157,7 @@ import firebase from "firebase";
               this.initial = false;
             } else {
               if (!snapshot.docChanges().empty) { 
+                this.$emit("update", null);
                 snapshot.docChanges().forEach(change => {
                   let doc = change.doc;
                   this.seen = false;

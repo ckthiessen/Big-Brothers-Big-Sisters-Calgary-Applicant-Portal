@@ -2,6 +2,7 @@
   <v-container fluid style="margin: 0 auto 0 auto; padding: 0px; width: 90%">
     <bbbs-header
       @newNotif="displayNotification"
+      @update="renderUser"
       fluid
       style="margin: 0 auto 0 auto; padding: 0px; width: 90%"
     ></bbbs-header>
@@ -263,6 +264,7 @@ export default {
       }
       let applicant = doc.data;
       this.username = applicant.name;
+      this.tasks = [];
       for (const serverTask of Object.values(applicant.tasks)) {
         let clientTask = {};
         clientTask.name = serverTask.name;

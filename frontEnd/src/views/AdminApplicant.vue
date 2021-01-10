@@ -2,6 +2,7 @@
   <v-container fluid style="margin: 0 auto 0 auto; padding: 0px; width: 90%">
     <bbbs-header
       @newNotif="displayNotification"
+      @update="renderUser"
       fluid
       style="margin: 0 auto 0 auto; padding: 0px; width: 90%"
     ></bbbs-header>
@@ -187,6 +188,7 @@ export default {
     this.applicantName = doc.data.name;
     this.isCommunityMentor = doc.data.isCommunityMentor;
     let servertasks = doc.data.tasks;
+    this.tasks = [];
     for (const task in servertasks) {
       if (servertasks[task].isSubmitted && servertasks[task].isApproved) {
         servertasks[task].status = "Complete";
