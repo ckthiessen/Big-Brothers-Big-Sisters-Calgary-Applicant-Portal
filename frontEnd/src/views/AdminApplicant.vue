@@ -15,6 +15,8 @@
         class="elevation-1"
         :hide-default-footer="true"
         disable-pagination
+        loading
+        loading-text="Loading... Please wait"
       >
         <template v-slot:top>
           <v-toolbar flat>
@@ -94,6 +96,7 @@
             v-if="item.fileUpload"
             :task="item"
             class="ml-n5"
+            :isAdminView="true"
           ></bbbs-download>
         </template>
         <template v-slot:item.buttonTitle="{ item }">

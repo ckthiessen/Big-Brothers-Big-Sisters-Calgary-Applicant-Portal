@@ -10,7 +10,7 @@
     >
       <v-icon>mdi-download</v-icon>
     </v-btn>
-    <v-btn color="accent darken-1" text @click="deleteFile"> Delete </v-btn>
+    <v-btn v-if="!isAdminView" color="accent darken-1" text @click="deleteFile"> Delete </v-btn>
   </div>
 </template>
 
@@ -23,6 +23,10 @@ export default {
   props: {
     task: Object,
     applicantID: String,
+    isAdminView: {
+      default: false,
+      type: Boolean
+    }
   },
   methods: {
     /**
