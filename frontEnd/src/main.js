@@ -6,7 +6,6 @@ import "./firebase"
 import { auth } from "./firebase";
 import VueConfetti from 'vue-confetti'
 
-Vue.use(VueConfetti)
 //Disable "You are running Vue in development mode" warning
 Vue.config.productionTip = false;
 //this will prevent user from being logged out on page refresh
@@ -17,6 +16,7 @@ auth.onAuthStateChanged(() => {
     app = new Vue({
       vuetify,
       router,
+      VueConfetti,
       render: h => h(App)
     }).$mount('#app')
   }
