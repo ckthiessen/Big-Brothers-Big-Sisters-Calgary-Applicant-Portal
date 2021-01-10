@@ -13,7 +13,7 @@ export async function getUserByID(id) {
 //   const response = await axios.post('/api/users', user);
 //   return await response;
 // }
-
+//JUST A TEST
 export async function firebaseTest(messageText) {
   let addMessage = firebase.functions().httpsCallable('addMessage');
   let result = await addMessage({ text: messageText });
@@ -21,6 +21,7 @@ export async function firebaseTest(messageText) {
 }
 
 //client side function for deleting a user by ID - pass in user's ID
+//ported to functions
 export async function deleteUserByID(id) {
   const response = await axios.delete('/api/users/' + id);
   return await response;
@@ -44,6 +45,7 @@ export async function updateUser(user){
 
 //client side function for updating an applicant's task status
 //pass in the user json object
+//PORTED TO FUNCTIONS
 export async function updateTask(id, tasks, selectedTask){
   const response = await axios.patch('/api/users', { id, tasks, selectedTask });
   return await response;

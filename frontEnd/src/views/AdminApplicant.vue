@@ -2,6 +2,7 @@
   <v-container fluid style="margin: 0 auto 0 auto; padding: 0px; width: 90%">
     <bbbs-header
       @newNotif="displayNotification"
+      @update="renderUser"
       fluid
       style="margin: 0 auto 0 auto; padding: 0px; width: 90%"
     ></bbbs-header>
@@ -9,7 +10,7 @@
     <v-card class="mx-auto">
       <v-data-table
         :headers="Headers"
-        :items="tasks"
+        :items="tasksToRender"
         item-key="index"
         class="elevation-1"
         :hide-default-footer="true"
@@ -27,6 +28,54 @@
               :v-model="isCommunityMentor"
               @change="toggleUserType"
             ></v-switch>
+            <v-dialog
+              v-model="dialog"
+              persistent
+              max-width="290"
+              >
+                <template v-slot:activator="{on, attrs}">
+                  <v-btn
+                    class="mx-2"
+                    fab
+                    dark
+                    v-bind="attrs"
+                    v-on="on"
+                    color="needsattention"
+                  >
+                    <v-icon dark>
+                      mdi-delete
+                    </v-icon>
+                  </v-btn>
+                  </template>
+                <v-card>
+                  <v-card-title class="justify-center"
+                  >
+                    Are you sure?
+                  </v-card-title>
+                  <v-card-text>Deleting {{applicantName}} will permanently remove their account from the system. 
+                    This cannot be reversed.</v-card-text>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                      color="accent"
+                      text
+                      @click="dialog = false"
+                      >
+                      Cancel
+                    </v-btn>
+                    <v-btn
+                      color="needsattention"
+                      text
+                      @click="deleteUser()"
+                      >
+                      Delete
+                    </v-btn>
+                  </v-card-actions>
+                  
+                </v-card>
+              </v-dialog>
+
+
           </v-toolbar>
         </template>
         <template v-slot:item.status="{ item }">
@@ -92,15 +141,18 @@ export default {
   },
   data() {
     return {
+      dialog: false,
       applicantID: "",
       adminID: "",
       applicantName: "",
       tasks: [],
+      tasksToRender: [],
       selectedIndex: "",
       switchLoading: false,
       notif: "",
       snackbar: false,
       isCommunityMentor: false,
+      educationExcludeTaskNameList:["BIG Extras - Car Insurance", "BIG Extras - Home Assessment"],
       downloadIcons: {
         noUpload: "mdi-download-off-outline",
         upload: "mdi-cloud-download",
@@ -139,13 +191,12 @@ export default {
       ],
       noActions: [
         "BIG Profile",
-        "You are a BIG Deal!",
       ],
     };
   },
   computed: {
     userType: function () {
-      return this.isCommunityMentor ? "Community Mentor" : "Education Mentor";
+      return this.isCommunityMentor ? "Community Mentor" : "In-School Mentor";
     }
   },
   created() {
@@ -160,6 +211,7 @@ export default {
         this.$emit("emitToApp", response.data);
       });
     },
+
     async toggleUserType() {
       this.switchLoading = true;
       try {
@@ -187,6 +239,8 @@ export default {
     this.applicantName = doc.data.name;
     this.isCommunityMentor = doc.data.isCommunityMentor;
     let servertasks = doc.data.tasks;
+    this.tasks = [];
+    this.tasksToRender = [];
     for (const task in servertasks) {
       if (servertasks[task].isSubmitted && servertasks[task].isApproved) {
         servertasks[task].status = "Complete";
@@ -198,9 +252,26 @@ export default {
         servertasks[task].status = "Incomplete";
         servertasks[task].buttonTitle = "Mark Complete";
       }
+      //if this task is in the list of excluded education tasks
+      if(this.educationExcludeTaskNameList.includes(servertasks[task].name)){
+        //only push these tasks if your a community mentor
+        if(this.isCommunityMentor){
+          this.tasksToRender.push(servertasks[task]);
+        }
+      } else {
+        this.tasksToRender.push(servertasks[task]);
+      }
       this.tasks.push(servertasks[task]);
-    }
-  },
+      }
+    },
+    async deleteUser() {
+      try {
+        await firebase.functions().httpsCallable("deleteUserByID")({id: this.applicantID});
+        this.$router.back();
+      }catch (err) {
+        this.displayNotification(err.message)
+      }
+    },
     async changeStatus(status, index) {
       let selectedTask = this.tasks[index];
       let notification;
@@ -237,9 +308,9 @@ export default {
         }
         serverTasks.push(serverTask);
       });
-
       try {
-        await firebase.functions().httpsCallable("adminUpdateTasks")({
+        await firebase.functions().httpsCallable("updateTasks")({
+          isAdmin: true,
           id: this.applicantID,
           serverTasks,
           notification
