@@ -17,6 +17,8 @@
         disable-pagination
         item-key="name"
         class="elevation-1"
+        loading
+        loading-text="Loading... Please wait"
       >
         <v-divider></v-divider>
         <template v-slot:top>
@@ -42,18 +44,22 @@
               {{ buttonTitle(item.status) }}
             </v-btn>
             <bbbs-upload
-              v-if="item.upload && !item.fileUpload"
+              v-if="
+                item.upload && !item.fileUpload && item.status !== 'Complete'
+              "
               class="float-right mt-1 mr-5"
-              @uploaded="handleUpload"
+              @uploaded="handleFile"
               @upload-error="displayNotification"
               :task="item"
             ></bbbs-upload>
             <bbbs-download
-              v-if="item.upload && item.fileUpload"
+              v-if="
+                item.upload && item.fileUpload && item.status !== 'Complete'
+              "
               class="float-right mt-5 mr-5"
               :applicantID="id"
               :task="item"
-              @deleted="handleDelete"
+              @deleted="handleFile"
               @delete-error="displayNotification"
             ></bbbs-download>
           </td>
@@ -103,7 +109,6 @@ import Upload from "../components/Upload.vue";
 import Download from "../components/Download.vue";
 import Carousel from "../components/Carousel.vue";
 import firebase from "firebase";
-import { updateTask } from "../services/apiServices";
 import VueConfetti from "vue-confetti";
 
 Vue.use(VueConfetti);
@@ -183,8 +188,8 @@ export default {
     carousel: Carousel,
   },
   methods: {
-    //function for updating the users filepath in the upload
-    async handleUpload(selectedTask) {
+    //function for updating the users filepath in the upload and delete
+    async handleFile(selectedTask) {
       //now update users filepath
       let serverTasks = [];
       this.tasks.forEach((task) => {
@@ -203,10 +208,15 @@ export default {
         }
         serverTasks.push(serverTask);
       });
-      let notification = `${this.username} has uploaded a file to ${selectedTask.name}`;
+      let notification;
+      if (selectedTask.fileUpload != null) {
+        notification = `${this.username} has uploaded a file for ${selectedTask.name}`;
+      } else {
+        notification = `${this.username} has deleted their uploaded file for ${selectedTask.name}`;
+      }
       try {
-        this.displayNotification("File successfully uploaded");
-        await firebase.functions().httpsCallable("applicantUpdateTasks")({
+        this.displayNotification(notification);
+        await firebase.functions().httpsCallable("updateTasks")({
           id: this.id,
           serverTasks,
           notification,
@@ -214,12 +224,6 @@ export default {
       } catch (err) {
         this.displayNotification(err.message);
       }
-    },
-    handleDelete(taskWithDeletedFile) {
-      let taskToChange = this.tasks.filter(
-        (task) => task.name === taskWithDeletedFile.name
-      );
-      taskToChange.fileUpload = null;
     },
     async changeStatus(task) {
       let selectedTask = task;

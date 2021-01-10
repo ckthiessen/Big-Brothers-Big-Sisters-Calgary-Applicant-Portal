@@ -16,7 +16,7 @@
 
 <script>
 import firebase from "firebase";
-import 'firebase/firestore';
+import "firebase/firestore";
 
 export default {
   name: "download",
@@ -25,26 +25,28 @@ export default {
     applicantID: String,
   },
   methods: {
+    /**
+     * Deletes the download URL for the file associated with the task and user
+     * Deletes the file from Firebase Storage
+     */
     async deleteFile() {
-      // If the resource was a file, have to delete from firebase storage as well
-      // TODO: Handle delete. Make delete button read only when already approved and show tool tip
       try {
-        // await firebase
-        //   .storage()
-        //   .ref(`${this.applicantID}/${this.task.name}`)
-        //   .delete();
+        await firebase
+          .storage()
+          .ref(`${this.applicantID}/${this.task.name}`)
+          .delete();
 
-        await firebase.firestore()
+        await firebase
+          .firestore()
           .collection("users")
           .doc(this.applicantID)
           .update({
-            fileUpload: firebase.firestore.FieldValue.delete()
+            fileUpload: firebase.firestore.FieldValue.delete(),
           });
-          console.log("done")
-
+        this.task.fileUpload = null;
         this.$emit("deleted", this.task);
       } catch (error) {
-        console.log(error)
+        console.log(error);
         this.$emit("delete-error", error.message);
       }
     },

@@ -2,8 +2,8 @@
   <div>
     <v-file-input
       color="accent"
-      label="Upload a file"
-      accept="application/pdf"
+      label="Upload PDF"
+      accept="*/*"
       v-model="fileData"
     >
     </v-file-input>
@@ -28,6 +28,10 @@ export default {
   },
   methods: {
     async saveFile() {
+      if (this.fileData == null) {
+        this.$emit("upload-error", "Must select a PDF to upload.");
+        return;
+      }
       try {
         let snapshot = await firebase
           .storage()
