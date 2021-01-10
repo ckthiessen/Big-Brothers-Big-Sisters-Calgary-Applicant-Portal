@@ -132,14 +132,13 @@ import firebase from "firebase";
             menu: false,
             userNotifications: [],
             notifications:[],
+            initial: false,
             id: "",
             name: "",
             type: "",
             user: {},
             email: "",
-            lastNotification: {},
             seen: true,
-            interval: "",
             showBackButton: false
         }),
         created() {
@@ -147,23 +146,26 @@ import firebase from "firebase";
           this.showBackButton = this.$route.params.adminID && this.$route.params.applicantID ? true : false;
           this.getUserInformation();
 
+          this.initial = true;
+
           let ref = firebase.firestore().collection('users').doc(this.id).collection('notifications');
 
-            ref.onSnapshot(snapshot => {
+          //trigger notification everytime users' notification document gets changed
+          ref.onSnapshot(snapshot => {
+            //ignore initial snapshot
+            if (this.initial) {
+              this.initial = false;
+            } else {
+              if (!snapshot.docChanges().empty) { 
                 snapshot.docChanges().forEach(change => {
-                    console.log("new notifications");
-                    let doc = change.doc;
-                    console.log(doc.data());
+                  let doc = change.doc;
+                  this.seen = false;
+                  this.notifications.push(doc.data().message + " - " + doc.data().date);
+                  this.emitNotification(doc.data().message);
                 });
-            });
-             //call pullNotifications every 3 seconds
-             //test
-            //  this.interval = setInterval(function () {
-            //    this.pullNotifications();
-            //  }.bind(this), 3000); 
-        },
-        beforeDestroy() {
-          clearInterval(this.interval);
+              }
+            }
+          });
         },
         methods: {
           async getUserInformation() {
@@ -194,53 +196,23 @@ import firebase from "firebase";
             try {
               doc = await firebase.functions().httpsCallable("getAllNotifications")({ id: this.id });
               this.userNotifications = doc.data;
-              console.log(this.userNotifications);
             } catch (err) {
               console.log(err.message);
             }
             if (this.userNotifications.length === 0) {
               this.notifications.push("No notifications");
-              this.lastNotification = "No notifications";
             } else {
               for (let i = 0; i < this.userNotifications.length; i++) {
                 let notification = this.userNotifications[i];
-                let notifDate = notification.date;
-                this.notifications.push(notification.message + " (" + notifDate + ")");
-                this.lastNotification = notification.message + " (" + notifDate + ")";
+                this.notifications.push(notification.message + " - " + notification.date);
               } 
             }
           },
-          // pullNotifications() {
-          //   getUserByID(this.id).then(response => {
-          //       this.user = response.data;
-          //       let length = this.user["notifications"].length;
-          //       if (length > 0) {
-          //         //check the last notification
-          //         let notification = this.user["notifications"][length - 1];
-          //         let notifDate = notification.date.split(",")[0]
-          //         //if last notification is not new
-          //         if (this.lastNotification === notification.message + " (" + notifDate + ")") {
-          //           return;
-          //         }
-
-          //         //display new notification
-          //         this.notifications.push(notification.message + " (" + notifDate + ")");
-          //         this.seen = false;
-          //         //remove "No notifications"
-          //         if (this.notifications[0] === "No notifications") {
-          //           this.notifications.shift();
-          //         }
-          //         //set the last notification again
-          //         this.lastNotification = notification.message + " (" + notifDate + ")";
-          //         this.emitNotification();
-          //       }
-          //   })
-          // },
           clearNotification() {
             this.seen = true;
           }, 
-          emitNotification() {
-            this.$emit("newNotif", this.lastNotification);
+          emitNotification(newNotification) {
+            this.$emit("newNotif", newNotification);
           },
           getColor() {
             if (this.seen === true) {

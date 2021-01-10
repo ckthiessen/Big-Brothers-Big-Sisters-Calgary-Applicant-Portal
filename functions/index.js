@@ -162,7 +162,7 @@ function sendNotificationByID(id, notification) {
   let notifIDDate = new Date().toISOString("en-CA", { timeZone: "America/Edmonton" }) //sets notification's ID to a specific time (down to the second for easier sorting)
   return db.collection('users').doc(id).collection("notifications").doc(notifIDDate).set({
     message: notification,
-    date: new Date().toGMTString("en-CA", { timeZone: "America/Edmonton" })
+    date: new Date().toLocaleDateString("en-CA", { timeZone: "America/Edmonton" })
   });
 };
 
