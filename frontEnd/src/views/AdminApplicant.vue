@@ -147,17 +147,11 @@ export default {
       applicantName: "",
       tasks: [],
       tasksToRender: [],
-      selectedIndex: "",
       switchLoading: false,
       notif: "",
       snackbar: false,
       isCommunityMentor: false,
       educationExcludeTaskNameList:["BIG Extras - Car Insurance", "BIG Extras - Home Assessment"],
-      downloadIcons: {
-        noUpload: "mdi-download-off-outline",
-        upload: "mdi-cloud-download",
-        uploadComplete: "mdi-cloud-check",
-      },
       Headers: [
         {
           text: "Task Name",
@@ -177,7 +171,7 @@ export default {
           value: "status",
         },
         {
-          text: "Download",
+          text: "",
           align: "start",
           sortable: false,
           value: "upload",
